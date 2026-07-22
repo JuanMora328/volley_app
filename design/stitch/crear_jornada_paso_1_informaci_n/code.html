@@ -1,0 +1,316 @@
+<!DOCTYPE html><html lang="es" class="light"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">try{
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary": "#ffffff",
+                    "on-secondary-container": "#fefcff",
+                    "on-tertiary-fixed-variant": "#304f00",
+                    "on-secondary-fixed-variant": "#003ea8",
+                    "on-tertiary-container": "#64a000",
+                    "on-tertiary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "primary-container": "#1e293b",
+                    "on-primary": "#ffffff",
+                    "surface-container-highest": "#e0e3e5",
+                    "primary-fixed": "#d8e3fb",
+                    "surface-container-low": "#f2f4f6",
+                    "outline": "#75777d",
+                    "surface-dim": "#d8dadc",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-tint": "#545f73",
+                    "surface-variant": "#e0e3e5",
+                    "inverse-on-surface": "#eff1f3",
+                    "outline-variant": "#c5c6cd",
+                    "error": "#ba1a1a",
+                    "secondary-container": "#316bf3",
+                    "on-background": "#191c1e",
+                    "background": "#f7f9fb",
+                    "tertiary-container": "#1a2e00",
+                    "inverse-primary": "#bcc7de",
+                    "surface": "#f7f9fb",
+                    "on-primary-fixed": "#111c2d",
+                    "on-primary-fixed-variant": "#3c475a",
+                    "on-tertiary-fixed": "#102000",
+                    "on-error": "#ffffff",
+                    "secondary-fixed-dim": "#b4c5ff",
+                    "inverse-surface": "#2d3133",
+                    "secondary-fixed": "#dbe1ff",
+                    "primary-fixed-dim": "#bcc7de",
+                    "tertiary": "#0b1800",
+                    "on-surface-variant": "#45474c",
+                    "tertiary-fixed-dim": "#91db2a",
+                    "surface-container-high": "#e6e8ea",
+                    "secondary": "#0051d5",
+                    "primary": "#091426",
+                    "on-surface": "#191c1e",
+                    "surface-bright": "#f7f9fb",
+                    "on-primary-container": "#8590a6",
+                    "surface-container": "#eceef0",
+                    "error-container": "#ffdad6",
+                    "on-secondary-fixed": "#00174b",
+                    "tertiary-fixed": "#acf847"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "16px",
+                    "lg": "24px",
+                    "xs": "8px",
+                    "xl": "32px",
+                    "container-margin": "20px",
+                    "md": "16px",
+                    "sm": "12px",
+                    "base": "4px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Inter"],
+                    "title-md": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "currency-md": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "label-lg": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "currency-md": ["18px", {"lineHeight": "24px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    }catch(_e){}</script><meta charset="utf-8"></head><body class="bg-surface text-on-surface min-h-screen pb-24 md:pb-0 md:pl-[260px]">
+<!-- Navigation Drawer (Desktop) -->
+<aside class="hidden lg:flex flex-col gap-xs p-md fixed left-0 top-0 h-full w-[260px] bg-primary dark:bg-primary-container shadow-md z-40">
+<div class="mb-xl px-sm">
+<span class="font-headline-lg text-headline-lg text-secondary-fixed">VolleyFlow</span>
+</div>
+<div class="flex items-center gap-md p-sm mb-lg rounded-xl bg-primary-fixed-dim/10">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary">
+<span class="material-symbols-outlined">person</span>
+</div>
+<div>
+<p class="font-title-md text-title-md text-on-primary">Admin</p>
+<p class="font-label-sm text-label-sm text-on-primary-fixed-variant">Match Organizer</p>
+</div>
+</div>
+<nav class="space-y-1">
+<a href="#" class="flex items-center gap-md px-md py-sm text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary-fixed-dim/20 transition-all rounded-lg">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-lg text-label-lg">Inicio</span>
+</a>
+<a href="#" class="flex items-center gap-md px-md py-sm bg-secondary-container text-on-secondary-container rounded-lg font-bold transition-all">
+<span class="material-symbols-outlined">calendar_month</span>
+<span class="font-label-lg text-label-lg">Jornadas</span>
+</a>
+<a href="#" class="flex items-center gap-md px-md py-sm text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary-fixed-dim/20 transition-all rounded-lg">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-label-lg text-label-lg">Jugadores</span>
+</a>
+<a href="#" class="flex items-center gap-md px-md py-sm text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary-fixed-dim/20 transition-all rounded-lg">
+<span class="material-symbols-outlined">sports_handball</span>
+<span class="font-label-lg text-label-lg">Canchas</span>
+</a>
+<a href="#" class="flex items-center gap-md px-md py-sm text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary-fixed-dim/20 transition-all rounded-lg">
+<span class="material-symbols-outlined">menu</span>
+<span class="font-label-lg text-label-lg">Más</span>
+</a>
+</nav>
+</aside>
+<!-- Top App Bar (Mobile) -->
+<header class="lg:hidden flex justify-between items-center w-full px-md py-sm bg-surface dark:bg-surface-dim shadow-sm sticky top-0 z-40">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-secondary">sports_volleyball</span>
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-secondary">VolleyFlow</span>
+</div>
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional profile headshot of a sports event administrator in a bright, modern studio setting. The lighting is soft and professional, with a clean navy blue background that matches the VolleyFlow corporate brand. The individual is smiling confidently, conveying a sense of organized authority and approachability." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDqT3zSyYwe82oAD1JDMCgql98VwhTSjTh_JvjUHOoYabCxcOZD-nwkRaiRUF3s8abQihQtkFIuluC4P4zVLjC9bWtDO_fyA1H0qAC50Q0VLX9dGiYE2DNEPvdIJkCAuey-uVKinMzzVjNC2lOXvZ00N71KLkg1WM4lHOCjMu-nqbZmiR6MU51mCzKpdwj4hhS5TARzdVPEmLQNKQYZtPSaOU44pXLsqO5DJjSJxWmobcpdywiCEIdwhioj2LJqjQLRcMQDKNtUntr">
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="max-w-4xl mx-auto p-gutter md:p-xl animate-fade-in">
+<!-- Progress Header -->
+<section class="mb-xl">
+<div class="flex items-center justify-between mb-md">
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary">Nueva Jornada</h1>
+<span class="font-label-lg text-label-lg text-secondary bg-secondary-container/10 px-sm py-1 rounded-full">Paso 1 de 3</span>
+</div>
+<!-- Stepper Visual -->
+<div class="relative flex items-center justify-between w-full">
+<div class="absolute top-1/2 left-0 w-full h-[2px] bg-surface-container-highest -z-10 -translate-y-1/2"></div>
+<div class="absolute top-1/2 left-0 w-1/3 h-[2px] bg-secondary -z-10 -translate-y-1/2 transition-all duration-500"></div>
+<div class="flex flex-col items-center gap-xs">
+<div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm step-active">1</div>
+<span class="hidden md:block font-label-sm text-label-sm text-secondary">Información</span>
+</div>
+<div class="flex flex-col items-center gap-xs">
+<div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm step-inactive">2</div>
+<span class="hidden md:block font-label-sm text-label-sm">Jugadores</span>
+</div>
+<div class="flex flex-col items-center gap-xs">
+<div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm step-inactive">3</div>
+<span class="hidden md:block font-label-sm text-label-sm">Equipos</span>
+</div>
+</div>
+</section>
+<!-- Form Area -->
+<form class="space-y-lg">
+<!-- Section: Logística -->
+<div class="bg-surface-container-lowest p-lg rounded-xl shadow-sm border border-outline-variant/30">
+<div class="flex items-center gap-sm mb-lg border-b border-outline-variant pb-sm">
+<span class="material-symbols-outlined text-secondary">event</span>
+<h2 class="font-title-md text-title-md text-primary">Detalles de la Jornada</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+<!-- Fecha -->
+<div class="space-y-xs">
+<label class="font-label-lg text-label-lg text-on-surface-variant block">Fecha</label>
+<div class="relative">
+<input class="w-full h-12 px-md bg-surface border border-outline-variant rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary transition-all outline-none" type="date">
+</div>
+</div>
+<!-- Hora -->
+<div class="space-y-xs">
+<label class="font-label-lg text-label-lg text-on-surface-variant block">Hora (Opcional)</label>
+<input class="w-full h-12 px-md bg-surface border border-outline-variant rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary transition-all outline-none" type="time">
+</div>
+<!-- Cancha Dropdown -->
+<div class="md:col-span-2 space-y-xs">
+<label class="font-label-lg text-label-lg text-on-surface-variant block">Ubicación / Cancha</label>
+<div class="relative group">
+<select class="w-full h-12 px-md bg-surface border border-outline-variant rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary transition-all outline-none appearance-none">
+<option disabled="" selected="" value="">Selecciona una cancha o escribe una nueva...</option>
+<option value="club_nautico">Club Náutico - Cancha 1</option>
+<option value="polideportivo">Polideportivo Municipal</option>
+<option value="manual">+ Agregar ubicación manual...</option>
+</select>
+<span class="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Section: Finanzas -->
+<div class="bg-surface-container-lowest p-lg rounded-xl shadow-sm border border-outline-variant/30">
+<div class="flex items-center gap-sm mb-lg border-b border-outline-variant pb-sm">
+<span class="material-symbols-outlined text-secondary">payments</span>
+<h2 class="font-title-md text-title-md text-primary">Costos Estimados</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+<div class="space-y-xs">
+<label class="font-label-lg text-label-lg text-on-surface-variant block">Valor de la Cancha ($)</label>
+<div class="relative">
+<span class="absolute left-md top-1/2 -translate-y-1/2 font-bold text-on-surface-variant">$</span>
+<input class="w-full h-12 pl-xl pr-md bg-surface border border-outline-variant rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary transition-all outline-none" placeholder="0.00" type="number">
+</div>
+</div>
+<div class="space-y-xs">
+<label class="font-label-lg text-label-lg text-on-surface-variant block">Gasto estimado Bebidas ($)</label>
+<div class="relative">
+<span class="absolute left-md top-1/2 -translate-y-1/2 font-bold text-on-surface-variant">$</span>
+<input class="w-full h-12 pl-xl pr-md bg-surface border border-outline-variant rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary transition-all outline-none" placeholder="0.00" type="number">
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant italic">Este valor se dividirá entre todos los asistentes.</p>
+</div>
+</div>
+</div>
+<!-- Section: Configuración Match -->
+<div class="bg-surface-container-lowest p-lg rounded-xl shadow-sm border border-outline-variant/30">
+<div class="flex items-center gap-sm mb-lg border-b border-outline-variant pb-sm">
+<span class="material-symbols-outlined text-secondary">settings</span>
+<h2 class="font-title-md text-title-md text-primary">Configuración del Partido</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+<div class="space-y-xs">
+<label class="font-label-lg text-label-lg text-on-surface-variant block">Puntaje por Set</label>
+<div class="flex items-center gap-base">
+<button class="w-12 h-12 flex items-center justify-center bg-surface-container-high rounded-lg hover:bg-secondary-container/20 transition-colors" onclick="this.nextElementSibling.stepDown()" type="button">
+<span class="material-symbols-outlined">remove</span>
+</button>
+<input class="flex-1 h-12 text-center bg-surface border border-outline-variant rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary transition-all outline-none font-bold text-title-md" type="number" value="25">
+<button class="w-12 h-12 flex items-center justify-center bg-surface-container-high rounded-lg hover:bg-secondary-container/20 transition-colors" onclick="this.previousElementSibling.stepUp()" type="button">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+</div>
+<div class="space-y-xs">
+<label class="font-label-lg text-label-lg text-on-surface-variant block">Cantidad de Equipos</label>
+<div class="grid grid-cols-3 gap-sm">
+<button class="h-12 border-2 border-secondary bg-secondary-container/10 text-secondary font-bold rounded-lg flex items-center justify-center" type="button">2</button>
+<button class="h-12 border border-outline-variant hover:border-secondary transition-colors text-on-surface-variant rounded-lg flex items-center justify-center" type="button">3</button>
+<button class="h-12 border border-outline-variant hover:border-secondary transition-colors text-on-surface-variant rounded-lg flex items-center justify-center" type="button">4</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Button -->
+<div class="pt-xl pb-lg md:pb-xl">
+<button class="w-full h-14 bg-secondary text-on-secondary font-bold rounded-xl shadow-lg hover:shadow-xl active:scale-95 transition-all flex items-center justify-center gap-md" type="submit">
+                    Siguiente
+                    <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<p class="text-center mt-md text-on-surface-variant font-label-sm">Todos los datos pueden editarse antes de finalizar.</p>
+</div>
+</form>
+</main>
+<!-- Bottom Navigation Bar (Mobile) -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full h-[64px] bg-surface dark:bg-surface-container-highest border-t border-outline-variant flex justify-around items-center px-xs pb-safe z-50 shadow-lg">
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm">Inicio</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-2xl px-4 py-1" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+<span class="font-label-sm text-label-sm">Jornadas</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-label-sm text-label-sm">Jugadores</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">sports_handball</span>
+<span class="font-label-sm text-label-sm">Canchas</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined" data-original-icon="more_hor">more_horiz</span>
+<span class="font-label-sm text-label-sm">Más</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction for inputs
+        document.querySelectorAll('input, select').forEach(el => {
+            el.addEventListener('focus', () => {
+                el.parentElement.classList.add('scale-[1.01]');
+            });
+            el.addEventListener('blur', () => {
+                el.parentElement.classList.remove('scale-[1.01]');
+            });
+        });
+
+        // Simple button toggle for team selection
+        const teamButtons = document.querySelectorAll('.grid-cols-3 button');
+        teamButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                teamButtons.forEach(b => {
+                    b.classList.remove('border-2', 'border-secondary', 'bg-secondary-container/10', 'text-secondary', 'font-bold');
+                    b.classList.add('border', 'border-outline-variant', 'text-on-surface-variant');
+                });
+                btn.classList.add('border-2', 'border-secondary', 'bg-secondary-container/10', 'text-secondary', 'font-bold');
+                btn.classList.remove('border', 'border-outline-variant', 'text-on-surface-variant');
+            });
+        });
+    </script>
+</body></html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-primary": "#bcc7de",
+                        "tertiary-container": "#1a2e00",
+                        "surface-tint": "#545f73",
+                        "surface": "#f7f9fb",
+                        "surface-variant": "#e0e3e5",
+                        "on-secondary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed": "#102000",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-container-high": "#e6e8ea",
+                        "surface-bright": "#f7f9fb",
+                        "primary": "#091426",
+                        "on-secondary-fixed-variant": "#003ea8",
+                        "surface-container-low": "#f2f4f6",
+                        "secondary": "#0051d5",
+                        "on-primary-fixed": "#111c2d",
+                        "surface-container-highest": "#e0e3e5",
+                        "primary-fixed-dim": "#bcc7de",
+                        "on-tertiary-fixed-variant": "#304f00",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed-dim": "#b4c5ff",
+                        "error-container": "#ffdad6",
+                        "surface-dim": "#d8dadc",
+                        "on-primary-container": "#8590a6",
+                        "tertiary": "#0b1800",
+                        "secondary-fixed": "#dbe1ff",
+                        "primary-container": "#1e293b",
+                        "on-surface-variant": "#45474c",
+                        "on-primary": "#ffffff",
+                        "outline-variant": "#c5c6cd",
+                        "inverse-surface": "#2d3133",
+                        "tertiary-fixed-dim": "#91db2a",
+                        "surface-container": "#eceef0",
+                        "on-secondary-fixed": "#00174b",
+                        "primary-fixed": "#d8e3fb",
+                        "outline": "#75777d",
+                        "background": "#f7f9fb",
+                        "secondary-container": "#316bf3",
+                        "on-secondary-container": "#fefcff",
+                        "on-primary-fixed-variant": "#3c475a",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed": "#acf847",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-tertiary-container": "#64a000",
+                        "on-background": "#191c1e",
+                        "on-surface": "#191c1e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "md": "16px",
+                        "base": "4px",
+                        "xl": "32px",
+                        "lg": "24px",
+                        "container-margin": "20px",
+                        "sm": "12px",
+                        "gutter": "16px",
+                        "xs": "8px"
+                    },
+                    "fontFamily": {
+                        "title-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "label-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "currency-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "currency-md": ["18px", {"lineHeight": "24px", "letterSpacing": "0.05em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen pb-32">
+<!-- Top AppBar -->
+<header class="fixed top-0 w-full z-50 flex items-center justify-between px-md h-16 bg-surface shadow-sm">
+<div class="flex items-center gap-md">
+<button class="transition-all duration-200 active:scale-95 p-base rounded-full hover:bg-surface-variant text-primary">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">Finalizar jornada</h1>
+</div>
+<div class="flex items-center">
+<span class="material-symbols-outlined text-primary" data-icon="account_balance_wallet">account_balance_wallet</span>
+</div>
+</header>
+<main class="pt-24 px-md max-w-2xl mx-auto space-y-lg">
+<!-- Section: Summary Stats -->
+<section class="animate-in fade-in slide-in-from-bottom-4 duration-500">
+<div class="glass-card rounded-xl p-lg shadow-sm border border-outline-variant relative overflow-hidden">
+<div class="absolute top-0 right-0 p-lg opacity-10">
+<span class="material-symbols-outlined text-6xl" data-icon="analytics">analytics</span>
+</div>
+<h3 class="font-title-md text-title-md text-primary mb-md">Resumen de la sesión</h3>
+<div class="grid grid-cols-2 gap-md">
+<div class="bg-surface-container-low p-md rounded-lg">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-base">Puntos totales</p>
+<p class="font-headline-lg text-headline-lg text-secondary">248</p>
+</div>
+<div class="bg-surface-container-low p-md rounded-lg">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-base">Duración total</p>
+<p class="font-headline-lg text-headline-lg text-secondary">1h 45m</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: Equipo Ganador -->
+<section class="space-y-md">
+<h2 class="font-title-md text-title-md text-primary">Equipo ganador</h2>
+<div class="grid grid-cols-1 gap-md">
+<label class="flex items-center justify-between p-md bg-surface-container-low rounded-xl border-2 border-transparent transition-all cursor-pointer group active:scale-[0.98]">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center text-white">
+<span class="material-symbols-outlined">group</span>
+</div>
+<div>
+<p class="font-label-lg text-label-lg text-primary">Equipo A (Azules)</p>
+<p class="font-body-md text-body-md text-on-surface-variant">12 victorias hoy</p>
+</div>
+</div>
+<input class="w-6 h-6 text-secondary border-outline-variant focus:ring-secondary" name="winning_team" type="radio"/>
+</label>
+<label class="flex items-center justify-between p-md bg-surface-container-low rounded-xl border-2 border-transparent transition-all cursor-pointer group active:scale-[0.98]">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-lg bg-tertiary-fixed-dim flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">group</span>
+</div>
+<div>
+<p class="font-label-lg text-label-lg text-primary">Equipo B (Rojos)</p>
+<p class="font-body-md text-body-md text-on-surface-variant">8 victorias hoy</p>
+</div>
+</div>
+<input class="w-6 h-6 text-secondary border-outline-variant focus:ring-secondary" name="winning_team" type="radio"/>
+</label>
+<label class="flex items-center justify-between p-md bg-surface-container-low rounded-xl border-2 border-transparent transition-all cursor-pointer group active:scale-[0.98]">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-lg bg-outline flex items-center justify-center text-white">
+<span class="material-symbols-outlined">balance</span>
+</div>
+<div>
+<p class="font-label-lg text-label-lg text-primary">Empate</p>
+<p class="font-body-md text-body-md text-on-surface-variant">Resultado equilibrado</p>
+</div>
+</div>
+<input class="w-6 h-6 text-secondary border-outline-variant focus:ring-secondary" name="winning_team" type="radio"/>
+</label>
+</div>
+</section>
+</main>
+<!-- Final Action Footer -->
+<footer class="fixed bottom-0 w-full p-lg bg-white/80 backdrop-blur-md border-t border-outline-variant z-50">
+<div class="max-w-2xl mx-auto">
+<button class="w-full bg-secondary text-white font-title-md text-title-md py-md rounded-xl shadow-lg shadow-secondary/20 transition-all duration-300 active:scale-95 flex items-center justify-center gap-md" id="closeSession">
+<span class="material-symbols-outlined">check_circle</span>
+                Cerrar jornada y guardar historial
+            </button>
+</div>
+</footer>
+<script>
+        // Radio button logic for visual selection
+        document.querySelectorAll('input[name="winning_team"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                document.querySelectorAll('label').forEach(lbl => lbl.classList.remove('border-secondary', 'bg-secondary-fixed'));
+                if (e.target.checked) {
+                    e.target.closest('label').classList.add('border-secondary', 'bg-secondary-fixed');
+                }
+            });
+        });
+
+        // Close Session interaction
+        document.getElementById('closeSession').addEventListener('click', function() {
+            this.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Guardando...';
+            this.disabled = true;
+            this.classList.add('opacity-80');
+            
+            setTimeout(() => {
+                this.innerHTML = '<span class="material-symbols-outlined">task_alt</span> ¡Jornada finalizada!';
+                this.classList.replace('bg-secondary', 'bg-tertiary-fixed-dim');
+                this.classList.replace('text-white', 'text-tertiary');
+            }, 1500);
+        });
+    </script>
+</body></html>

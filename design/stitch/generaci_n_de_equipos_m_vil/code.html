@@ -1,0 +1,291 @@
+<!DOCTYPE html><html lang="es" style=""><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">try{
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-surface": "#191c1e",
+                      "surface-container-highest": "#e0e3e5",
+                      "secondary-container": "#316bf3",
+                      "inverse-primary": "#bcc7de",
+                      "surface-container-low": "#f2f4f6",
+                      "on-tertiary-fixed-variant": "#304f00",
+                      "background": "#f7f9fb",
+                      "on-error": "#ffffff",
+                      "surface-container": "#eceef0",
+                      "primary-fixed-dim": "#bcc7de",
+                      "error-container": "#ffdad6",
+                      "outline": "#75777d",
+                      "surface-dim": "#d8dadc",
+                      "on-error-container": "#93000a",
+                      "tertiary-fixed": "#acf847",
+                      "surface-container-lowest": "#ffffff",
+                      "on-surface-variant": "#45474c",
+                      "on-secondary-fixed": "#00174b",
+                      "on-secondary-container": "#fefcff",
+                      "error": "#ba1a1a",
+                      "primary-container": "#1e293b",
+                      "tertiary-container": "#1a2e00",
+                      "surface-variant": "#e0e3e5",
+                      "on-primary-fixed": "#111c2d",
+                      "tertiary": "#0b1800",
+                      "tertiary-fixed-dim": "#91db2a",
+                      "on-tertiary-container": "#64a000",
+                      "surface": "#f7f9fb",
+                      "surface-bright": "#f7f9fb",
+                      "primary": "#091426",
+                      "on-secondary-fixed-variant": "#003ea8",
+                      "on-tertiary-fixed": "#102000",
+                      "on-primary": "#ffffff",
+                      "on-tertiary": "#ffffff",
+                      "surface-container-high": "#e6e8ea",
+                      "on-background": "#191c1e",
+                      "outline-variant": "#c5c6cd",
+                      "on-secondary": "#ffffff",
+                      "secondary": "#0051d5",
+                      "on-primary-fixed-variant": "#3c475a",
+                      "inverse-on-surface": "#eff1f3",
+                      "on-primary-container": "#8590a6",
+                      "inverse-surface": "#2d3133",
+                      "primary-fixed": "#d8e3fb",
+                      "secondary-fixed-dim": "#b4c5ff",
+                      "secondary-fixed": "#dbe1ff",
+                      "surface-tint": "#545f73"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "lg": "24px",
+                      "gutter": "16px",
+                      "sm": "12px",
+                      "xs": "8px",
+                      "xl": "32px",
+                      "base": "4px",
+                      "md": "16px",
+                      "container-margin": "20px"
+              },
+              "fontFamily": {
+                      "body-md": ["Inter"],
+                      "label-sm": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "title-md": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "currency-md": ["Inter"],
+                      "label-lg": ["Inter"],
+                      "display-lg": ["Inter"],
+                      "headline-lg-mobile": ["Inter"]
+              },
+              "fontSize": {
+                      "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "currency-md": ["18px", {"lineHeight": "24px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                      "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}]
+              }
+            },
+          },
+        }
+    }catch(_e){}</script><meta charset="utf-8"></head><body class="bg-surface text-on-surface font-body-md min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-md h-16 bg-surface shadow-sm">
+<div class="flex items-center gap-4">
+<button class="active:scale-95 transition-transform p-2 rounded-full hover:bg-surface-container" onclick="history.back()">
+<span class="material-symbols-outlined text-secondary" data-original-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary">Generación de Equipos</h1>
+</div>
+<button class="active:scale-95 transition-transform p-2 rounded-full hover:bg-surface-container">
+<span class="material-symbols-outlined text-secondary">notifications</span>
+</button>
+</header>
+<main class="pt-20 px-md space-y-lg">
+<!-- Configuration Card (Bento Style) -->
+<section class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant p-md">
+<div class="flex items-center gap-2 mb-md">
+<span class="material-symbols-outlined text-secondary">settings_input_component</span>
+<h2 class="font-title-md text-title-md text-primary">Configuración</h2>
+</div>
+<div class="grid grid-cols-1 gap-md">
+<!-- Team Count Selector -->
+<div>
+<label class="font-label-lg text-label-lg text-on-surface-variant mb-xs block">Número de Equipos</label>
+<div class="flex gap-xs">
+<button class="flex-1 py-sm px-md rounded-lg border border-secondary bg-secondary-container text-on-secondary-container font-semibold transition-all">2</button>
+<button class="flex-1 py-sm px-md rounded-lg border border-outline-variant bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all">3</button>
+<button class="flex-1 py-sm px-md rounded-lg border border-outline-variant bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-all">4</button>
+</div>
+</div>
+<!-- Criteria Selector -->
+<div>
+<label class="font-label-lg text-label-lg text-on-surface-variant mb-xs block">Criterio de Generación</label>
+<select class="w-full h-12 bg-surface-container-low border border-outline-variant rounded-lg px-md font-body-md focus:ring-2 focus:ring-secondary focus:border-secondary outline-none appearance-none">
+<option>Equilibrado por Nivel</option>
+<option>Aleatorio</option>
+<option>Posiciones Fijas</option>
+</select>
+</div>
+</div>
+</section>
+<!-- Team List Title -->
+<div class="flex justify-between items-end px-xs">
+<h3 class="font-title-md text-title-md text-primary">Vista Previa</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant">12 jugadores seleccionados</span>
+</div>
+<!-- Team Cards -->
+<div class="space-y-md">
+<!-- Equipo A -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden border border-outline-variant">
+<div class="bg-primary-container p-md flex justify-between items-center">
+<div class="flex items-center gap-2">
+<div class="w-2 h-6 bg-secondary rounded-full"></div>
+<h4 class="font-title-md text-title-md text-on-primary">Equipo A</h4>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-label-sm text-label-sm text-on-primary-container uppercase tracking-wider">Promedio</span>
+<span class="font-currency-md text-currency-md text-tertiary-fixed">7.8</span>
+</div>
+</div>
+<div class="p-md space-y-sm">
+<!-- Player Row -->
+<div class="flex items-center justify-between p-sm rounded-lg hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full border-2 border-secondary overflow-hidden bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="Close-up professional portrait of a male volleyball athlete with short hair, wearing a navy sports jersey, high-key lighting with a clean modern studio background, professional sports branding style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAp0jd2TtHh12deHj7S43BANM_GtV7lIb3kpDec56DHmFsOaKhmK5uiehldqpXGl-_OP-0svhfHIT0J6ZLOkL52O8ULFU-ug3wOXmyfUw-fgfSJ08kni2aidZH2qvdcSDU_zZXuziBWsUBTY5ZdwuPzJ1l9A8ZtO-P5Nm01L_AVEOnI69Rz5huUpPmLJ_6gddUgQ0o4TLBOVy-6t-mt2uwlgyeu-8243RjKzzZCBtAP3qcAVv4cwOtoXiBHf5XLXFueXrU00KDs-zf1">
+</div>
+<div>
+<p class="font-label-lg text-label-lg text-primary">Carlos Ruiz</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Punta Receptor</p>
+</div>
+</div>
+<div class="bg-secondary-container/10 px-3 py-1 rounded-full">
+<span class="font-label-lg text-label-lg text-secondary">Niv. 8.5</span>
+</div>
+</div>
+<!-- Player Row -->
+<div class="flex items-center justify-between p-sm rounded-lg hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full border-2 border-secondary overflow-hidden bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="Professional studio portrait of a female volleyball player, smiling confidently, wearing a professional athletic uniform in white and navy, bright and energetic lighting, clean blurred background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXQPpOnRRL6rqNLSje_cEPJIm2L3uH4cvMq6DyZJR8fFdG9Vf7ONARlcadpE9rfusVCccDZkcKumlXTJFLzaUyjqiE95LTu3-Q7tgx2JJgWawh2qU5fGKpAKWrZze_eR551vnf-4BElHmgC6MovIQFe04bLD6z-7oq8bxA61hAF9eN7L-J4UlGE1-iTSDfys8QL_DtnjpyU4vvTHyU5_ZKPeABe6LkgMlwA-ZMLe-e_EoogTVvKq1ArwC11dQLtBasuejH7mdvettW">
+</div>
+<div>
+<p class="font-label-lg text-label-lg text-primary">Elena Mora</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Líbero</p>
+</div>
+</div>
+<div class="bg-secondary-container/10 px-3 py-1 rounded-full">
+<span class="font-label-lg text-label-lg text-secondary">Niv. 7.2</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Equipo B -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden border border-outline-variant">
+<div class="bg-surface-container-highest p-md flex justify-between items-center">
+<div class="flex items-center gap-2">
+<div class="w-2 h-6 bg-outline rounded-full"></div>
+<h4 class="font-title-md text-title-md text-primary">Equipo B</h4>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Promedio</span>
+<span class="font-currency-md text-currency-md text-secondary">7.9</span>
+</div>
+</div>
+<div class="p-md space-y-sm">
+<!-- Player Row -->
+<div class="flex items-center justify-between p-sm rounded-lg hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full border-2 border-outline-variant overflow-hidden bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="Dynamic portrait of a male athlete in a volleyball team kit, focused expression, high-contrast professional lighting highlighting muscle definition, modern athletic studio setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdgkfdYfDt_axP7IHWC0crVy_BbQ70GBMzAGSG88KV-lI_nSVD9JxS3hOu0H71sF3DhAIylSBM_JxcP88_g_zPJUEtKz5mrAgoShnxQGcw8dgejXGmpR-Qq6iuoz21ZhTC-51Ij7C19csdDm-gyACRrdMSefdfdkMd2ktqA9iwoBOzuOxc11IaWp-Q2QcxPqn4k1Ugt8i_EI5Zdewa6OH2JQoFEI0ESJ8ktWS1RK9x90bzekJmbfkxMHGSbIXNZBmeWTeHXCNSV7BW">
+</div>
+<div>
+<p class="font-label-lg text-label-lg text-primary">Marcos Sol</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Armador</p>
+</div>
+</div>
+<div class="bg-secondary-container/10 px-3 py-1 rounded-full">
+<span class="font-label-lg text-label-lg text-secondary">Niv. 8.1</span>
+</div>
+</div>
+<!-- Player Row -->
+<div class="flex items-center justify-between p-sm rounded-lg hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full border-2 border-outline-variant overflow-hidden bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="Portrait of a determined female athlete, wearing team volleyball colors, professional studio lighting, energetic and professional vibe, blurred sports court background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEo7_B63wAoyIbg3-A4oIzkTzxpRVCcPJ_7w77ZhvoPW7fsRcocwojPKD3c2U355ZooaovN9bV8IHP1dGX38MkF-58-QYUzLgdA6crpKzsG_yPF-fgeKIOtkpY9kWbjZYp5cc74-QWUcReFc2Ho2cHsyQdMY_iPelgL-3IW2AK3bJ1MZlrg5r7s-8zi5Y-vo0EBvSpxg3308RIbDuG8yE9zy2kUtEonKduLN1Bb2QI4_4XaZ1J0ld-9YXfQYzlZGq_zbDzFtZpW7xb">
+</div>
+<div>
+<p class="font-label-lg text-label-lg text-primary">Julia Vega</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Central</p>
+</div>
+</div>
+<div class="bg-secondary-container/10 px-3 py-1 rounded-full">
+<span class="font-label-lg text-label-lg text-secondary">Niv. 7.7</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- -->
+<div class="flex flex-col gap-md pt-lg">
+<button class="w-full h-14 bg-secondary text-on-secondary rounded-xl font-title-md flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-all">
+<span class="material-symbols-outlined">check_circle</span>
+                Confirmar Equipos
+            </button>
+<button class="w-full h-12 bg-surface-container-highest text-primary rounded-xl font-label-lg flex items-center justify-center gap-2 active:scale-95 transition-all">
+<span class="material-symbols-outlined">shuffle</span>
+                Regenerar Equipos
+            </button>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center bg-surface-container-lowest pb-safe h-[64px] border-t border-outline-variant shadow-lg">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-all duration-150 p-2" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm">Inicio</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary font-semibold hover:bg-surface-container-low transition-all duration-150 p-2" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">groups</span>
+<span class="font-label-sm text-label-sm">Jornadas</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-all duration-150 p-2" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-label-sm text-label-sm">Jugadores</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-all duration-150 p-2" href="#">
+<span class="material-symbols-outlined">sports_volleyball</span>
+<span class="font-label-sm text-label-sm">Canchas</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-all duration-150 p-2" href="#">
+<span class="material-symbols-outlined">more_horiz</span>
+<span class="font-label-sm text-label-sm">Más</span>
+</a>
+</nav>
+<!-- Re-roll FAB (Alternative position) -->
+
+<script>
+        // Simple micro-interaction for re-roll button
+        document.querySelector('.fixed.right-6.bottom-24').addEventListener('click', function() {
+            const icon = this.querySelector('.material-symbols-outlined');
+            icon.style.transform = 'rotate(360deg)';
+            setTimeout(() => { icon.style.transform = 'rotate(0deg)'; }, 500);
+            
+            // Visual feedback on team cards
+            document.querySelectorAll('.bg-surface-container-lowest.rounded-xl.shadow-sm').forEach(card => {
+                card.style.opacity = '0.5';
+                card.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'scale(1)';
+                }, 300);
+            });
+        });
+    </script>
+
+</body></html>

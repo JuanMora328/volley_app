@@ -1,0 +1,359 @@
+<!DOCTYPE html><html lang="es" class="light"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">try{
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary": "#ffffff",
+                        "on-secondary-container": "#fefcff",
+                        "on-tertiary-fixed-variant": "#304f00",
+                        "on-secondary-fixed-variant": "#003ea8",
+                        "on-tertiary-container": "#64a000",
+                        "on-tertiary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "primary-container": "#1e293b",
+                        "on-primary": "#ffffff",
+                        "surface-container-highest": "#e0e3e5",
+                        "primary-fixed": "#d8e3fb",
+                        "surface-container-low": "#f2f4f6",
+                        "outline": "#75777d",
+                        "surface-dim": "#d8dadc",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-tint": "#545f73",
+                        "surface-variant": "#e0e3e5",
+                        "inverse-on-surface": "#eff1f3",
+                        "outline-variant": "#c5c6cd",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#316bf3",
+                        "on-background": "#191c1e",
+                        "background": "#f7f9fb",
+                        "tertiary-container": "#1a2e00",
+                        "inverse-primary": "#bcc7de",
+                        "surface": "#f7f9fb",
+                        "on-primary-fixed": "#111c2d",
+                        "on-primary-fixed-variant": "#3c475a",
+                        "on-tertiary-fixed": "#102000",
+                        "on-error": "#ffffff",
+                        "secondary-fixed-dim": "#b4c5ff",
+                        "inverse-surface": "#2d3133",
+                        "secondary-fixed": "#dbe1ff",
+                        "primary-fixed-dim": "#bcc7de",
+                        "tertiary": "#0b1800",
+                        "on-surface-variant": "#45474c",
+                        "tertiary-fixed-dim": "#91db2a",
+                        "surface-container-high": "#e6e8ea",
+                        "secondary": "#0051d5",
+                        "primary": "#091426",
+                        "on-surface": "#191c1e",
+                        "surface-bright": "#f7f9fb",
+                        "on-primary-container": "#8590a6",
+                        "surface-container": "#eceef0",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed": "#00174b",
+                        "tertiary-fixed": "#acf847"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "lg": "24px",
+                        "xs": "8px",
+                        "xl": "32px",
+                        "container-margin": "20px",
+                        "md": "16px",
+                        "sm": "12px",
+                        "base": "4px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Inter"],
+                        "title-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "currency-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "label-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "currency-md": ["18px", {"lineHeight": "24px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    }catch(_e){}</script><meta charset="utf-8"></head><body class="bg-surface text-on-surface min-h-screen pb-32">
+<!-- Top AppBar (from JSON) -->
+<nav class="sticky top-0 z-40 bg-surface dark:bg-surface-dim shadow-sm flex justify-between items-center w-full px-md py-sm max-w-7xl mx-auto">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary dark:text-secondary-fixed text-[32px]">sports_volleyball</span>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-secondary dark:text-secondary-fixed">VolleyFlow</h1>
+</div>
+<div class="flex items-center gap-md">
+<button class="material-symbols-outlined p-xs hover:bg-surface-container-high rounded-full transition-colors">notifications</button>
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary">
+<span class="font-label-lg">JD</span>
+</div>
+</div>
+</nav>
+<main class="max-w-4xl mx-auto px-gutter py-xl">
+<!-- Progress Indicator -->
+<header class="mb-xl">
+<div class="flex items-center justify-between mb-sm">
+<h2 class="font-headline-lg text-headline-lg text-primary">Nueva Jornada</h2>
+<span class="font-label-lg text-on-surface-variant bg-surface-container rounded-full px-md py-1">Paso 2 de 3</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-secondary h-full w-[66%] transition-all duration-500"></div>
+</div>
+<div class="mt-md flex justify-between text-on-surface-variant font-label-sm">
+<span class="flex items-center gap-xs text-secondary font-bold"><span class="material-symbols-outlined text-sm">check_circle</span> Configuración</span>
+<span class="text-secondary font-bold border-b-2 border-secondary pb-1">Participantes</span>
+<span>Confirmación</span>
+</div>
+</header>
+<!-- Bento Layout for Search and Stats -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-lg">
+<!-- Left Column: Player Selection (8 cols) -->
+<section class="md:col-span-8 flex flex-col gap-md">
+<!-- Search and-->
+<div class="bg-surface-container-lowest p-md rounded-xl shadow-sm border border-outline-variant/30 flex flex-col sm:flex-row gap-sm items-center">
+<div class="relative flex-1 w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input type="text" placeholder="Buscar jugadores por nombre o posición..." class="w-full pl-10 pr-4 py-2.5 bg-surface-container-low border border-outline-variant rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent transition-all outline-none">
+</div>
+<button class="w-full sm:w-auto bg-secondary-container text-on-secondary-container px-md py-2.5 rounded-lg font-label-lg flex items-center justify-center gap-xs hover:opacity-90 transition-opacity active:scale-95">
+<span class="material-symbols-outlined">person_add</span>
+                        Invitado rápido
+                    </button>
+</div>
+<!-- Player List -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/30 overflow-hidden">
+<div class="p-md border-b border-outline-variant/30 bg-surface-container-low/50 flex justify-between items-center">
+<h3 class="font-title-md text-title-md text-primary">Miembros del Club</h3>
+<div class="flex items-center gap-xs">
+<span class="font-label-sm text-on-surface-variant">Ordenar por:</span>
+<select class="text-label-sm bg-transparent border-none focus:ring-0 p-0 pr-6 text-secondary font-bold">
+<option>Nivel</option>
+<option>Nombre</option>
+<option>Frecuencia</option>
+</select>
+</div>
+</div>
+<div class="max-h-[500px] overflow-y-auto custom-scrollbar">
+<!-- Player Row 1 (Selected) -->
+<label class="flex items-center p-md border-b border-outline-variant/20 hover:bg-surface-container-low transition-colors cursor-pointer group">
+<input checked="" class="w-5 h-5 rounded border-outline-variant text-secondary focus:ring-secondary transition-all" type="checkbox">
+<div class="ml-md w-10 h-10 rounded-full overflow-hidden bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a young male volleyball player wearing a navy jersey, looking friendly and athletic. High-quality corporate sports photography style with soft studio lighting and a clean neutral background, matching the professional blue and white theme of VolleyFlow." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCt7fdyXT_6dS42t6l98i-BpZDrZZFZ13nGKrtV32kN4gponLnTu5y35fXLZVPIpvPTAwWBmGzpaUaac6p1c03gYJ3KvOIqb6Ka5NQLk6K3M0LlUkYlH7t_hbr4N1KYT6Vc1kC_7Ey7y97-bfA9mnhXAA-8Wcds8nGP2PKPjpqdVVISuFDLsvj5t8wvISsOW3a_I2XX8j-5N-ut1czQhqQK8zaBh3HIPUx2hkGHrOCOR5Jn5JvF3dDwBKpmSuWRSjTwwyTpzpaLxEjw">
+</div>
+<div class="ml-md flex-1">
+<p class="font-label-lg text-primary">Carlos Méndez</p>
+<p class="text-[12px] text-on-surface-variant uppercase tracking-wider font-bold">Atacante</p>
+</div>
+<div class="flex flex-col items-end gap-1">
+<div class="flex text-secondary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]">star</span>
+</div>
+<span class="text-[10px] text-on-surface-variant bg-surface-container px-1.5 rounded">Ajustar nivel</span>
+</div>
+</label>
+<!-- Player Row 2 (Not Selected) -->
+<label class="flex items-center p-md border-b border-outline-variant/20 hover:bg-surface-container-low transition-colors cursor-pointer group">
+<input class="w-5 h-5 rounded border-outline-variant text-secondary focus:ring-secondary transition-all" type="checkbox">
+<div class="ml-md w-10 h-10 rounded-full overflow-hidden bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a athletic woman with her hair in a ponytail, wearing a light blue sports shirt. The lighting is bright and modern, creating a high-key aesthetic suitable for a professional sports management app with a navy and light gray color palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAU_h0dAkVOSnc7i-CK7K8l9Dcs84kUahCejRWWebBXlxkG-hURIPP_mBsF49lGzJZ8utI1fBTmRSTaTxHB3n2FatK6vF2Ql23v-AiKT78P0YfLb7x3wfBqj2hzEpfj0QZDOj0x7Ni33FZfqhvnpPF0rL-3IEfIEyzKTf5qeskmvUhHgIorBUpEzOeB4YMJ2XB8y2nLBu0F39lxc6Sfh96KiIq4G-vZDAPLgKV5fc7R_6xXJXNDfvegBK4XLtZVWWrL7ECSpF_qybdl">
+</div>
+<div class="ml-md flex-1">
+<p class="font-label-lg text-primary">Lucía Fernández</p>
+<p class="text-[12px] text-on-surface-variant uppercase tracking-wider font-bold">Colocadora</p>
+</div>
+<div class="flex flex-col items-end gap-1">
+<div class="flex text-outline-variant group-hover:text-secondary/50 transition-colors">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]">star</span>
+<span class="material-symbols-outlined text-[18px]">star</span>
+</div>
+</div>
+</label>
+<!-- Player Row 3 (Selected) -->
+<label class="flex items-center p-md border-b border-outline-variant/20 hover:bg-surface-container-low transition-colors cursor-pointer group">
+<input checked="" class="w-5 h-5 rounded border-outline-variant text-secondary focus:ring-secondary transition-all" type="checkbox">
+<div class="ml-md w-10 h-10 rounded-full overflow-hidden bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="Close-up portrait of a tall male athlete with a focused expression, wearing dark athletic apparel. Professional lighting highlights his facial features against a blurred gymnasium background. The overall aesthetic is energetic and authoritative, using a clean corporate sport style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjF9Q3DywUVU-7IMUBDd3WJ-MJORRkpFVqOGGN6iItH4-0e31O7ZmEbdkkrVq7czln94Oq778KbJLEFlzQfUCzjPoTxesuBoB90j-90qeP295il-9bKqBNQw8k7fcj0_0Uo9qsm4v2vXbhIe3op-m8R1WpjzRIasF9E_RWkRGl7Yp7qBDJMjvWX6dP1K_DvDS9BJhG4n9gXOvl8TCzJswQrc3Tki0HFkwDN2aetgxztsKz-1IQqevagFpvmf5O8X4wNlyNby1pXUDP">
+</div>
+<div class="ml-md flex-1">
+<p class="font-label-lg text-primary">Roberto Salas</p>
+<p class="text-[12px] text-on-surface-variant uppercase tracking-wider font-bold">Central</p>
+</div>
+<div class="flex flex-col items-end gap-1">
+<div class="flex text-secondary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+</label>
+<!-- Repeated for scroll demo -->
+<label class="flex items-center p-md border-b border-outline-variant/20 hover:bg-surface-container-low transition-colors cursor-pointer group opacity-60">
+<input class="w-5 h-5 rounded border-outline-variant text-secondary focus:ring-secondary transition-all" type="checkbox">
+<div class="ml-md w-10 h-10 rounded-full bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">person</span>
+</div>
+<div class="ml-md flex-1">
+<p class="font-label-lg text-primary">Mario Drago (Ausente)</p>
+<p class="text-[12px] text-on-surface-variant uppercase tracking-wider font-bold">Opuesto</p>
+</div>
+<div class="flex flex-col items-end gap-1">
+<div class="flex text-outline-variant">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]">star</span>
+<span class="material-symbols-outlined text-[18px]">star</span>
+<span class="material-symbols-outlined text-[18px]">star</span>
+</div>
+</div>
+</label>
+</div>
+<div class="p-md text-center">
+<button class="text-secondary font-label-lg hover:underline">Ver todos los 42 miembros</button>
+</div>
+</div>
+</section>
+<!-- Right Column: Contextual Card (4 cols) -->
+<aside class="md:col-span-4 flex flex-col gap-lg">
+<div class="bg-primary-container text-on-primary p-lg rounded-xl shadow-md relative overflow-hidden">
+<!-- Subtle background decoration -->
+<div class="absolute -right-4 -bottom-4 opacity-10">
+<span class="material-symbols-outlined text-[120px]">groups</span>
+</div>
+<h3 class="font-title-md text-title-md mb-md relative z-10">Resumen de Equipos</h3>
+<div class="space-y-md relative z-10">
+<div class="flex justify-between items-center border-b border-on-primary-container/30 pb-sm">
+<span class="text-on-primary-container font-body-md">Meta:</span>
+<span class="font-bold">12 Jugadores</span>
+</div>
+<div class="flex justify-between items-center border-b border-on-primary-container/30 pb-sm">
+<span class="text-on-primary-container font-body-md">Seleccionados:</span>
+<span class="font-bold text-headline-lg-mobile">14</span>
+</div>
+<div class="bg-error/20 border border-error/50 p-sm rounded-lg flex gap-xs">
+<span class="material-symbols-outlined text-error-container">warning</span>
+<p class="text-sm text-on-secondary-container">Sobran 2 jugadores para 2 equipos de 6. Considera rotaciones o invitar 4 más para 3 equipos.</p>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-low p-md rounded-xl border border-outline-variant/50">
+<h4 class="font-label-lg text-primary mb-sm">Nivel de Juego Promedio</h4>
+<div class="flex items-center gap-md">
+<span class="text-headline-lg text-secondary">4.2</span>
+<div class="flex-1">
+<div class="flex text-secondary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]">star_half</span>
+</div>
+<p class="text-[12px] text-on-surface-variant">Jornada de nivel Avanzado</p>
+</div>
+</div>
+</div>
+</aside>
+</div>
+<!-- Navigation Actions Floating Bar -->
+<div class="fixed bottom-0 left-0 right-0 bg-surface border-t border-outline-variant shadow-[0_-10px_20px_rgba(0,0,0,0.05)] px-gutter py-md z-50">
+<div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-md">
+<!-- Status Message -->
+<div class="flex items-center gap-md">
+<div class="flex items-center gap-xs px-md py-1.5 bg-secondary/10 rounded-full">
+<span class="material-symbols-outlined text-secondary text-sm">check_circle</span>
+<span class="font-label-lg text-secondary">14 seleccionados</span>
+</div>
+<p class="hidden md:block text-error text-[12px] font-medium animate-pulse flex items-center gap-xs">
+<span class="material-symbols-outlined text-sm">info</span>
+                        Ajuste de equipos desbalanceado
+                    </p>
+</div>
+<!-- Action Buttons -->
+<div class="flex items-center gap-md w-full sm:w-auto">
+<button class="flex-1 sm:flex-none px-xl py-3 rounded-lg border border-outline-variant text-on-surface-variant font-label-lg hover:bg-surface-container transition-all active:scale-95">
+                        Anterior
+                    </button>
+<button class="flex-1 sm:flex-none px-xl py-3 rounded-lg bg-secondary text-on-secondary font-label-lg shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-sm">
+                        Siguiente
+                        <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Nav for Mobile (from JSON logic) -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full bg-surface dark:bg-surface-container-highest border-t border-outline-variant h-[64px] z-40 flex justify-around items-center px-xs pb-safe">
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm">Inicio</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-2xl px-4 py-1" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+<span class="font-label-sm text-label-sm">Jornadas</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-label-sm text-label-sm">Jugadores</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">sports_handball</span>
+<span class="font-label-sm text-label-sm">Canchas</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">more_horiz</span>
+<span class="font-label-sm text-label-sm">Más</span>
+</a>
+</nav>
+<!-- Micro-interaction script for checkboxes and stars -->
+<script>
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', (e) => {
+                const label = e.target.closest('label');
+                if (e.target.checked) {
+                    label.classList.add('bg-secondary/5');
+                } else {
+                    label.classList.remove('bg-secondary/5');
+                }
+            });
+        });
+
+        // Simple star rating interaction simulation
+        document.querySelectorAll('.material-symbols-outlined').forEach(star => {
+            if (star.innerText === 'star' || star.innerText === 'star_half') {
+                star.addEventListener('mouseenter', () => {
+                    star.style.transform = 'scale(1.2)';
+                    star.style.transition = 'transform 0.1s ease';
+                });
+                star.addEventListener('mouseleave', () => {
+                    star.style.transform = 'scale(1)';
+                });
+            }
+        });
+    </script>
+</body></html>

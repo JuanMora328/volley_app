@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>VolleyFlow - Historial y Tabla</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed-variant": "#304f00",
+                    "on-surface": "#191c1e",
+                    "surface-bright": "#f7f9fb",
+                    "on-tertiary-fixed": "#102000",
+                    "on-error": "#ffffff",
+                    "primary-fixed-dim": "#bcc7de",
+                    "outline": "#75777d",
+                    "tertiary-fixed-dim": "#91db2a",
+                    "on-primary-fixed-variant": "#3c475a",
+                    "surface-container-highest": "#e0e3e5",
+                    "on-primary-container": "#8590a6",
+                    "inverse-on-surface": "#eff1f3",
+                    "error": "#ba1a1a",
+                    "tertiary-fixed": "#acf847",
+                    "secondary-fixed": "#dbe1ff",
+                    "surface-container-high": "#e6e8ea",
+                    "on-tertiary-container": "#64a000",
+                    "on-surface-variant": "#45474c",
+                    "error-container": "#ffdad6",
+                    "on-primary-fixed": "#111c2d",
+                    "on-background": "#191c1e",
+                    "surface-dim": "#d8dadc",
+                    "secondary-fixed-dim": "#b4c5ff",
+                    "on-secondary": "#ffffff",
+                    "surface-container": "#eceef0",
+                    "on-secondary-fixed": "#00174b",
+                    "secondary": "#0051d5",
+                    "inverse-surface": "#2d3133",
+                    "inverse-primary": "#bcc7de",
+                    "primary-fixed": "#d8e3fb",
+                    "primary-container": "#1e293b",
+                    "on-secondary-container": "#fefcff",
+                    "on-primary": "#ffffff",
+                    "surface-variant": "#e0e3e5",
+                    "tertiary": "#0b1800",
+                    "surface": "#f7f9fb",
+                    "surface-tint": "#545f73",
+                    "tertiary-container": "#1a2e00",
+                    "secondary-container": "#316bf3",
+                    "on-error-container": "#93000a",
+                    "outline-variant": "#c5c6cd",
+                    "background": "#f7f9fb",
+                    "surface-container-low": "#f2f4f6",
+                    "on-secondary-fixed-variant": "#003ea8",
+                    "primary": "#091426",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "sm": "12px",
+                    "lg": "24px",
+                    "md": "16px",
+                    "gutter": "16px",
+                    "container-margin": "20px",
+                    "base": "4px",
+                    "xl": "32px",
+                    "xs": "8px"
+            },
+            "fontFamily": {
+                    "body-md": ["Inter"],
+                    "currency-md": ["Inter"],
+                    "title-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "label-lg": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "headline-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "currency-md": ["18px", {"lineHeight": "24px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-tab-indicator {
+            height: 3px;
+            width: 100%;
+            bottom: 0;
+            left: 0;
+            position: absolute;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+        @media (max-width: 768px) {
+            .mobile-hide { display: none; }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md selection:bg-secondary-fixed selection:text-on-secondary-fixed">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full z-50 bg-surface shadow-sm h-16 flex items-center justify-between px-md md:px-lg max-w-7xl mx-auto left-0 right-0">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary text-headline-lg-mobile">sports_volleyball</span>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary">VolleyFlow</h1>
+</div>
+<div class="flex items-center gap-md">
+<button class="material-symbols-outlined text-on-surface-variant hover:opacity-80 transition-opacity active:scale-95" data-icon="search">search</button>
+<div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional profile headshot of a sports tournament organizer, smiling warmly. The image has high-key lighting and a clean, minimalist background, reflecting a professional and energetic brand identity. The palette is dominated by soft whites and neutral tones with a subtle navy accent in the attire." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQ8RFSWcRqMK9O7axznYu-R-FM2zckY0ns-c5kHRnhh7sXPdyCNF6jwGFJ-2nt2IEYfs7ma2K9QYJbkKkwMQZg1dF4zDd_GqhPxATrNZYcb1NtNSMNG2qCvMQl7WvcmDSQv01yw2Jgy2MDiQU6jBYMCi5S4zZJuY_DaJdEmH8_LtDSdmdbilX_nW-nppQsyQ8Pc_Gx1XeB0RikYJ1lVoPsMNCKe1hiRzG5_8PYSdOHmR1X7BCxRH4DVhkqCaBAEkZlAIxrXy3qVp7w"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-20 pb-24 md:pb-8 px-container-margin max-w-7xl mx-auto">
+<!-- Tab Navigation Shell -->
+<div class="flex items-center justify-center mb-lg">
+<div class="bg-surface-container flex p-1 rounded-xl shadow-sm border border-outline-variant/30">
+<button class="px-xl py-xs rounded-lg font-label-lg transition-all duration-200 flex items-center gap-xs bg-secondary-container text-on-secondary-container shadow-sm" id="tab-historial-btn" onclick="switchTab('historial')">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">history</span>
+                    Historial
+                </button>
+<button class="px-xl py-xs rounded-lg font-label-lg transition-all duration-200 flex items-center gap-xs text-on-surface-variant hover:bg-surface-container-high" id="tab-tabla-btn" onclick="switchTab('tabla')">
+<span class="material-symbols-outlined text-[18px]">leaderboard</span>
+                    Tabla
+                </button>
+</div>
+</div>
+<!-- Section: Historial de Partidos -->
+<section class="space-y-md animate-fade-in" id="section-historial">
+<div class="flex justify-between items-center mb-sm">
+<h2 class="font-title-md text-title-md text-primary">Partidos Recientes</h2>
+<span class="text-label-sm text-on-surface-variant bg-surface-container-high px-sm py-1 rounded-full">Jornada 12</span>
+</div>
+<!-- Most Recent Match (With Undo Button) -->
+<div class="bg-surface-container-lowest rounded-xl p-md shadow-md border-l-4 border-secondary relative group transition-transform hover:scale-[1.01]">
+<div class="flex justify-between items-start mb-md">
+<span class="text-label-sm text-secondary font-bold flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+                        FINALIZADO RECIENTEMENTE
+                    </span>
+<button class="bg-error-container text-on-error-container px-sm py-1 rounded-lg text-label-sm font-bold flex items-center gap-1 hover:opacity-80 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[16px]">undo</span>
+                        Deshacer último
+                    </button>
+</div>
+<div class="flex items-center justify-between text-center">
+<div class="flex-1 flex flex-col items-center gap-xs">
+<div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center mb-1">
+<span class="material-symbols-outlined text-primary">shield</span>
+</div>
+<span class="font-label-lg text-primary">Titanes VC</span>
+</div>
+<div class="flex flex-col items-center gap-1 px-lg">
+<div class="flex items-center gap-md">
+<span class="font-display-lg text-display-lg text-primary leading-none">25</span>
+<span class="text-outline-variant font-bold"> - </span>
+<span class="font-display-lg text-display-lg text-on-surface-variant leading-none">23</span>
+</div>
+<span class="text-label-sm text-outline font-medium tracking-widest uppercase">18:45 • Cancha 1</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-xs">
+<div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center mb-1">
+<span class="material-symbols-outlined text-on-surface-variant">groups</span>
+</div>
+<span class="font-label-lg text-on-surface-variant">Raptors</span>
+</div>
+</div>
+</div>
+<!-- List of Past Matches -->
+<div class="space-y-sm">
+<!-- Match Card 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-md shadow-sm border border-outline-variant/30 flex items-center gap-md">
+<div class="flex-1 flex items-center justify-between">
+<div class="flex items-center gap-md">
+<span class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+</span>
+<span class="font-label-lg">Fénix Club</span>
+</div>
+<span class="font-title-md text-primary">21 - 19</span>
+<div class="flex items-center gap-md text-right">
+<span class="font-label-lg text-on-surface-variant">Leones</span>
+<span class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center opacity-40">
+<span class="material-symbols-outlined text-[18px]">shield</span>
+</span>
+</div>
+</div>
+<div class="w-px h-8 bg-outline-variant/30"></div>
+<div class="text-right min-w-[80px]">
+<p class="text-label-sm font-bold text-primary">Final</p>
+<p class="text-label-sm text-outline">17:30</p>
+</div>
+</div>
+<!-- Match Card 3 -->
+<div class="bg-surface-container-lowest rounded-xl p-md shadow-sm border border-outline-variant/30 flex items-center gap-md">
+<div class="flex-1 flex items-center justify-between">
+<div class="flex items-center gap-md">
+<span class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center opacity-40">
+<span class="material-symbols-outlined text-[18px]">sports</span>
+</span>
+<span class="font-label-lg text-on-surface-variant">Spartans</span>
+</div>
+<span class="font-title-md text-primary">15 - 25</span>
+<div class="flex items-center gap-md text-right">
+<span class="font-label-lg">Volley Kings</span>
+<span class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">workspace_premium</span>
+</span>
+</div>
+</div>
+<div class="w-px h-8 bg-outline-variant/30"></div>
+<div class="text-right min-w-[80px]">
+<p class="text-label-sm font-bold text-primary">Final</p>
+<p class="text-label-sm text-outline">16:15</p>
+</div>
+</div>
+<!-- Match Card 4 -->
+<div class="bg-surface-container-lowest rounded-xl p-md shadow-sm border border-outline-variant/30 flex items-center gap-md">
+<div class="flex-1 flex items-center justify-between">
+<div class="flex items-center gap-md">
+<span class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">shield</span>
+</span>
+<span class="font-label-lg">Titanes VC</span>
+</div>
+<span class="font-title-md text-primary">25 - 12</span>
+<div class="flex items-center gap-md text-right">
+<span class="font-label-lg text-on-surface-variant">Dragons</span>
+<span class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center opacity-40">
+<span class="material-symbols-outlined text-[18px]">pets</span>
+</span>
+</div>
+</div>
+<div class="w-px h-8 bg-outline-variant/30"></div>
+<div class="text-right min-w-[80px]">
+<p class="text-label-sm font-bold text-primary">Final</p>
+<p class="text-label-sm text-outline">15:00</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: Tabla de Posiciones -->
+<section class="hidden animate-fade-in" id="section-tabla">
+<div class="bg-surface-container-lowest rounded-2xl shadow-lg border border-outline-variant/30 overflow-hidden">
+<div class="p-lg bg-primary-container text-on-primary-container flex justify-between items-center">
+<div>
+<h2 class="font-title-md text-title-md text-white">Clasificación General</h2>
+<p class="text-label-sm text-on-primary-container opacity-80 uppercase tracking-widest">Torneo Clausura 2024</p>
+</div>
+<button class="material-symbols-outlined text-white hover:bg-white/10 p-2 rounded-lg transition-colors">filter_list</button>
+</div>
+<div class="overflow-x-auto custom-scrollbar">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant">
+<th class="px-md py-md font-label-sm text-outline uppercase">Pos</th>
+<th class="px-md py-md font-label-sm text-outline uppercase">Equipo</th>
+<th class="px-md py-md font-label-sm text-outline uppercase text-center">PJ</th>
+<th class="px-md py-md font-label-sm text-outline uppercase text-center">G</th>
+<th class="px-md py-md font-label-sm text-outline uppercase text-center">P</th>
+<th class="px-md py-md font-label-sm text-outline uppercase text-center text-secondary font-bold">Pts</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/20">
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="px-md py-md">
+<div class="w-8 h-8 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-bold flex items-center justify-center">1</div>
+</td>
+<td class="px-md py-md">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[20px]" style="font-variation-settings: 'FILL' 1;">shield</span>
+</div>
+<span class="font-label-lg text-primary">Titanes VC</span>
+</div>
+</td>
+<td class="px-md py-md text-center font-body-md">12</td>
+<td class="px-md py-md text-center font-body-md">11</td>
+<td class="px-md py-md text-center font-body-md">1</td>
+<td class="px-md py-md text-center font-currency-md text-secondary">33</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="px-md py-md">
+<div class="w-8 h-8 rounded-full bg-secondary-fixed text-on-secondary-fixed font-bold flex items-center justify-center">2</div>
+</td>
+<td class="px-md py-md">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[20px]">workspace_premium</span>
+</div>
+<span class="font-label-lg text-primary">Volley Kings</span>
+</div>
+</td>
+<td class="px-md py-md text-center font-body-md">12</td>
+<td class="px-md py-md text-center font-body-md">9</td>
+<td class="px-md py-md text-center font-body-md">3</td>
+<td class="px-md py-md text-center font-currency-md text-secondary">27</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="px-md py-md">
+<div class="w-8 h-8 rounded-full bg-surface-container-high text-on-surface font-bold flex items-center justify-center">3</div>
+</td>
+<td class="px-md py-md">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[20px]">verified</span>
+</div>
+<span class="font-label-lg text-primary">Fénix Club</span>
+</div>
+</td>
+<td class="px-md py-md text-center font-body-md">12</td>
+<td class="px-md py-md text-center font-body-md">8</td>
+<td class="px-md py-md text-center font-body-md">4</td>
+<td class="px-md py-md text-center font-currency-md text-secondary">24</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="px-md py-md">
+<div class="w-8 h-8 rounded-full bg-surface-container-high text-on-surface font-bold flex items-center justify-center">4</div>
+</td>
+<td class="px-md py-md">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[20px]">groups</span>
+</div>
+<span class="font-label-lg text-primary">Raptors</span>
+</div>
+</td>
+<td class="px-md py-md text-center font-body-md">12</td>
+<td class="px-md py-md text-center font-body-md">7</td>
+<td class="px-md py-md text-center font-body-md">5</td>
+<td class="px-md py-md text-center font-currency-md text-secondary">21</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="px-md py-md">
+<div class="w-8 h-8 rounded-full bg-surface-container-high text-on-surface font-bold flex items-center justify-center">5</div>
+</td>
+<td class="px-md py-md">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[20px]">sports</span>
+</div>
+<span class="font-label-lg text-primary">Spartans</span>
+</div>
+</td>
+<td class="px-md py-md text-center font-body-md">11</td>
+<td class="px-md py-md text-center font-body-md">5</td>
+<td class="px-md py-md text-center font-body-md">6</td>
+<td class="px-md py-md text-center font-currency-md text-secondary">15</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-md bg-surface-container-low text-center">
+<button class="text-secondary font-label-lg hover:underline transition-all">Ver tabla completa</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar (Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-surface border-t border-outline-variant shadow-lg h-16 flex justify-around items-center px-sm pb-safe z-50">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-colors active:scale-90" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm">Inicio</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary font-bold hover:bg-surface-container-low transition-colors active:scale-90" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">calendar_today</span>
+<span class="font-label-sm text-label-sm">Jornadas</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-colors active:scale-90" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-label-sm text-label-sm">Jugadores</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-colors active:scale-90" href="#">
+<span class="material-symbols-outlined">sports_volleyball</span>
+<span class="font-label-sm text-label-sm">Canchas</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-colors active:scale-90" href="#">
+<span class="material-symbols-outlined">more_horiz</span>
+<span class="font-label-sm text-label-sm">Más</span>
+</a>
+</nav>
+<script>
+        function switchTab(tab) {
+            const histSec = document.getElementById('section-historial');
+            const tablaSec = document.getElementById('section-tabla');
+            const histBtn = document.getElementById('tab-historial-btn');
+            const tablaBtn = document.getElementById('tab-tabla-btn');
+
+            if (tab === 'historial') {
+                histSec.classList.remove('hidden');
+                tablaSec.classList.add('hidden');
+                
+                histBtn.classList.add('bg-secondary-container', 'text-on-secondary-container', 'shadow-sm');
+                histBtn.classList.remove('text-on-surface-variant', 'hover:bg-surface-container-high');
+                histBtn.querySelector('span').style.fontVariationSettings = "'FILL' 1";
+                
+                tablaBtn.classList.remove('bg-secondary-container', 'text-on-secondary-container', 'shadow-sm');
+                tablaBtn.classList.add('text-on-surface-variant', 'hover:bg-surface-container-high');
+                tablaBtn.querySelector('span').style.fontVariationSettings = "'FILL' 0";
+            } else {
+                tablaSec.classList.remove('hidden');
+                histSec.classList.add('hidden');
+                
+                tablaBtn.classList.add('bg-secondary-container', 'text-on-secondary-container', 'shadow-sm');
+                tablaBtn.classList.remove('text-on-surface-variant', 'hover:bg-surface-container-high');
+                tablaBtn.querySelector('span').style.fontVariationSettings = "'FILL' 1";
+                
+                histBtn.classList.remove('bg-secondary-container', 'text-on-secondary-container', 'shadow-sm');
+                histBtn.classList.add('text-on-surface-variant', 'hover:bg-surface-container-high');
+                histBtn.querySelector('span').style.fontVariationSettings = "'FILL' 0";
+            }
+        }
+
+        // Add some micro-animations
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('#section-historial > div > div');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.4s ease-out';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100 * index);
+            });
+        });
+    </script>
+<style>
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fade-in 0.3s ease-out forwards;
+        }
+    </style>
+</body></html>

@@ -1,0 +1,352 @@
+<!DOCTYPE html><html lang="es" class="light"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">try{
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed-variant": "#003ea8",
+                        "on-primary-container": "#8590a6",
+                        "surface-container-high": "#e6e8ea",
+                        "on-tertiary-fixed": "#102000",
+                        "on-tertiary-fixed-variant": "#304f00",
+                        "on-tertiary-container": "#64a000",
+                        "surface-tint": "#545f73",
+                        "surface": "#f7f9fb",
+                        "surface-container-lowest": "#ffffff",
+                        "on-background": "#191c1e",
+                        "secondary-fixed-dim": "#b4c5ff",
+                        "primary-container": "#1e293b",
+                        "on-primary-fixed": "#111c2d",
+                        "on-primary-fixed-variant": "#3c475a",
+                        "on-primary": "#ffffff",
+                        "on-surface-variant": "#45474c",
+                        "inverse-surface": "#2d3133",
+                        "tertiary-fixed": "#acf847",
+                        "secondary": "#0051d5",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-secondary-container": "#fefcff",
+                        "on-error": "#ffffff",
+                        "surface-dim": "#d8dadc",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed": "#00174b",
+                        "on-secondary": "#ffffff",
+                        "surface-variant": "#e0e3e5",
+                        "primary-fixed-dim": "#bcc7de",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed": "#dbe1ff",
+                        "primary": "#091426",
+                        "outline-variant": "#c5c6cd",
+                        "error-container": "#ffdad6",
+                        "surface-container-low": "#f2f4f6",
+                        "background": "#f7f9fb",
+                        "tertiary-fixed-dim": "#91db2a",
+                        "surface-bright": "#f7f9fb",
+                        "on-tertiary": "#ffffff",
+                        "on-surface": "#191c1e",
+                        "tertiary": "#0b1800",
+                        "secondary-container": "#316bf3",
+                        "outline": "#75777d",
+                        "inverse-primary": "#bcc7de",
+                        "primary-fixed": "#d8e3fb",
+                        "surface-container": "#eceef0",
+                        "tertiary-container": "#1a2e00",
+                        "surface-container-highest": "#e0e3e5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "sm": "12px",
+                        "lg": "24px",
+                        "md": "16px",
+                        "gutter": "16px",
+                        "container-margin": "20px",
+                        "base": "4px",
+                        "xs": "8px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "label-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "title-md": ["Inter"],
+                        "currency-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "currency-md": ["18px", {"lineHeight": "24px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    }catch(_e){}</script><meta charset="utf-8"></head><body class="bg-surface text-on-surface">
+<!-- Desktop Navigation Drawer (Fixed) -->
+<aside class="hidden lg:flex flex-col gap-xs p-md fixed left-0 top-0 h-full w-[260px] bg-primary dark:bg-primary-container shadow-md z-40">
+<div class="flex items-center gap-sm mb-xl px-xs">
+<span class="material-symbols-outlined text-secondary-fixed text-headline-lg" data-icon="sports_volleyball" data-original-icon="sports_volleyball">sports_volleyball</span>
+<span class="font-headline-lg text-headline-lg text-secondary-fixed">VolleyFlow</span>
+</div>
+<nav class="flex-1 flex flex-col gap-xs">
+<a href="#" class="flex items-center gap-md px-md py-sm text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary-fixed-dim/20 transition-all duration-200">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-lg text-label-lg">Inicio</span>
+</a>
+<a href="#" class="flex items-center gap-md px-md py-sm text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary-fixed-dim/20 transition-all duration-200">
+<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
+<span class="font-label-lg text-label-lg">Jornadas</span>
+</a>
+<a href="#" class="flex items-center gap-md px-md py-sm text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary-fixed-dim/20 transition-all duration-200">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+<span class="font-label-lg text-label-lg">Jugadores</span>
+</a>
+<a href="#" class="flex items-center gap-md px-md py-sm bg-secondary-container text-on-secondary-container rounded-lg font-bold transition-all duration-200">
+<span class="material-symbols-outlined" data-icon="sports_handball">sports_handball</span>
+<span class="font-label-lg text-label-lg">Canchas</span>
+</a>
+<a href="#" class="flex items-center gap-md px-md py-sm text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary-fixed-dim/20 transition-all duration-200">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+<span class="font-label-lg text-label-lg">Más</span>
+</a>
+</nav>
+<div class="mt-auto pt-md border-t border-on-primary-fixed-variant/20 flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a sports administrator, wearing a navy polo shirt with a subtle sports logo. The lighting is soft and professional, with a clean studio background. The overall aesthetic is trustworthy and competent." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBY5K1FZodpTMys8XYPz-JxCbZKnUR9_PloC98j84AJHthC5FnRdV3seZeVCA8M4DETcNqmQjBW4N3vsxZWKvXJTJndUeNAe-qbXApBH4OvF6a7gD0Ac8rD1w51DMf1l0wtIRQ3r-fpz4D-AXxn4Sjl1DjrwXONOF1GZ1GkPnSRVxI-GO3F6IPeZqJNqfLOPphpg2b1-dBpOIyIuWl1t5Y1ohJRRCpL6Ns1PYeghJiBiHnah7J4sfrTLSveYY6tGiZZEhZmvGDxRc2w">
+</div>
+<div class="flex flex-col">
+<span class="font-title-md text-sm text-on-primary">Admin Volley</span>
+<span class="font-label-sm text-on-primary-fixed-variant">Match Organizer</span>
+</div>
+</div>
+</aside>
+<!-- Mobile Top App Bar -->
+<header class="lg:hidden fixed top-0 left-0 w-full h-16 bg-surface dark:bg-surface-dim shadow-sm z-50 flex items-center justify-between px-md py-sm">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-secondary dark:text-secondary-fixed text-headline-lg-mobile" data-icon="sports_volleyball">sports_volleyball</span>
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-secondary dark:text-secondary-fixed">VolleyFlow</span>
+</div>
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="person">person</span>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="min-h-screen pt-20 pb-24 lg:pt-8 lg:pb-8 lg:pl-[284px] lg:pr-8 bg-surface">
+<div class="max-w-7xl mx-auto px-md lg:px-0">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-md mb-xl">
+<div>
+<h1 class="font-headline-lg-mobile lg:font-headline-lg text-headline-lg-mobile lg:text-headline-lg text-primary">Canchas</h1>
+<p class="font-body-md text-on-surface-variant">Gestiona tus sedes y puntos de encuentro habituales.</p>
+</div>
+<button class="flex items-center justify-center gap-xs bg-secondary hover:bg-on-secondary-fixed-variant text-on-secondary px-lg py-md rounded-xl shadow-md transition-all active:scale-95 duration-100">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+<span class="font-label-lg text-label-lg">Nueva cancha</span>
+</button>
+</div>
+<!-- Bento Grid of Courts -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-lg">
+<!-- Court Card 1: Active -->
+<div class="group bg-surface-container-lowest border border-outline-variant/30 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300">
+<div class="h-48 relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent z-10"></div>
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A professional indoor volleyball court with polished wooden floors, bright LED lighting, and high-tension nets. The space is clean, modern, and ready for a tournament. The blue and yellow court lines are crisp and vibrant under the spotlights." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDL2z3AGNbvBetyDzrnC8Ofsa4oVL_HxJjpepWcPvhe5C15QJtNKnLvxOE66wtr9m12jB-35CgHPx8NujkzUfZtpUk1Z4xLZE6W7gwaLEnqvCjA93SmEIa1s-zVD9h2RvhJEA519UMacrtlKliX2XkuMLBFS4s1a6h6h0y9GDSYprOO1Ek6jGh_jOYfFixdcNEvLIGgg_MT7fNrQiq6CAoQVcz1OX1PikznKtrOXY3CxbtstDh75xSvrQ1w2yn576HIvC9RwnyYZrJ-">
+<div class="absolute top-md right-md z-20">
+<span class="inline-flex items-center gap-xs px-sm py-1 bg-tertiary-fixed text-on-tertiary-fixed rounded-full font-label-sm text-label-sm shadow-sm">
+<span class="w-2 h-2 rounded-full bg-on-tertiary-container animate-pulse"></span>
+                                Activa
+                            </span>
+</div>
+<div class="absolute bottom-md left-md z-20">
+<h3 class="font-title-md text-white">Cancha Central</h3>
+<p class="font-label-sm text-white/80 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="location_on">location_on</span>
+                                Av. del Deporte 1234, CABA
+                            </p>
+</div>
+</div>
+<div class="p-lg space-y-md">
+<div class="grid grid-cols-2 gap-md">
+<div class="bg-surface-container-low p-md rounded-lg">
+<span class="font-label-sm text-on-surface-variant block mb-1">Alquiler / Turno</span>
+<span class="font-currency-md text-currency-md text-primary">$25,000</span>
+</div>
+<div class="bg-surface-container-low p-md rounded-lg">
+<span class="font-label-sm text-on-surface-variant block mb-1">Bebidas (Prom.)</span>
+<span class="font-currency-md text-currency-md text-primary">$3,500</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-md border-t border-outline-variant/20">
+<button class="flex-1 flex items-center justify-center gap-xs text-on-surface-variant hover:text-secondary font-label-lg py-xs transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+                                Editar
+                            </button>
+<div class="w-px h-6 bg-outline-variant/30"></div>
+<button class="flex-1 flex items-center justify-center gap-xs text-on-surface-variant hover:text-error font-label-lg py-xs transition-colors">
+<span class="material-symbols-outlined" data-icon="block">block</span>
+                                Desactivar
+                            </button>
+</div>
+</div>
+</div>
+<!-- Court Card 2: Active -->
+<div class="group bg-surface-container-lowest border border-outline-variant/30 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300">
+<div class="h-48 relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent z-10"></div>
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A modern outdoor volleyball court at sunset. The court has a professional synthetic blue surface. The surrounding area features lush greenery and soft ambient evening lights. The sky is a warm palette of orange and purple." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_5eseoI-MiJFqZFkW4J1GB-U-y8BdCFZe-KZbuKKSlPGxJK-PyMZ3Ktb2MbM0nIanud3Q8irRonS0K723GgdZEN-OkRFxdm86EsnvzqCMvH7KyWipt1HDYKTC2cJwEMZmPlVmEXLs6NN0Ke8zqI3IoG-Z34jvQzxfXSKriCfS-mIxmOkDMerDrqN9HFfcGSUpUQk4VkB2aYjuPDZuaF2YntBGvAi3_mYVrgSxRF20WYSCe-aVGavSwCi8LHq5qiNzCNLTCwT_bQvn">
+<div class="absolute top-md right-md z-20">
+<span class="inline-flex items-center gap-xs px-sm py-1 bg-tertiary-fixed text-on-tertiary-fixed rounded-full font-label-sm text-label-sm shadow-sm">
+<span class="w-2 h-2 rounded-full bg-on-tertiary-container animate-pulse"></span>
+                                Activa
+                            </span>
+</div>
+<div class="absolute bottom-md left-md z-20">
+<h3 class="font-title-md text-white">Sede Norte - Aire Libre</h3>
+<p class="font-label-sm text-white/80 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="location_on">location_on</span>
+                                Panamericana Km 45, Pilar
+                            </p>
+</div>
+</div>
+<div class="p-lg space-y-md">
+<div class="grid grid-cols-2 gap-md">
+<div class="bg-surface-container-low p-md rounded-lg">
+<span class="font-label-sm text-on-surface-variant block mb-1">Alquiler / Turno</span>
+<span class="font-currency-md text-currency-md text-primary">$18,000</span>
+</div>
+<div class="bg-surface-container-low p-md rounded-lg">
+<span class="font-label-sm text-on-surface-variant block mb-1">Bebidas (Prom.)</span>
+<span class="font-currency-md text-currency-md text-primary">$2,800</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-md border-t border-outline-variant/20">
+<button class="flex-1 flex items-center justify-center gap-xs text-on-surface-variant hover:text-secondary font-label-lg py-xs transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+                                Editar
+                            </button>
+<div class="w-px h-6 bg-outline-variant/30"></div>
+<button class="flex-1 flex items-center justify-center gap-xs text-on-surface-variant hover:text-error font-label-lg py-xs transition-colors">
+<span class="material-symbols-outlined" data-icon="block">block</span>
+                                Desactivar
+                            </button>
+</div>
+</div>
+</div>
+<!-- Court Card 3: Inactive -->
+<div class="group bg-surface-container-lowest border border-outline-variant/30 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 opacity-80">
+<div class="h-48 relative overflow-hidden grayscale">
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent z-10"></div>
+<img class="w-full h-full object-cover" data-alt="An older indoor gym used for volleyball, featuring slightly worn wooden floors and traditional brick walls. The lighting is slightly dim, suggesting it is currently out of service. No people are present, conveying a quiet, inactive atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZOmyAoi6WMRE-mAJhwYzTN66mas4IAq1ZAFy3x0Br2ilo4cQ_Dk0VAiXNct6fJJ16pXcwLuvJlMCjRKKZtgoMuDtr0adVUZe6qZxdoX10yJw6OYvKFBB8023HiVeMO4CxHVCxNg9ayfjiesExv6AVGu1T3iv4bQwaACQ3KnYx3LNJyJziDA_-dEguiz-GFYeXdQojxGTLFw6jwpb5xZre4Xno1Chk-rs4iRHMPVWCIwY_PsfaaaKXCXZiHH7fmT34UTJXeS11_og-">
+<div class="absolute top-md right-md z-20">
+<span class="inline-flex items-center gap-xs px-sm py-1 bg-surface-variant text-on-surface-variant rounded-full font-label-sm text-label-sm">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+                                Inactiva
+                            </span>
+</div>
+<div class="absolute bottom-md left-md z-20">
+<h3 class="font-title-md text-white">Complejo Vieytes</h3>
+<p class="font-label-sm text-white/80 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="location_on">location_on</span>
+                                Vieytes 900, Banfield
+                            </p>
+</div>
+</div>
+<div class="p-lg space-y-md">
+<div class="grid grid-cols-2 gap-md">
+<div class="bg-surface-container-low p-md rounded-lg opacity-60">
+<span class="font-label-sm text-on-surface-variant block mb-1">Alquiler / Turno</span>
+<span class="font-currency-md text-currency-md text-primary">$22,500</span>
+</div>
+<div class="bg-surface-container-low p-md rounded-lg opacity-60">
+<span class="font-label-sm text-on-surface-variant block mb-1">Bebidas (Prom.)</span>
+<span class="font-currency-md text-currency-md text-primary">$3,200</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-md border-t border-outline-variant/20">
+<button class="flex-1 flex items-center justify-center gap-xs text-on-surface-variant hover:text-secondary font-label-lg py-xs transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+                                Editar
+                            </button>
+<div class="w-px h-6 bg-outline-variant/30"></div>
+<button class="flex-1 flex items-center justify-center gap-xs text-secondary hover:underline font-label-lg py-xs transition-colors">
+<span class="material-symbols-outlined" data-icon="check_circle">check_circle</span>
+                                Reactivar
+                            </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Summary / Stats Section (Asymmetric UI) -->
+<section class="mt-xl grid grid-cols-1 lg:grid-cols-3 gap-lg">
+
+<div class="bg-surface-container-highest p-xl rounded-xl flex flex-col gap-md">
+<h4 class="font-title-md text-primary">Próximo Partido</h4>
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-lg bg-secondary flex items-center justify-center text-on-secondary shadow-sm">
+<span class="material-symbols-outlined" data-icon="timer">timer</span>
+</div>
+<div>
+<p class="font-label-lg">Hoy, 20:30hs</p>
+<p class="font-body-md text-on-surface-variant">Cancha Central</p>
+</div>
+</div>
+<div class="mt-auto">
+<button class="w-full py-md border-2 border-primary text-primary rounded-lg font-label-lg hover:bg-primary hover:text-on-primary transition-all">
+                            Ver detalles de jornada
+                        </button>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Mobile Bottom Navigation -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full h-[64px] bg-surface dark:bg-surface-container-highest flex justify-around items-center px-xs pb-safe border-t border-outline-variant shadow-lg z-50">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-colors px-4 py-1" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-sm text-label-sm">Inicio</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-colors px-4 py-1" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
+<span class="font-label-sm text-label-sm">Jornadas</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-colors px-4 py-1" href="#">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+<span class="font-label-sm text-label-sm">Jugadores</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-2xl px-4 py-1 active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="sports_handball" data-original-icon="sports_hand">sports_handball</span>
+<span class="font-label-sm text-label-sm">Canchas</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-colors px-4 py-1" href="#">
+<span class="material-symbols-outlined" data-icon="more_horiz">more_horiz</span>
+<span class="font-label-sm text-label-sm">Más</span>
+</a>
+</nav>
+<script>
+        // Micro-interactions and effects
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.classList.add('scale-95');
+            });
+            button.addEventListener('mouseup', () => {
+                button.classList.remove('scale-95');
+            });
+            button.addEventListener('mouseleave', () => {
+                button.classList.remove('scale-95');
+            });
+        });
+    </script>
+
+</body></html>

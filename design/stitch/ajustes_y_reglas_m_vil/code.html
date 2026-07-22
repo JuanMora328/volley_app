@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ajustes y Reglas - VolleyFlow</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Theme Config -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "primary-fixed": "#d8e3fb",
+                "surface-container-low": "#f2f4f6",
+                "on-tertiary-container": "#64a000",
+                "on-background": "#191c1e",
+                "on-secondary-container": "#fefcff",
+                "secondary": "#0051d5",
+                "on-surface": "#191c1e",
+                "surface-variant": "#e0e3e5",
+                "on-tertiary-fixed": "#102000",
+                "on-error-container": "#93000a",
+                "surface": "#f7f9fb",
+                "tertiary-fixed-dim": "#91db2a",
+                "on-secondary": "#ffffff",
+                "surface-container-high": "#e6e8ea",
+                "outline-variant": "#c5c6cd",
+                "surface-container-lowest": "#ffffff",
+                "inverse-on-surface": "#eff1f3",
+                "primary": "#091426",
+                "background": "#f7f9fb",
+                "tertiary": "#0b1800",
+                "surface-bright": "#f7f9fb",
+                "on-primary": "#ffffff",
+                "surface-container": "#eceef0",
+                "on-secondary-fixed-variant": "#003ea8",
+                "on-primary-fixed-variant": "#3c475a",
+                "tertiary-container": "#1a2e00",
+                "on-surface-variant": "#45474c",
+                "error-container": "#ffdad6",
+                "tertiary-fixed": "#acf847",
+                "secondary-fixed": "#dbe1ff",
+                "on-error": "#ffffff",
+                "surface-container-highest": "#e0e3e5",
+                "on-tertiary-fixed-variant": "#304f00",
+                "on-secondary-fixed": "#00174b",
+                "on-primary-container": "#8590a6",
+                "surface-dim": "#d8dadc",
+                "on-primary-fixed": "#111c2d",
+                "inverse-surface": "#2d3133",
+                "primary-fixed-dim": "#bcc7de",
+                "outline": "#75777d",
+                "surface-tint": "#545f73",
+                "secondary-fixed-dim": "#b4c5ff",
+                "inverse-primary": "#bcc7de",
+                "secondary-container": "#316bf3",
+                "primary-container": "#1e293b",
+                "on-tertiary": "#ffffff",
+                "error": "#ba1a1a"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "lg": "24px",
+                "xl": "32px",
+                "container-margin": "20px",
+                "xs": "8px",
+                "sm": "12px",
+                "base": "4px",
+                "md": "16px",
+                "gutter": "16px"
+            },
+            "fontFamily": {
+                "title-md": ["Inter"],
+                "currency-md": ["Inter"],
+                "label-sm": ["Inter"],
+                "display-lg": ["Inter"],
+                "body-md": ["Inter"],
+                "headline-lg-mobile": ["Inter"],
+                "body-lg": ["Inter"],
+                "label-lg": ["Inter"],
+                "headline-lg": ["Inter"]
+            },
+            "fontSize": {
+                "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                "currency-md": ["18px", {"lineHeight": "24px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-header {
+            backdrop-filter: blur(12px);
+            background-color: rgba(255, 255, 255, 0.85);
+        }
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+        .toggle-switch:checked + .toggle-dot {
+            transform: translateX(100%);
+            background-color: #ffffff;
+        }
+        .toggle-switch:checked {
+            background-color: #0051d5;
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+
+<body class="bg-background text-on-background min-h-screen pb-24 lg:pb-0 lg:pl-[260px]">
+
+    <!-- TopAppBar -->
+    <header class="w-full sticky top-0 z-40 bg-surface dark:bg-surface-container-low border-b border-outline-variant dark:border-outline shadow-sm flex items-center justify-between px-md h-16">
+        <div class="flex items-center gap-sm">
+            <span class="material-symbols-outlined text-secondary dark:text-secondary-fixed">sports_volleyball</span>
+            <h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary dark:text-primary-fixed">VolleyFlow</h1>
+        </div>
+        <div class="flex items-center gap-md">
+            <button class="p-2 rounded-full hover:bg-surface-container-high transition-colors active:opacity-80">
+                <span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+            </button>
+            <div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-primary font-bold text-sm">
+                OV
+            </div>
+        </div>
+    </header>
+
+    <!-- NavigationDrawer (Desktop Only) -->
+    <aside class="hidden lg:flex fixed left-0 top-0 h-full w-[260px] flex-col bg-primary dark:bg-primary-container py-lg px-md shadow-xl z-50">
+        <div class="mb-xl flex items-center gap-md px-md">
+            <div class="w-12 h-12 rounded-xl bg-primary-fixed-dim flex items-center justify-center">
+                <span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+            </div>
+            <div class="flex flex-col">
+                <span class="font-label-lg text-white font-bold">Organizador Volley</span>
+                <span class="text-xs text-on-primary-container">Admin Pro</span>
+            </div>
+        </div>
+
+        <nav class="flex flex-col gap-xs flex-1">
+            <a href="#" class="flex items-center gap-md px-md py-sm text-on-primary-container opacity-80 hover:bg-primary-fixed-variant transition-colors active:translate-x-1 rounded-lg">
+                <span class="material-symbols-outlined">home</span>
+                <span class="font-body-md">Inicio</span>
+            </a>
+            <a href="#" class="flex items-center gap-md px-md py-sm text-on-primary-container opacity-80 hover:bg-primary-fixed-variant transition-colors active:translate-x-1 rounded-lg">
+                <span class="material-symbols-outlined">event_note</span>
+                <span class="font-body-md">Jornadas</span>
+            </a>
+            <a href="#" class="flex items-center gap-md px-md py-sm text-on-primary-container opacity-80 hover:bg-primary-fixed-variant transition-colors active:translate-x-1 rounded-lg">
+                <span class="material-symbols-outlined">rule</span>
+                <span class="font-body-md">Reglamento</span>
+            </a>
+            <a href="#" class="flex items-center gap-md px-md py-sm bg-secondary text-on-secondary rounded-lg font-bold transition-transform active:translate-x-1">
+                <span class="material-symbols-outlined">settings</span>
+                <span class="font-body-md">Ajustes</span>
+            </a>
+        </nav>
+
+        <div class="mt-auto px-md py-sm">
+            <div class="p-md rounded-xl bg-primary-fixed/10 border border-primary-fixed/20">
+                <p class="text-xs text-on-primary-container uppercase tracking-wider font-bold mb-1">Status</p>
+                <p class="font-label-lg text-tertiary-fixed">VolleyFlow Premium</p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Canvas -->
+    <main class="p-md lg:p-xl max-w-4xl mx-auto space-y-lg">
+        <header class="mb-lg">
+            <h2 class="font-headline-lg text-headline-lg text-primary">Ajustes y reglas</h2>
+            <p class="text-on-surface-variant font-body-md">Configura el comportamiento global de tus torneos y la administración de tu perfil.</p>
+        </header>
+
+        <!-- Configuración General -->
+        <section class="space-y-md">
+            <div class="flex items-center gap-sm">
+                <span class="material-symbols-outlined text-secondary">tune</span>
+                <h3 class="font-title-md text-title-md text-on-surface">Configuración general</h3>
+            </div>
+            
+            <div class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_12px_rgba(30,41,59,0.05)] border border-outline-variant overflow-hidden">
+                <!-- Language Row -->
+                <div class="flex items-center justify-between p-md border-b border-outline-variant hover:bg-surface-container transition-colors group">
+                    <div class="flex flex-col">
+                        <span class="font-label-lg text-on-surface">Idioma de la interfaz</span>
+                        <span class="text-xs text-on-surface-variant">Define el idioma principal de la aplicación</span>
+                    </div>
+                    <select class="bg-surface border border-outline rounded-lg px-md py-sm text-sm focus:ring-2 focus:ring-secondary outline-none transition-all">
+                        <option>Español (ES)</option>
+                        <option>English (US)</option>
+                        <option>Português (BR)</option>
+                    </select>
+                </div>
+                <!-- Notifications Row -->
+                <div class="flex items-center justify-between p-md hover:bg-surface-container transition-colors">
+                    <div class="flex flex-col">
+                        <span class="font-label-lg text-on-surface">Notificaciones Push</span>
+                        <span class="text-xs text-on-surface-variant">Alertas de inicio de juego y cambios de cancha</span>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" class="sr-only toggle-switch" checked>
+                        <div class="w-11 h-6 bg-surface-variant rounded-full transition-colors"></div>
+                        <div class="toggle-dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform"></div>
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <!-- Reglas de Juego -->
+        <section class="space-y-md">
+            <div class="flex items-center gap-sm">
+                <span class="material-symbols-outlined text-secondary">scoreboard</span>
+                <h3 class="font-title-md text-title-md text-on-surface">Reglas de juego</h3>
+            </div>
+
+            <div class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_12px_rgba(30,41,59,0.05)] border border-outline-variant divide-y divide-outline-variant">
+                <!-- Points per Set -->
+                <div class="flex items-center justify-between p-md hover:bg-surface-container transition-colors">
+                    <div class="flex flex-col">
+                        <span class="font-label-lg text-on-surface">Puntos por set</span>
+                        <span class="text-xs text-on-surface-variant">Puntaje máximo para ganar un set estándar</span>
+                    </div>
+                    <div class="flex items-center bg-surface border border-outline rounded-lg overflow-hidden">
+                        <button onclick="this.nextElementSibling.stepDown()" class="px-3 py-2 hover:bg-surface-variant text-secondary transition-colors active:scale-95"><span class="material-symbols-outlined text-sm">remove</span></button>
+                        <input type="number" value="25" class="w-12 text-center border-none bg-transparent font-bold text-primary focus:ring-0">
+                        <button onclick="this.previousElementSibling.stepUp()" class="px-3 py-2 hover:bg-surface-variant text-secondary transition-colors active:scale-95"><span class="material-symbols-outlined text-sm">add</span></button>
+                    </div>
+                </div>
+                <!-- Number of Sets -->
+                <div class="flex items-center justify-between p-md hover:bg-surface-container transition-colors">
+                    <div class="flex flex-col">
+                        <span class="font-label-lg text-on-surface">Cantidad de sets</span>
+                        <span class="text-xs text-on-surface-variant">Número total de sets para definir ganador</span>
+                    </div>
+                    <div class="flex items-center gap-sm">
+                        <div class="flex items-center bg-surface border border-outline rounded-lg overflow-hidden">
+                            <button onclick="this.nextElementSibling.stepDown()" class="px-3 py-2 hover:bg-surface-variant text-secondary transition-colors"><span class="material-symbols-outlined text-sm">remove</span></button>
+                            <input type="number" value="3" class="w-10 text-center border-none bg-transparent font-bold text-primary focus:ring-0">
+                            <button onclick="this.previousElementSibling.stepUp()" class="px-3 py-2 hover:bg-surface-variant text-secondary transition-colors"><span class="material-symbols-outlined text-sm">add</span></button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Winner Stays -->
+                <div class="flex items-center justify-between p-md hover:bg-surface-container transition-colors">
+                    <div class="flex flex-col">
+                        <span class="font-label-lg text-on-surface">El que gana se queda</span>
+                        <span class="text-xs text-on-surface-variant">El equipo ganador permanece en la cancha</span>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" class="sr-only toggle-switch">
+                        <div class="w-11 h-6 bg-surface-variant rounded-full transition-colors"></div>
+                        <div class="toggle-dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform"></div>
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gestión de Pagos -->
+        <section class="space-y-md">
+            <div class="flex items-center gap-sm">
+                <span class="material-symbols-outlined text-secondary">payments</span>
+                <h3 class="font-title-md text-title-md text-on-surface">Gestión de pagos</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+                <div class="bg-surface-container-lowest p-md rounded-xl shadow-[0px_4px_12px_rgba(30,41,59,0.05)] border border-outline-variant flex flex-col gap-sm">
+                    <div class="flex items-center gap-xs text-on-surface-variant">
+                        <span class="material-symbols-outlined text-sm">local_atm</span>
+                        <span class="text-xs font-bold uppercase tracking-wide">Tarifa base</span>
+                    </div>
+                    <div class="flex items-center gap-sm">
+                        <span class="text-2xl font-bold text-primary">$</span>
+                        <input type="number" value="1500" class="flex-1 bg-surface border border-outline rounded-lg px-md py-sm font-currency-md text-currency-md text-secondary focus:ring-2 focus:ring-secondary outline-none transition-all">
+                    </div>
+                    <p class="text-xs text-on-surface-variant">Costo por jugador por jornada estándar.</p>
+                </div>
+
+                <div class="bg-surface-container-lowest p-md rounded-xl shadow-[0px_4px_12px_rgba(30,41,59,0.05)] border border-outline-variant flex flex-col gap-sm">
+                    <div class="flex items-center gap-xs text-on-surface-variant">
+                        <span class="material-symbols-outlined text-sm">currency_exchange</span>
+                        <span class="text-xs font-bold uppercase tracking-wide">Moneda</span>
+                    </div>
+                    <select class="bg-surface border border-outline rounded-lg px-md py-sm text-sm focus:ring-2 focus:ring-secondary outline-none transition-all mt-1">
+                        <option>ARS - Peso Argentino</option>
+                        <option>USD - Dólar Estadounidense</option>
+                        <option>BRL - Real Brasileño</option>
+                        <option>EUR - Euro</option>
+                    </select>
+                    <p class="text-xs text-on-surface-variant">Afecta visualmente a todos los reportes de deuda.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Action Button -->
+        <div class="flex flex-col sm:flex-row gap-md pt-lg">
+            <button class="flex-1 bg-secondary text-on-secondary font-label-lg py-md rounded-xl shadow-lg hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-sm">
+                <span class="material-symbols-outlined">save</span>
+                Guardar cambios
+            </button>
+            <button class="flex-1 bg-surface-container-high text-on-surface-variant font-label-lg py-md rounded-xl hover:bg-surface-variant transition-colors flex items-center justify-center gap-sm">
+                Restablecer predeterminados
+            </button>
+        </div>
+    </main>
+
+    <!-- BottomNavBar (Mobile Only) -->
+    <nav class="md:hidden fixed bottom-0 left-0 w-full z-50 h-16 flex justify-around items-center px-xs pb-safe bg-surface-container-lowest dark:bg-surface-container-low shadow-[0px_-4px_12px_rgba(30,41,59,0.05)]">
+        <button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant opacity-70 hover:text-secondary transition-colors active:scale-95 duration-200">
+            <span class="material-symbols-outlined">home</span>
+            <span class="font-label-sm text-label-sm">Inicio</span>
+        </button>
+        <button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant opacity-70 hover:text-secondary transition-colors active:scale-95 duration-200">
+            <span class="material-symbols-outlined">event_note</span>
+            <span class="font-label-sm text-label-sm">Jornadas</span>
+        </button>
+        <button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant opacity-70 hover:text-secondary transition-colors active:scale-95 duration-200">
+            <span class="material-symbols-outlined">group</span>
+            <span class="font-label-sm text-label-sm">Jugadores</span>
+        </button>
+        <button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant opacity-70 hover:text-secondary transition-colors active:scale-95 duration-200">
+            <span class="material-symbols-outlined">stadium</span>
+            <span class="font-label-sm text-label-sm">Canchas</span>
+        </button>
+        <button class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim font-semibold bg-primary-fixed/20 rounded-xl px-3 py-1 transition-transform active:scale-95 duration-200">
+            <span class="material-symbols-outlined">menu</span>
+            <span class="font-label-sm text-label-sm">Más</span>
+        </button>
+    </nav>
+
+    <script>
+        // Micro-interactions for toggles
+        document.querySelectorAll('.toggle-switch').forEach(toggle => {
+            toggle.addEventListener('change', function() {
+                const parent = this.closest('.bg-surface-container-lowest');
+                if (this.checked) {
+                    console.log('Setting activated');
+                    // Add subtle success pulse or feedback
+                }
+            });
+        });
+
+        // Numeric input validation and formatting
+        const numInputs = document.querySelectorAll('input[type="number"]');
+        numInputs.forEach(input => {
+            input.addEventListener('blur', function() {
+                if(this.value < 0) this.value = 0;
+            });
+        });
+    </script>
+</body>
+</html></style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body></body></html>

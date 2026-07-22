@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Historial de Jornadas - VolleyFlow</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed": "#d8e3fb",
+                    "surface-container-low": "#f2f4f6",
+                    "on-tertiary-container": "#64a000",
+                    "on-background": "#191c1e",
+                    "on-secondary-container": "#fefcff",
+                    "secondary": "#0051d5",
+                    "on-surface": "#191c1e",
+                    "surface-variant": "#e0e3e5",
+                    "on-tertiary-fixed": "#102000",
+                    "on-error-container": "#93000a",
+                    "surface": "#f7f9fb",
+                    "tertiary-fixed-dim": "#91db2a",
+                    "on-secondary": "#ffffff",
+                    "surface-container-high": "#e6e8ea",
+                    "outline-variant": "#c5c6cd",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-on-surface": "#eff1f3",
+                    "primary": "#091426",
+                    "background": "#f7f9fb",
+                    "tertiary": "#0b1800",
+                    "surface-bright": "#f7f9fb",
+                    "on-primary": "#ffffff",
+                    "surface-container": "#eceef0",
+                    "on-secondary-fixed-variant": "#003ea8",
+                    "on-primary-fixed-variant": "#3c475a",
+                    "tertiary-container": "#1a2e00",
+                    "on-surface-variant": "#45474c",
+                    "error-container": "#ffdad6",
+                    "tertiary-fixed": "#acf847",
+                    "secondary-fixed": "#dbe1ff",
+                    "on-error": "#ffffff",
+                    "surface-container-highest": "#e0e3e5",
+                    "on-tertiary-fixed-variant": "#304f00",
+                    "on-secondary-fixed": "#00174b",
+                    "on-primary-container": "#8590a6",
+                    "surface-dim": "#d8dadc",
+                    "on-primary-fixed": "#111c2d",
+                    "inverse-surface": "#2d3133",
+                    "primary-fixed-dim": "#bcc7de",
+                    "outline": "#75777d",
+                    "surface-tint": "#545f73",
+                    "secondary-fixed-dim": "#b4c5ff",
+                    "inverse-primary": "#bcc7de",
+                    "secondary-container": "#316bf3",
+                    "primary-container": "#1e293b",
+                    "on-tertiary": "#ffffff",
+                    "error": "#ba1a1a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "lg": "24px",
+                    "xl": "32px",
+                    "container-margin": "20px",
+                    "xs": "8px",
+                    "sm": "12px",
+                    "base": "4px",
+                    "md": "16px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "title-md": ["Inter"],
+                    "currency-md": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-lg": ["Inter"],
+                    "headline-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "currency-md": ["18px", {"lineHeight": "24px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-24 md:pb-0 md:pl-[260px]">
+<!-- Top AppBar -->
+<header class="w-full sticky top-0 bg-surface dark:bg-surface-container-low border-b border-outline-variant dark:border-outline shadow-sm flex items-center justify-between px-md h-16 w-full z-40">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary dark:text-secondary-fixed text-headline-lg-mobile" data-icon="sports_volleyball">sports_volleyball</span>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary dark:text-primary-fixed">VolleyFlow</h1>
+</div>
+<div class="flex items-center gap-md">
+<button class="p-2 rounded-full hover:bg-surface-container-high transition-colors active:opacity-80">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="notifications">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed font-bold text-label-sm">
+                OV
+            </div>
+</div>
+</header>
+<!-- Desktop Sidebar (NavigationDrawer) -->
+<aside class="hidden md:flex fixed left-0 top-0 h-full w-[260px] flex flex-col py-lg px-md bg-primary dark:bg-primary-container shadow-xl z-50">
+<div class="mb-xl px-sm">
+<div class="flex items-center gap-md mb-lg">
+<div class="w-12 h-12 rounded-xl bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container" data-icon="account_circle" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+</div>
+<div>
+<p class="font-headline-lg text-headline-lg text-on-primary text-title-md">Organizador Volley</p>
+<p class="font-body-md text-body-md text-on-primary-container opacity-80">Admin Pro</p>
+</div>
+</div>
+<div class="py-xs px-sm bg-secondary/10 rounded-full inline-block">
+<span class="text-on-primary-container font-label-sm text-label-sm">VolleyFlow Premium</span>
+</div>
+</div>
+<nav class="flex-1 space-y-base">
+<a class="flex items-center gap-md px-md py-sm text-on-primary-container opacity-80 hover:bg-primary-fixed-variant transition-colors rounded-lg active:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-body-md text-body-md">Inicio</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm bg-secondary text-on-secondary rounded-lg font-bold active:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-body-md text-body-md">Historial</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-primary-container opacity-80 hover:bg-primary-fixed-variant transition-colors rounded-lg active:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="rule">rule</span>
+<span class="font-body-md text-body-md">Reglamento</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-primary-container opacity-80 hover:bg-primary-fixed-variant transition-colors rounded-lg active:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-body-md text-body-md">Ajustes</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content Canvas -->
+<main class="p-md md:p-xl max-w-6xl mx-auto">
+<!-- Search & Header Section -->
+<div class="mb-xl">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-md mb-lg">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-primary mb-base">Historial de jornadas</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Revisa los resultados y cierres de caja de tus torneos pasados.</p>
+</div>
+<div class="relative w-full md:w-80">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
+<input class="w-full pl-xl pr-md py-sm bg-surface-container-lowest border border-outline-variant rounded-xl focus:ring-2 focus:ring-secondary focus:border-secondary outline-none transition-all font-body-md text-body-md" placeholder="Buscar por lugar o fecha..." type="text"/>
+</div>
+</div>
+<!-- Summary Chips -->
+<div class="flex flex-wrap gap-sm">
+<div class="px-md py-sm bg-secondary/5 rounded-full border border-secondary/10 flex items-center gap-xs">
+<span class="font-label-lg text-label-lg text-secondary">Total: 42 Jornadas</span>
+</div>
+<div class="px-md py-sm bg-tertiary-fixed/20 rounded-full border border-tertiary-fixed-dim/30 flex items-center gap-xs">
+<span class="font-label-lg text-label-lg text-on-tertiary-fixed-variant">Balance: +$124.500</span>
+</div>
+</div>
+</div>
+<!-- Bento Grid Layout for History Items -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-lg">
+<!-- Item 1: Featured/Recent -->
+<div class="glass-card p-lg rounded-xl border border-outline-variant shadow-[0px_4px_12px_rgba(30,41,59,0.05)] hover:shadow-[0px_8px_20px_rgba(30,41,59,0.08)] transition-all flex flex-col md:flex-row gap-lg group">
+<div class="w-full md:w-32 h-32 rounded-lg bg-surface-container overflow-hidden shrink-0">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A professional indoor volleyball court with polished wooden floors and bright overhead stadium lighting. The atmosphere is energetic, suggesting a high-level competitive match about to begin. The colors are dominated by cool blues and crisp whites, reflecting a premium sports brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDw6-7iKXcpgtVZ1mp00rZr6egz7pFLxIAj8FGFxcmtuoRcEikb-GyD2w1dhxYU-PKHzn1WMJeItoprXaL1r0BcpIZE-OcCTco6JH_YXzLQ50hSLmg7fys1xeWFILMHnZBwzVK7g4xpd4YvL81RWx0hYITpsMqswX2_hsmQ3vBCqOmHX_gyZdvu5G64-pOoACxvHLvkTJu2eeN8ShQz1cwVw96jOZdIuN4Hxe7t8mxJHwjUPFEcvnHs7eO2bBNjVqD5TkfzoNhniQj-"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">12 Oct 2023</span>
+<div class="flex items-center gap-xs px-sm py-1 bg-tertiary-fixed text-on-tertiary-fixed rounded-full">
+<span class="material-symbols-outlined text-[14px]" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-label-sm text-label-sm font-bold uppercase">Completada</span>
+</div>
+</div>
+<h3 class="font-title-md text-title-md text-primary mb-xs">Complejo Deportivo Municipal</h3>
+<div class="flex items-center gap-md text-on-surface-variant mb-md">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-secondary" data-icon="group">group</span>
+<span class="font-body-md text-body-md">24 Jugadores</span>
+</div>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-secondary" data-icon="emoji_events">emoji_events</span>
+<span class="font-body-md text-body-md">Los Halcones</span>
+</div>
+</div>
+<div class="pt-md border-t border-outline-variant grid grid-cols-2 gap-md">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-base">Recaudado</p>
+<p class="font-currency-md text-currency-md text-primary">$48.000</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-base">Gastos</p>
+<p class="font-currency-md text-currency-md text-error">-$12.500</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="glass-card p-lg rounded-xl border border-outline-variant shadow-[0px_4px_12px_rgba(30,41,59,0.05)] hover:shadow-[0px_8px_20px_rgba(30,41,59,0.08)] transition-all flex flex-col md:flex-row gap-lg group">
+<div class="w-full md:w-32 h-32 rounded-lg bg-surface-container overflow-hidden shrink-0">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="An outdoor sand volleyball court at sunset, with warm golden light illuminating the net and the surrounding palm trees. The aesthetic is sporty yet relaxed, with vibrant oranges and deep shadows. The visual quality is clean and modern, highlighting the professional organization of the event." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5igwbuZTLYaBpafgZ299N04YQd9oycXH1sfSIJSoxNceoqBg0TUlGjLZ7VpKN-Dh-LELzVrtxS2xLethmsEEHgy9u3XgjbnPx1yrirgw8kTHkClRTkx_LBWzSw50_TCxtQYs-QPlEvVsKj__2NKwpoj-RUUOrtrUvFGgJ7Kq7JoD9cUCxW2aEusQJgitTdrxOnVsq2ZlNWvNwNg_IOn55YXDDmfoKbsrq95kYKjoyMfVM2SH078IMyuqhj0Abc3MVexujEftgY1Fh"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">05 Oct 2023</span>
+<div class="flex items-center gap-xs px-sm py-1 bg-tertiary-fixed text-on-tertiary-fixed rounded-full">
+<span class="material-symbols-outlined text-[14px]" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-label-sm text-label-sm font-bold uppercase">Completada</span>
+</div>
+</div>
+<h3 class="font-title-md text-title-md text-primary mb-xs">Arena Voley Club</h3>
+<div class="flex items-center gap-md text-on-surface-variant mb-md">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-secondary" data-icon="group">group</span>
+<span class="font-body-md text-body-md">16 Jugadores</span>
+</div>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-secondary" data-icon="emoji_events">emoji_events</span>
+<span class="font-body-md text-body-md">Titanes del Sur</span>
+</div>
+</div>
+<div class="pt-md border-t border-outline-variant grid grid-cols-2 gap-md">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-base">Recaudado</p>
+<p class="font-currency-md text-currency-md text-primary">$32.000</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-base">Gastos</p>
+<p class="font-currency-md text-currency-md text-error">-$8.000</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="glass-card p-lg rounded-xl border border-outline-variant shadow-[0px_4px_12px_rgba(30,41,59,0.05)] hover:shadow-[0px_8px_20px_rgba(30,41,59,0.08)] transition-all flex flex-col md:flex-row gap-lg group">
+<div class="w-full md:w-32 h-32 rounded-lg bg-surface-container overflow-hidden shrink-0">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A macro shot of a professional volleyball resting on the boundary line of an indoor court. The lighting is dramatic and focused, emphasizing the texture of the ball and the smooth finish of the court floor. The color palette is composed of deep navy blue and crisp white highlights." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgQBReDePkDX7gNXtB1esePptsdZlN-DkCfG13boXMxlDrDKhoWxsiFBmf32dHzl3t-k-Eq3QoykNBhM9BJisJGdAEAK6tyMd1hGpQiXpksZ-dU0moVqHhpLMrcJpGlS881ASp6xjfKi33wf6EwAj_OqF8IYKUltD-cnq05cw48tVI2219rx8bOuNEGJUV0f5ZTKHDSn5nN_skztwv4AGjkN9UNHeuQsm9S_tX-9jU2XbrsNHuRNE66IDeO-SAO4YxN8PQUUBCujj3"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">28 Sep 2023</span>
+<div class="flex items-center gap-xs px-sm py-1 bg-tertiary-fixed text-on-tertiary-fixed rounded-full">
+<span class="material-symbols-outlined text-[14px]" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-label-sm text-label-sm font-bold uppercase">Completada</span>
+</div>
+</div>
+<h3 class="font-title-md text-title-md text-primary mb-xs">Polideportivo Central</h3>
+<div class="flex items-center gap-md text-on-surface-variant mb-md">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-secondary" data-icon="group">group</span>
+<span class="font-body-md text-body-md">32 Jugadores</span>
+</div>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-secondary" data-icon="emoji_events">emoji_events</span>
+<span class="font-body-md text-body-md">Spike Kings</span>
+</div>
+</div>
+<div class="pt-md border-t border-outline-variant grid grid-cols-2 gap-md">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-base">Recaudado</p>
+<p class="font-currency-md text-currency-md text-primary">$64.000</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-base">Gastos</p>
+<p class="font-currency-md text-currency-md text-error">-$22.000</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 4 -->
+<div class="glass-card p-lg rounded-xl border border-outline-variant shadow-[0px_4px_12px_rgba(30,41,59,0.05)] hover:shadow-[0px_8px_20px_rgba(30,41,59,0.08)] transition-all flex flex-col md:flex-row gap-lg group">
+<div class="w-full md:w-32 h-32 rounded-lg bg-surface-container overflow-hidden shrink-0">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A modern sports complex with multiple volleyball courts visible through a glass partition. The setting is clean, bright, and highly organized, conveying a professional sports management atmosphere. High-key lighting and a dominant white and soft grey palette with sharp electric blue accents define the scene." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3pMUfUC2XixFn477g5gCR60D589eciXFhvoEQL3lyZ32kHp6_o7aT2c6VJ7SkNzxrRIZ6ZhVXhE-26INXmI4s95f_NiGHppQJ9iq8fGSF5MQ0lytGb9cz-7WAdTIWilpa4QRM3eHbsVJgAVzxW8_mgw9O56dTh1JI8-YimY0d0zR3KcCRpftZnpIwb-P8MiavpLmJF1hF7R461m2tpG8wRs3YkcWHWsGYxCY1vzza18vl0vWREqr8Zt3YJe2tz6zV2dRdae1iVsUc"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">21 Sep 2023</span>
+<div class="flex items-center gap-xs px-sm py-1 bg-tertiary-fixed text-on-tertiary-fixed rounded-full">
+<span class="material-symbols-outlined text-[14px]" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-label-sm text-label-sm font-bold uppercase">Completada</span>
+</div>
+</div>
+<h3 class="font-title-md text-title-md text-primary mb-xs">Complejo El Recreo</h3>
+<div class="flex items-center gap-md text-on-surface-variant mb-md">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-secondary" data-icon="group">group</span>
+<span class="font-body-md text-body-md">20 Jugadores</span>
+</div>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-secondary" data-icon="emoji_events">emoji_events</span>
+<span class="font-body-md text-body-md">Voley Masters</span>
+</div>
+</div>
+<div class="pt-md border-t border-outline-variant grid grid-cols-2 gap-md">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-base">Recaudado</p>
+<p class="font-currency-md text-currency-md text-primary">$40.000</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-base">Gastos</p>
+<p class="font-currency-md text-currency-md text-error">-$10.000</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination / Load More -->
+<div class="mt-xl flex justify-center">
+<button class="flex items-center gap-sm px-xl py-md bg-surface border border-outline-variant rounded-full text-primary font-label-lg text-label-lg hover:bg-surface-container-high transition-all active:scale-95">
+                Cargar más jornadas
+                <span class="material-symbols-outlined" data-icon="expand_more">expand_more</span>
+</button>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-xs pb-safe bg-surface-container-lowest dark:bg-surface-container-low shadow-[0px_-4px_12px_rgba(30,41,59,0.05)] h-16">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant opacity-70 hover:text-secondary transition-colors active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-sm text-label-sm">Inicio</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim font-semibold bg-primary-fixed/20 rounded-xl px-3 py-1 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="event_note">event_note</span>
+<span class="font-label-sm text-label-sm">Jornadas</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant opacity-70 hover:text-secondary transition-colors active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-label-sm text-label-sm">Jugadores</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant opacity-70 hover:text-secondary transition-colors active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="stadium">stadium</span>
+<span class="font-label-sm text-label-sm">Canchas</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant opacity-70 hover:text-secondary transition-colors active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+<span class="font-label-sm text-label-sm">Más</span>
+</a>
+</nav>
+<script>
+        // Micro-interactions for list item hover
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-4px)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body></html>

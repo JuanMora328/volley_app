@@ -1,0 +1,308 @@
+<!DOCTYPE html><html lang="es" class="light"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">try{
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-primary": "#bcc7de",
+                    "tertiary-container": "#1a2e00",
+                    "surface-tint": "#545f73",
+                    "surface": "#f7f9fb",
+                    "surface-variant": "#e0e3e5",
+                    "on-secondary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed": "#102000",
+                    "inverse-on-surface": "#eff1f3",
+                    "surface-container-high": "#e6e8ea",
+                    "surface-bright": "#f7f9fb",
+                    "primary": "#091426",
+                    "on-secondary-fixed-variant": "#003ea8",
+                    "surface-container-low": "#f2f4f6",
+                    "secondary": "#0051d5",
+                    "on-primary-fixed": "#111c2d",
+                    "surface-container-highest": "#e0e3e5",
+                    "primary-fixed-dim": "#bcc7de",
+                    "on-tertiary-fixed-variant": "#304f00",
+                    "on-error-container": "#93000a",
+                    "secondary-fixed-dim": "#b4c5ff",
+                    "error-container": "#ffdad6",
+                    "surface-dim": "#d8dadc",
+                    "on-primary-container": "#8590a6",
+                    "tertiary": "#0b1800",
+                    "secondary-fixed": "#dbe1ff",
+                    "primary-container": "#1e293b",
+                    "on-surface-variant": "#45474c",
+                    "on-primary": "#ffffff",
+                    "outline-variant": "#c5c6cd",
+                    "inverse-surface": "#2d3133",
+                    "tertiary-fixed-dim": "#91db2a",
+                    "surface-container": "#eceef0",
+                    "on-secondary-fixed": "#00174b",
+                    "primary-fixed": "#d8e3fb",
+                    "outline": "#75777d",
+                    "background": "#f7f9fb",
+                    "secondary-container": "#316bf3",
+                    "on-secondary-container": "#fefcff",
+                    "on-primary-fixed-variant": "#3c475a",
+                    "error": "#ba1a1a",
+                    "tertiary-fixed": "#acf847",
+                    "on-tertiary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "on-tertiary-container": "#64a000",
+                    "on-background": "#191c1e",
+                    "on-surface": "#191c1e"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "md": "16px",
+                    "base": "4px",
+                    "xl": "32px",
+                    "lg": "24px",
+                    "container-margin": "20px",
+                    "sm": "12px",
+                    "gutter": "16px",
+                    "xs": "8px"
+            },
+            "fontFamily": {
+                    "title-md": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "label-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "currency-md": ["Inter"]
+            },
+            "fontSize": {
+                    "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "currency-md": ["18px", {"lineHeight": "24px", "letterSpacing": "0.05em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    }catch(_e){}</script><meta charset="utf-8"></head><body class="bg-background text-on-background min-h-screen pb-32">
+<!-- Top App Bar -->
+<header class="fixed top-0 w-full z-50 flex items-center justify-between px-md h-16 bg-surface shadow-sm transition-all duration-200">
+<div class="flex items-center gap-md">
+<button class="transition-all duration-200 active:scale-95 text-primary hover:bg-surface-variant p-xs rounded-full">
+<span class="material-symbols-outlined" data-original-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-title-md text-title-md text-primary">Estado de Pagos</h1>
+</div>
+<button class="transition-all duration-200 active:scale-95 text-primary hover:bg-surface-variant p-xs rounded-full">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-20 px-md md:max-w-4xl md:mx-auto">
+<!-- Search and Filter Section -->
+<div class="mb-lg">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline group-focus-within:text-secondary transition-colors">search</span>
+<input type="text" placeholder="Buscar jugador..." class="w-full pl-xl pr-md py-md bg-surface-container-low border-none rounded-xl text-body-md focus:ring-2 focus:ring-secondary transition-all outline-none" id="playerSearch">
+</div>
+</div>
+<!-- Summary Statistics Bento -->
+<div class="grid grid-cols-2 gap-md mb-lg">
+<div class="bg-surface-container-lowest p-md rounded-xl shadow-sm border border-outline-variant/30">
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-xs">Recolectado</p>
+<p class="font-currency-md text-currency-md text-secondary">$100.00</p>
+</div>
+<div class="bg-surface-container-lowest p-md rounded-xl shadow-sm border border-outline-variant/30">
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-xs">Pendiente</p>
+<p class="font-currency-md text-currency-md text-error">$20.00</p>
+</div>
+</div>
+<!-- Player List Header -->
+<div class="flex items-center justify-between mb-sm px-xs">
+<h2 class="font-label-lg text-label-lg text-on-surface-variant uppercase tracking-wider">Plantilla</h2>
+<span class="font-label-sm text-label-sm text-outline">12 Jugadores</span>
+</div>
+<!-- Players List -->
+<div class="space-y-md" id="playerList">
+<!-- Paid Player Item -->
+<div class="bg-white rounded-xl p-md flex items-center justify-between shadow-sm hover:shadow-md transition-all group border border-transparent hover:border-outline-variant/30">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-surface-container-high shrink-0">
+<img class="w-full h-full object-cover" data-alt="A close-up professional headshot of a young male athlete with an energetic expression, set against a blurred stadium background. The lighting is bright and natural, capturing a sporty and determined mood with clean lines and high contrast, consistent with a premium sports management app aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOYcNUdTJxnRfBrZedZ6K9wure-WQjFXVczKPMiMBYZ5U6oxcJBJ0UvIMCUda0DXDwqHHCqPBJ6lmfNQY60w-TMjivFAxnKFxCj9PnMPtUQjGntGMvYECZkQ5RkAkSn6fdPYAdlqK-OwTOU3Bb5T108j55nwOs06gHy9dfmma0blmGPE9miJOygAls2WPbehYGAVz2ya3nwj2kye-LWV4tX9sIkOln2rGaKWb0NTgVPsrQjfaJOQGFVNDrn_DoS87pbmM2CaY1wGML">
+</div>
+<div>
+<h3 class="font-label-lg text-label-lg text-primary">Carlos Rodriguez</h3>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px] text-on-tertiary-container" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-label-sm text-label-sm text-on-tertiary-container">Pagado</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end gap-xs">
+<span class="font-currency-md text-currency-md text-primary">$10.00</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox">
+<div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+</div>
+<!-- Pending-->
+<div class="bg-white rounded-xl p-md flex items-center justify-between shadow-sm hover:shadow-md transition-all group border border-transparent hover:border-outline-variant/30">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-surface-container-high shrink-0">
+<img class="w-full h-full object-cover" data-alt="A medium shot of a smiling female football player in a professional jersey, looking directly at the camera with a confident pose. The background is a crisp, bright soccer field under daylight. The visual style is modern, vibrant, and clean, using a professional corporate sports color palette of blues and whites." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVXXmghL-MQgDBv5RV5WgvlbB3xBFbs4MPPVfVmr4H6Hcs8YFjDyDjI4YKWZRmHI53kciibcDG1nXavgNj5ovPJn4oKeMhNDhhTiACfFOTEYFeYTd08Ed-KJqm7gzhlLXbQvmhHi6oAye_v45lWmGh4gIPU9DOyzhcM3Nla03BQNFB4QeuJxzHkPBN1ioHic8n7t-rI5FNpoXq9YF_9IW2FoMPbkVk6cdSx1thcMAa7DefuFlxB8NB58roRie8EkfIXuTuQagg1j9F">
+</div>
+<div>
+<h3 class="font-label-lg text-label-lg text-primary">Sofía Martínez</h3>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px] text-outline">schedule</span>
+<span class="font-label-sm text-label-sm text-outline">Pendiente</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end gap-xs">
+<span class="font-currency-md text-currency-md text-error">$10.00</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox">
+<div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+</div>
+<!-- Paid Player Item 2 -->
+<div class="bg-white rounded-xl p-md flex items-center justify-between shadow-sm hover:shadow-md transition-all group border border-transparent hover:border-outline-variant/30">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-surface-container-high shrink-0">
+<img class="w-full h-full object-cover" data-alt="A portrait of a male volleyball player in action gear, holding a ball, standing in a bright indoor sports arena. The image is captured with shallow depth of field, highlighting the player's focused gaze. The aesthetic is sharp, professional, and incorporates corporate blue tones for a cohesive sports management app feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBS6Br2Ixbu4-caOj9TmhmUaBPs5xMV0VKsslep1SonjhMsvE86CdiyysuSingnV9PQ709O0hQGnTLr024Zu__0rLJO6dIBSAnFvNrBrTcMsfXvh1vaqa_JBGgmbt0utqbh8Vf5GTtHTGj9li2s5UU2LD9d_8rt0WR-1p5sMdQILDKoqR-ESgi4LBs-w2hCt2C7NPMdS1q_Mi4HB_sgtWKaySFcX_MoU11pvTHnOzi-o2pAvB5Fwq76nCaZXgKM_kCoaIgyZcEp5_P0">
+</div>
+<div>
+<h3 class="font-label-lg text-label-lg text-primary">Mateo López</h3>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px] text-on-tertiary-container" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-label-sm text-label-sm text-on-tertiary-container">Pagado</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end gap-xs">
+<span class="font-currency-md text-currency-md text-primary">$10.00</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox">
+<div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+</div>
+<!-- Pending Player Item 2 -->
+<div class="bg-white rounded-xl p-md flex items-center justify-between shadow-sm hover:shadow-md transition-all group border border-transparent hover:border-outline-variant/30">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-surface-container-high shrink-0">
+<img class="w-full h-full object-cover" data-alt="A professional studio portrait of an athletic man in dark activewear, set against a neutral, high-key light gray background. The lighting is soft and even, highlighting his friendly yet professional expression. The composition is clean and modern, suitable for a player profile in a technical sports dashboard." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4jpp_VJYtbPqAAVFexyZgPUU5-zcoaHKvC9hVelWsVh0lwI97C2Tbb3dwiiRzGAfm-Da9YRtrWDUakcWm4pdx5X2G-eJa9GGeEudkIfmBlG6hSUqS31csZqE7QF1XhWeEuavDdsQ519gsp5j9nWwAFSlG7Oewe4j0ESn5q70fPHSEa5LFpuQBAyg9pO8n54EM9ybhzDymxci3-rWmv2szfurZg70iwc0m4P6Lirlkwbh__QnW6YAAP-GfswD0KO6Z4n_mVI8cdQJN">
+</div>
+<div>
+<h3 class="font-label-lg text-label-lg text-primary">Julián Pérez</h3>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px] text-outline">schedule</span>
+<span class="font-label-sm text-label-sm text-outline">Pendiente</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end gap-xs">
+<span class="font-currency-md text-currency-md text-error">$10.00</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox">
+<div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+</div>
+</div>
+</main>
+<!-- Summary Footer Sticky -->
+<div class="fixed bottom-16 left-0 w-full bg-surface-container-lowest border-t border-outline-variant p-md z-40">
+<div class="md:max-w-4xl md:mx-auto flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Total Recolectado</span>
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-secondary">$100 / $120</span>
+</div>
+<button class="bg-secondary text-on-secondary px-lg py-md rounded-xl font-label-lg text-label-lg shadow-lg active:scale-95 transition-transform">
+                Enviar Recordatorios
+            </button>
+</div>
+</div>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 w-full z-50 h-16 flex justify-around items-center px-base bg-surface shadow-lg border-t border-outline-variant">
+<button class="flex flex-col items-center justify-center text-on-surface-variant transition-transform duration-300 active:scale-90 hover:text-secondary">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm">Inicio</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant transition-transform duration-300 active:scale-90 hover:text-secondary">
+<span class="material-symbols-outlined">sports_volleyball</span>
+<span class="font-label-sm text-label-sm">Jornadas</span>
+</button>
+<button class="flex flex-col items-center justify-center text-secondary font-semibold transition-transform duration-300 active:scale-90">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-label-sm text-label-sm">Jugadores</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant transition-transform duration-300 active:scale-90 hover:text-secondary">
+<span class="material-symbols-outlined">stadium</span>
+<span class="font-label-sm text-label-sm">Canchas</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant transition-transform duration-300 active:scale-90 hover:text-secondary">
+<span class="material-symbols-outlined">more_horiz</span>
+<span class="font-label-sm text-label-sm">Más</span>
+</button>
+</nav>
+<script>
+        // Simple Interaction logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('playerSearch');
+            const playerRows = document.querySelectorAll('#playerList > div');
+
+            searchInput.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                playerRows.forEach(row => {
+                    const playerName = row.querySelector('h3').textContent.toLowerCase();
+                    if (playerName.includes(term)) {
+                        row.classList.remove('hidden');
+                    } else {
+                        row.classList.add('hidden');
+                    }
+                });
+            });
+
+            // Toggle payment logic
+            const toggles = document.querySelectorAll('input[type="checkbox"]');
+            toggles.forEach(toggle => {
+                toggle.addEventListener('change', function() {
+                    const statusSpan = this.closest('div.flex.items-center.justify-between').querySelector('.flex.items-center.gap-xs span:last-child');
+                    const iconSpan = this.closest('div.flex.items-center.justify-between').querySelector('.material-symbols-outlined.text-\\[14px\\]');
+                    const amountSpan = this.closest('div.flex.items-center.justify-between').querySelector('.font-currency-md');
+                    
+                    if (this.checked) {
+                        statusSpan.textContent = 'Pagado';
+                        statusSpan.className = 'font-label-sm text-label-sm text-on-tertiary-container';
+                        iconSpan.textContent = 'check_circle';
+                        iconSpan.className = 'material-symbols-outlined text-[14px] text-on-tertiary-container';
+                        iconSpan.style.fontVariationSettings = "'FILL' 1";
+                        amountSpan.classList.remove('text-error');
+                        amountSpan.classList.add('text-primary');
+                    } else {
+                        statusSpan.textContent = 'Pendiente';
+                        statusSpan.className = 'font-label-sm text-label-sm text-outline';
+                        iconSpan.textContent = 'schedule';
+                        iconSpan.className = 'material-symbols-outlined text-[14px] text-outline';
+                        iconSpan.style.fontVariationSettings = "'FILL' 0";
+                        amountSpan.classList.remove('text-primary');
+                        amountSpan.classList.add('text-error');
+                    }
+                });
+            });
+        });
+    </script>
+</body></html>

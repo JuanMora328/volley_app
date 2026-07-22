@@ -1,0 +1,547 @@
+<!DOCTYPE html><html lang="es" class="light"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">try{
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-fixed-variant": "#003ea8",
+                    "on-primary-container": "#8590a6",
+                    "surface-container-high": "#e6e8ea",
+                    "on-tertiary-fixed": "#102000",
+                    "on-tertiary-fixed-variant": "#304f00",
+                    "on-tertiary-container": "#64a000",
+                    "surface-tint": "#545f73",
+                    "surface": "#f7f9fb",
+                    "surface-container-lowest": "#ffffff",
+                    "on-background": "#191c1e",
+                    "secondary-fixed-dim": "#b4c5ff",
+                    "primary-container": "#1e293b",
+                    "on-primary-fixed": "#111c2d",
+                    "on-primary-fixed-variant": "#3c475a",
+                    "on-primary": "#ffffff",
+                    "on-surface-variant": "#45474c",
+                    "inverse-surface": "#2d3133",
+                    "tertiary-fixed": "#acf847",
+                    "secondary": "#0051d5",
+                    "inverse-on-surface": "#eff1f3",
+                    "on-secondary-container": "#fefcff",
+                    "on-error": "#ffffff",
+                    "surface-dim": "#d8dadc",
+                    "error": "#ba1a1a",
+                    "on-secondary-fixed": "#00174b",
+                    "on-secondary": "#ffffff",
+                    "surface-variant": "#e0e3e5",
+                    "primary-fixed-dim": "#bcc7de",
+                    "on-error-container": "#93000a",
+                    "secondary-fixed": "#dbe1ff",
+                    "primary": "#091426",
+                    "outline-variant": "#c5c6cd",
+                    "error-container": "#ffdad6",
+                    "surface-container-low": "#f2f4f6",
+                    "background": "#f7f9fb",
+                    "tertiary-fixed-dim": "#91db2a",
+                    "surface-bright": "#f7f9fb",
+                    "on-tertiary": "#ffffff",
+                    "on-surface": "#191c1e",
+                    "tertiary": "#0b1800",
+                    "secondary-container": "#316bf3",
+                    "outline": "#75777d",
+                    "inverse-primary": "#bcc7de",
+                    "primary-fixed": "#d8e3fb",
+                    "surface-container": "#eceef0",
+                    "tertiary-container": "#1a2e00",
+                    "surface-container-highest": "#e0e3e5"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "xl": "32px",
+                    "sm": "12px",
+                    "lg": "24px",
+                    "md": "16px",
+                    "gutter": "16px",
+                    "container-margin": "20px",
+                    "base": "4px",
+                    "xs": "8px"
+            },
+            "fontFamily": {
+                    "label-sm": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "label-lg": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "title-md": ["Inter"],
+                    "currency-md": ["Inter"],
+                    "headline-lg-mobile": ["Inter"]
+            },
+            "fontSize": {
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "currency-md": ["18px", {"lineHeight": "24px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    }catch(_e){}</script><meta charset="utf-8"></head><body class="bg-surface text-on-surface min-h-screen">
+<!-- TopAppBar (Mobile Context & Search Area) -->
+<header class="bg-surface dark:bg-surface-dim shadow-sm docked full-width top-0 sticky z-40">
+<div class="flex justify-between items-center w-full px-md py-sm max-w-7xl mx-auto">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-secondary dark:text-secondary-fixed text-headline-lg-mobile font-headline-lg-mobile" data-icon="sports_volleyball">sports_volleyball</span>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-secondary dark:text-secondary-fixed">VolleyFlow</h1>
+</div>
+<div class="flex items-center gap-md">
+<div class="hidden md:flex items-center bg-surface-container-low px-md py-xs rounded-full border border-outline-variant focus-within:ring-2 focus-within:ring-secondary-container transition-all">
+<span class="material-symbols-outlined text-on-surface-variant text-body-md" data-icon="search">search</span>
+<input type="text" placeholder="Buscar jugadores..." class="bg-transparent border-none focus:ring-0 text-body-md placeholder:text-on-surface-variant/50 w-64">
+</div>
+<div class="w-10 h-10 rounded-full overflow-hidden bg-primary-container flex items-center justify-center text-on-primary">
+<img class="w-full h-full object-cover" data-alt="A professional studio portrait of a sports administrator with a clean athletic look, wearing a high-performance navy polo shirt. The lighting is soft and professional against a neutral, bright light-mode grey background. The aesthetic is clean, corporate, and sporty, matching the modern VolleyFlow brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcCMMJSyvYwzKtNvRFqi0quRXkMmdzrWAeJT64-Dx7p5lFVupB3WHvECpF6khfyAcGJH_JwFkTZaSdtFL3UuojAq8Af0Uizrn6vSvPXpOz-K1kfoBI4uVLn2qz3DGCx5cyPBh4y_FV4Nt9Ch5WRGTzoDFuVJYMdDQvzstDCHxY112jjNnQ0Bi5bvSKis2hFPPPDw7SIEHxwV4UiwHRofVBk5eBlokB2SNt2LmI7gT8h-UjuycXSJhMVrsfmRuUeye0zjhhWRXS9yPn">
+</div>
+</div>
+</div>
+</header>
+<div class="flex max-w-7xl mx-auto min-h-[calc(100vh-64px)]">
+<!-- NavigationDrawer (Desktop) -->
+<aside class="hidden lg:flex flex-col gap-xs p-md sticky top-16 h-[calc(100vh-64px)] w-[260px] bg-primary dark:bg-primary-container text-on-primary dark:text-on-primary-container transition-all duration-200 shadow-md">
+<div class="mb-lg px-xs py-sm border-b border-on-primary-fixed-variant/20 flex flex-col items-start">
+<p class="font-title-md text-title-md text-secondary-fixed">VolleyFlow Admin</p>
+<p class="font-label-lg text-label-lg text-on-primary-container opacity-80">Match Organizer</p>
+</div>
+<nav class="space-y-xs">
+<a class="flex items-center gap-md px-md py-sm text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary-fixed-dim/20 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-lg text-label-lg">Inicio</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary-fixed-dim/20 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
+<span class="font-label-lg text-label-lg">Jornadas</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm bg-secondary-container text-on-secondary-container rounded-lg font-bold transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+<span class="font-label-lg text-label-lg">Jugadores</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary-fixed-dim/20 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="sports_handball">sports_handball</span>
+<span class="font-label-lg text-label-lg">Canchas</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-primary-fixed-variant hover:text-on-primary hover:bg-primary-fixed-dim/20 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+<span class="font-label-lg text-label-lg">Más</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 p-lg md:p-xl overflow-y-auto pb-24 lg:pb-lg">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-md mb-xl">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-primary">Jugadores</h2>
+<p class="text-on-surface-variant font-body-md">Gestiona la base de datos de deportistas y su rendimiento.</p>
+</div>
+<button class="bg-secondary text-on-secondary px-lg py-sm rounded-xl font-label-lg text-label-lg flex items-center justify-center gap-xs shadow-md active:scale-95 transition-all hover:bg-secondary/90 h-[48px]">
+<span class="material-symbols-outlined" data-icon="person_add">person_add</span>
+                    Nuevo jugador
+                </button>
+</div>
+<!-- Mobile Search & Filter (Visible only on small screens) -->
+<div class="flex flex-col gap-md md:hidden mb-lg">
+<div class="flex items-center bg-surface-container px-md py-sm rounded-xl">
+<span class="material-symbols-outlined text-on-surface-variant mr-sm" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 flex-1 text-body-md" placeholder="Buscar..." type="text">
+</div>
+</div>
+<!-- Advanced Filters -->
+<div class="bg-surface-container-low rounded-xl p-md mb-xl border border-outline-variant/30 flex flex-wrap items-center gap-md">
+<div class="flex items-center bg-surface p-base rounded-lg shadow-sm">
+<button class="px-lg py-xs rounded-md bg-secondary text-on-secondary font-label-lg text-label-lg transition-colors">Todos</button>
+<button class="px-lg py-xs rounded-md text-on-surface-variant hover:bg-surface-container-high font-label-lg text-label-lg transition-colors">Activos</button>
+<button class="px-lg py-xs rounded-md text-on-surface-variant hover:bg-surface-container-high font-label-lg text-label-lg transition-colors">Inactivos</button>
+</div>
+<div class="h-8 w-[1px] bg-outline-variant hidden md:block"></div>
+<div class="flex items-center gap-xs">
+<span class="text-on-surface-variant font-label-sm text-label-sm">Ordenar por:</span>
+<select class="bg-transparent border-none text-label-lg font-label-lg text-secondary focus:ring-0 cursor-pointer">
+<option>Nombre (A-Z)</option>
+<option>Nivel (Mayor a menor)</option>
+<option>Recientes</option>
+</select>
+</div>
+</div>
+<!-- Players Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-lg">
+<!-- Player Card Template (X6 examples) -->
+<!-- Player Card 1 -->
+<div class="player-card bg-surface-container-lowest rounded-xl p-lg shadow-sm border border-outline-variant/20 flex flex-col gap-md relative overflow-hidden">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-md">
+<div class="w-14 h-14 rounded-full overflow-hidden bg-primary-fixed flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A close-up headshot of a confident female volleyball player in her mid-20s. She is smiling, has athletic gear on, and her hair is tied back. High-key natural lighting illuminates her face against a soft-focus indoor gym background. Modern, bright light-mode aesthetic with vibrant energy." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQUMU4hGR_uaHlcrRwNIzwD0uzFU8zSqaAQ5KwEJ6pKpknUnCv1CqM7XFznv7OjZG06RMYdJeMinZ2E3gSEwVVvJ6ME9-TcKVDKCJ1XR8L-Hvz9FunBF2hh0LjC59sCVOWEK8RQxu7oleqchlW1DcHeUxPStdvnR4L6XuYRSOOgmN2JM6au9xcHo64cdnatJMi8rqE0ue5ARPpHBHIITfGJW23vBL1Xdz1n2AAquZyoDA5EfTBh0JlcqtLKtvEzwDC5othmx_aAFoz">
+</div>
+<div>
+<h3 class="font-title-md text-title-md text-primary">Lucía Méndez</h3>
+<div class="flex items-center gap-base mt-base">
+<span class="flex">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-surface-container-highest text-sm" data-icon="star">star</span>
+</span>
+<span class="text-on-surface-variant font-label-sm text-label-sm">Nivel 4</span>
+</div>
+</div>
+</div>
+<span class="bg-tertiary-container text-on-tertiary-container px-sm py-base rounded-full font-label-sm text-label-sm border border-tertiary-fixed/20 flex items-center gap-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed animate-pulse"></span>
+                            Activo
+                        </span>
+</div>
+<div class="grid grid-cols-2 gap-md py-sm border-t border-b border-outline-variant/10">
+<div class="flex flex-col">
+<span class="text-on-surface-variant font-label-sm text-label-sm">Partidos</span>
+<span class="font-title-md text-title-md text-secondary">42</span>
+</div>
+<div class="flex flex-col">
+<span class="text-on-surface-variant font-label-sm text-label-sm">Win Rate</span>
+<span class="font-title-md text-title-md text-secondary">68%</span>
+</div>
+</div>
+<div class="flex items-center justify-between mt-base">
+<div class="flex gap-xs">
+<button class="w-10 h-10 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-secondary-container hover:text-on-secondary-container transition-all" title="Editar">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-error-container hover:text-on-error-container transition-all" title="Desactivar">
+<span class="material-symbols-outlined" data-icon="person_off">person_off</span>
+</button>
+</div>
+<button class="text-secondary font-label-lg text-label-lg flex items-center gap-base hover:underline">
+                            Historial
+                            <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Player Card 2 -->
+<div class="player-card bg-surface-container-lowest rounded-xl p-lg shadow-sm border border-outline-variant/20 flex flex-col gap-md">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-md">
+<div class="w-14 h-14 rounded-full overflow-hidden bg-primary-fixed flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A portrait of a male volleyball athlete with short hair and an focused expression. He wears a professional athletic t-shirt. The background is a brightly lit sports court with soft blue and white tones. Clean, modern composition reflecting a professional athlete profile in VolleyFlow." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1EdkCldhMfYZ_CfeRx9McQ5QsCzvAg_XyOn8ZfA7LHghHAVI4ex7iDtvwZDEDfzHyh1l4lsROQmJ3iFtlQzij23AB3-AY_3NO2gX0T4gn8tL616ydVpwR5_F1bRGBeNQsMrjPY0MG8UgGNtsMGqmBAHfikJbM_0TSvmvVLTy6gNqcRTDohIgiB95eyeB6caf7WJtys4Fe5EujKrmF8t5-N7he6dWdCS5gitIZndZ76OZTOVjDnZUCOnTONsaNIjc5FyFqa-YF6n5M">
+</div>
+<div>
+<h3 class="font-title-md text-title-md text-primary">Carlos Ruiz</h3>
+<div class="flex items-center gap-base mt-base">
+<span class="flex">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+</span>
+<span class="text-on-surface-variant font-label-sm text-label-sm">Nivel 5</span>
+</div>
+</div>
+</div>
+<span class="bg-tertiary-container text-on-tertiary-container px-sm py-base rounded-full font-label-sm text-label-sm border border-tertiary-fixed/20 flex items-center gap-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed animate-pulse"></span>
+                            Activo
+                        </span>
+</div>
+<div class="grid grid-cols-2 gap-md py-sm border-t border-b border-outline-variant/10">
+<div class="flex flex-col">
+<span class="text-on-surface-variant font-label-sm text-label-sm">Partidos</span>
+<span class="font-title-md text-title-md text-secondary">156</span>
+</div>
+<div class="flex flex-col">
+<span class="text-on-surface-variant font-label-sm text-label-sm">Win Rate</span>
+<span class="font-title-md text-title-md text-secondary">82%</span>
+</div>
+</div>
+<div class="flex items-center justify-between mt-base">
+<div class="flex gap-xs">
+<button class="w-10 h-10 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-secondary-container hover:text-on-secondary-container transition-all" title="Editar">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-error-container hover:text-on-error-container transition-all" title="Desactivar">
+<span class="material-symbols-outlined" data-icon="person_off">person_off</span>
+</button>
+</div>
+<button class="text-secondary font-label-lg text-label-lg flex items-center gap-base hover:underline">
+                            Historial
+                            <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Player Card 3 (Inactive) -->
+<div class="player-card bg-surface-container-low rounded-xl p-lg shadow-sm border border-outline-variant/20 flex flex-col gap-md opacity-80">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-md">
+<div class="w-14 h-14 rounded-full overflow-hidden bg-surface-dim grayscale flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A portrait of an older volleyball player with graying hair and glasses, looking thoughtful. Soft, diffused lighting against a neutral background. The image is clean and high-quality, presented in a minimalist light-mode corporate style. Desaturated tones suggest an inactive or veteran status." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhdUU8gnvV7_f7ql0WvEaEVx1rYQdYDf-qpzw74uDow4Gls35Ur6Z745PII7HxK5bfgmAkg_OZkfsiOsOhY4xLTIO5N-NyhYNKb_0mfaJuVePk3fdrNLTSZuOBdkKayrUWUXDDJvNZbHihDSiiKhmTOl9DXHvhpbva3oU9X_d0FkZ_QUuwU0zhm3wvdJNKPMN00HolNcZDTSc_eV9toYUhcfPI81GVarp81hGjL7FHKNuyixvYU1g-23PdOoXUu_fz79zqVXXidEq2">
+</div>
+<div>
+<h3 class="font-title-md text-title-md text-on-surface-variant">Roberto Gómez</h3>
+<div class="flex items-center gap-base mt-base">
+<span class="flex">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-surface-container-highest text-sm" data-icon="star">star</span>
+<span class="material-symbols-outlined text-surface-container-highest text-sm" data-icon="star">star</span>
+<span class="material-symbols-outlined text-surface-container-highest text-sm" data-icon="star">star</span>
+</span>
+<span class="text-on-surface-variant font-label-sm text-label-sm">Nivel 2</span>
+</div>
+</div>
+</div>
+<span class="bg-surface-variant text-on-surface-variant px-sm py-base rounded-full font-label-sm text-label-sm flex items-center gap-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+                            Inactivo
+                        </span>
+</div>
+<div class="grid grid-cols-2 gap-md py-sm border-t border-b border-outline-variant/10">
+<div class="flex flex-col">
+<span class="text-on-surface-variant font-label-sm text-label-sm">Partidos</span>
+<span class="font-title-md text-title-md text-on-surface-variant">12</span>
+</div>
+<div class="flex flex-col">
+<span class="text-on-surface-variant font-label-sm text-label-sm">Win Rate</span>
+<span class="font-title-md text-title-md text-on-surface-variant">33%</span>
+</div>
+</div>
+<div class="flex items-center justify-between mt-base">
+<div class="flex gap-xs">
+<button class="w-10 h-10 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-secondary-container hover:text-on-secondary-container transition-all" title="Editar">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-tertiary-container hover:text-on-tertiary-container transition-all" title="Activar">
+<span class="material-symbols-outlined" data-icon="person_check">person_check</span>
+</button>
+</div>
+<button class="text-on-surface-variant font-label-lg text-label-lg flex items-center gap-base hover:underline opacity-60">
+                            Historial
+                            <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Player Card 4 -->
+<div class="player-card bg-surface-container-lowest rounded-xl p-lg shadow-sm border border-outline-variant/20 flex flex-col gap-md">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-md">
+<div class="w-14 h-14 rounded-full overflow-hidden bg-primary-fixed flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A portrait of a young male volleyball player with an energetic expression, wearing a bright athletic jersey. Dynamic lighting and high-contrast composition against a modern stadium background. Corporate yet sporty aesthetic, consistent with VolleyFlow brand guidelines." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPtXEMzfmh2Q19e6j42pT3LWpf33PxKbEeyNnou4pvGM680_w_lt3KJYWyhGNGXvWpIsm-JWt-FOMYIqhGfDBounCkAApzT1BbQlphAUWXIsJ-_sh7G3QVWpGxJ3xAtik92WEO_ZWgEG7Kk5bGHDE6THIOIhxm36gTPFgSvWY3HQQa15i-_b6YgFf-NomiaDh4x2hrdCrBGC2tPZhFtCiWaHBV87TTO_OJ7fjeiEU0pLAjqea3sgdVs4x6cpICT6MB2-pFzVTa0V17">
+</div>
+<div>
+<h3 class="font-title-md text-title-md text-primary">Santi Polo</h3>
+<div class="flex items-center gap-base mt-base">
+<span class="flex">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-surface-container-highest text-sm" data-icon="star">star</span>
+<span class="material-symbols-outlined text-surface-container-highest text-sm" data-icon="star">star</span>
+</span>
+<span class="text-on-surface-variant font-label-sm text-label-sm">Nivel 3</span>
+</div>
+</div>
+</div>
+<span class="bg-tertiary-container text-on-tertiary-container px-sm py-base rounded-full font-label-sm text-label-sm border border-tertiary-fixed/20 flex items-center gap-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed animate-pulse"></span>
+                            Activo
+                        </span>
+</div>
+<div class="grid grid-cols-2 gap-md py-sm border-t border-b border-outline-variant/10">
+<div class="flex flex-col">
+<span class="text-on-surface-variant font-label-sm text-label-sm">Partidos</span>
+<span class="font-title-md text-title-md text-secondary">28</span>
+</div>
+<div class="flex flex-col">
+<span class="text-on-surface-variant font-label-sm text-label-sm">Win Rate</span>
+<span class="font-title-md text-title-md text-secondary">50%</span>
+</div>
+</div>
+<div class="flex items-center justify-between mt-base">
+<div class="flex gap-xs">
+<button class="w-10 h-10 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-secondary-container hover:text-on-secondary-container transition-all" title="Editar">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-error-container hover:text-on-error-container transition-all" title="Desactivar">
+<span class="material-symbols-outlined" data-icon="person_off">person_off</span>
+</button>
+</div>
+<button class="text-secondary font-label-lg text-label-lg flex items-center gap-base hover:underline">
+                            Historial
+                            <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Player Card 5 -->
+<div class="player-card bg-surface-container-lowest rounded-xl p-lg shadow-sm border border-outline-variant/20 flex flex-col gap-md">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-md">
+<div class="w-14 h-14 rounded-full overflow-hidden bg-primary-fixed flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A portrait of a young female volleyball player with a high ponytail and professional sports attire. She is looking confidently at the camera. Soft, high-key studio lighting with a subtle blue tint in the shadows. The atmosphere is professional, sleek, and high-performance." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA807JoRkxQesfQpo4Fruqs4jyQsBRPMCB3zc8SwPBM0aIezA0o0k2EvChJIgDEvj9qM7rg8a-MOk59MsGOo9-vw4yJ-0ZbKawW8-kSDWk0h9rtawpjAushmcb3wj_WJH8q52LLwAgQRgufojQw0Nzti53P1BdXxxpdorxc5WN-UKoN0nZNCrdmNLQV0P8gw2F-IlXjtMInWTgfTX_yDvhYh-cJfL0vJwLNdQH3ci9RTaIWPA4FKRWowHSZX-jhB1ms0jeiNNCyH6bk">
+</div>
+<div>
+<h3 class="font-title-md text-title-md text-primary">Ana Belén</h3>
+<div class="flex items-center gap-base mt-base">
+<span class="flex">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+</span>
+<span class="text-on-surface-variant font-label-sm text-label-sm">Nivel 5</span>
+</div>
+</div>
+</div>
+<span class="bg-tertiary-container text-on-tertiary-container px-sm py-base rounded-full font-label-sm text-label-sm border border-tertiary-fixed/20 flex items-center gap-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed animate-pulse"></span>
+                            Activo
+                        </span>
+</div>
+<div class="grid grid-cols-2 gap-md py-sm border-t border-b border-outline-variant/10">
+<div class="flex flex-col">
+<span class="text-on-surface-variant font-label-sm text-label-sm">Partidos</span>
+<span class="font-title-md text-title-md text-secondary">89</span>
+</div>
+<div class="flex flex-col">
+<span class="text-on-surface-variant font-label-sm text-label-sm">Win Rate</span>
+<span class="font-title-md text-title-md text-secondary">74%</span>
+</div>
+</div>
+<div class="flex items-center justify-between mt-base">
+<div class="flex gap-xs">
+<button class="w-10 h-10 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-secondary-container hover:text-on-secondary-container transition-all" title="Editar">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-error-container hover:text-on-error-container transition-all" title="Desactivar">
+<span class="material-symbols-outlined" data-icon="person_off">person_off</span>
+</button>
+</div>
+<button class="text-secondary font-label-lg text-label-lg flex items-center gap-base hover:underline">
+                            Historial
+                            <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Player Card 6 -->
+<div class="player-card bg-surface-container-lowest rounded-xl p-lg shadow-sm border border-outline-variant/20 flex flex-col gap-md">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-md">
+<div class="w-14 h-14 rounded-full overflow-hidden bg-primary-fixed flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A portrait of a male volleyball athlete with a determined gaze, wearing a modern blue sports tank top. Bright, clean background with soft morning light. The look is professional, emphasizing the player's profile in a corporate sports management app context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdsRO6CFu7e1GWyw0iD3v8X2lyOpTGWQlXWaI-bN3L6ObRJ1Jo2hdZRLsJITYiSEx2_5RJ-JeG-btkzWotHn9m38_xzXj8WhpEhFx26K6aN7Q7XSG9rSLdc_yO_gvkMQM07tKCM1Rclqwjem6z9CcQiCwTdmXgpYSyGZZDXnl5ZYWdyesT1gJ15mV40nORFrSRQZUFqqMRKC1q7WbUHJreyLW_S0I6JANlbFSyhmW2InYtaSDJVvWfLBxBQsNJczDeO2ys0woV-rpQ">
+</div>
+<div>
+<h3 class="font-title-md text-title-md text-primary">Iván Torres</h3>
+<div class="flex items-center gap-base mt-base">
+<span class="flex">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-surface-container-highest text-sm" data-icon="star">star</span>
+<span class="material-symbols-outlined text-surface-container-highest text-sm" data-icon="star">star</span>
+<span class="material-symbols-outlined text-surface-container-highest text-sm" data-icon="star">star</span>
+</span>
+<span class="text-on-surface-variant font-label-sm text-label-sm">Nivel 2</span>
+</div>
+</div>
+</div>
+<span class="bg-tertiary-container text-on-tertiary-container px-sm py-base rounded-full font-label-sm text-label-sm border border-tertiary-fixed/20 flex items-center gap-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed animate-pulse"></span>
+                            Activo
+                        </span>
+</div>
+<div class="grid grid-cols-2 gap-md py-sm border-t border-b border-outline-variant/10">
+<div class="flex flex-col">
+<span class="text-on-surface-variant font-label-sm text-label-sm">Partidos</span>
+<span class="font-title-md text-title-md text-secondary">5</span>
+</div>
+<div class="flex flex-col">
+<span class="text-on-surface-variant font-label-sm text-label-sm">Win Rate</span>
+<span class="font-title-md text-title-md text-secondary">20%</span>
+</div>
+</div>
+<div class="flex items-center justify-between mt-base">
+<div class="flex gap-xs">
+<button class="w-10 h-10 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-secondary-container hover:text-on-secondary-container transition-all" title="Editar">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-error-container hover:text-on-error-container transition-all" title="Desactivar">
+<span class="material-symbols-outlined" data-icon="person_off">person_off</span>
+</button>
+</div>
+<button class="text-secondary font-label-lg text-label-lg flex items-center gap-base hover:underline">
+                            Historial
+                            <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Empty State / Pagination Hint (Visual) -->
+<div class="mt-xl py-lg border-t border-outline-variant/20 flex flex-col md:flex-row justify-between items-center gap-md">
+<p class="text-on-surface-variant font-body-md">Mostrando 6 de 128 jugadores</p>
+<div class="flex items-center gap-xs">
+<button class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center hover:bg-surface-container transition-colors disabled:opacity-30" disabled="">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="w-10 h-10 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-label-lg text-label-lg">1</button>
+<button class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center hover:bg-surface-container transition-colors font-label-lg text-label-lg">2</button>
+<button class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center hover:bg-surface-container transition-colors font-label-lg text-label-lg">3</button>
+<span class="px-xs text-on-surface-variant">...</span>
+<button class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</main>
+</div>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-xs pb-safe bg-surface dark:bg-surface-container-highest h-[64px] z-50 shadow-lg border-t border-outline-variant"><a class="flex flex-col items-center justify-center flex-1 gap-1 text-on-surface-variant hover:bg-surface-container-low py-2" href="#"><span class="material-symbols-outlined" data-icon="home">home</span><span class="font-label-sm text-label-sm">Inicio</span></a><a class="flex flex-col items-center justify-center flex-1 gap-1 text-on-surface-variant hover:bg-surface-container-low py-2" href="#"><span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span><span class="font-label-sm text-label-sm">Jornadas</span></a><div class="flex-1 flex justify-center"><a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-xl px-4 py-1 active:scale-90 duration-150" href="#"><span class="material-symbols-outlined" data-icon="groups">groups</span><span class="font-label-sm text-label-sm">Jugadores</span></a></div><a class="flex flex-col items-center justify-center flex-1 gap-1 text-on-surface-variant hover:bg-surface-container-low py-2" href="#"><span class="material-symbols-outlined" data-icon="sports_handball">sports_handball</span><span class="font-label-sm text-label-sm">Canchas</span></a><a class="flex flex-col items-center justify-center flex-1 gap-1 text-on-surface-variant hover:bg-surface-container-low py-2" href="#"><span class="material-symbols-outlined" data-icon="more_horiz">more_horiz</span><span class="font-label-sm text-label-sm">Más</span></a></nav>
+<!-- Floating Action Button (Contextual for Mobile Add) -->
+<button class="md:hidden fixed right-6 w-14 h-14 bg-secondary text-on-secondary rounded-full shadow-2xl flex items-center justify-center z-40 active:scale-90 transition-transform bottom-24">
+<span class="material-symbols-outlined" data-icon="person_add">person_add</span>
+</button>
+<script>
+        // Simple search feedback interaction
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput.addEventListener('input', (e) => {
+            const cards = document.querySelectorAll('.player-card');
+            const query = e.target.value.toLowerCase();
+            
+            cards.forEach(card => {
+                const name = card.querySelector('h3').textContent.toLowerCase();
+                if(name.includes(query)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Toggle Active/Inactive filter logic (Visual feedback only)
+        const filterButtons = document.querySelectorAll('.flex.items-center.bg-surface button');
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterButtons.forEach(b => {
+                    b.classList.remove('bg-secondary', 'text-on-secondary');
+                    b.classList.add('text-on-surface-variant');
+                });
+                btn.classList.add('bg-secondary', 'text-on-secondary');
+                btn.classList.remove('text-on-surface-variant');
+            });
+        });
+    </script>
+
+</body></html>
