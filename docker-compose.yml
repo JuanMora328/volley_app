@@ -6,7 +6,7 @@ services:
       POSTGRES_PASSWORD: volleyflow
       POSTGRES_DB: volleyflow
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
 volumes:

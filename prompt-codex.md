@@ -485,7 +485,7 @@ No utilices:
 Crea una función reutilizable:
 
 ```ts
-distributeIntegerAmount(total, participantIds)
+distributeIntegerAmount(total, participantIds);
 ```
 
 Debe garantizar:

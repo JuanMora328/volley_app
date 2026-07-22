@@ -1,1 +1,24 @@
-import Link from 'next/link';export default function Dashboard(){return <div className="space-y-6"><section className="rounded-xl bg-primary p-6 text-white"><p className="text-sm text-blue-100">Panel del organizador</p><h1 className="text-3xl font-bold">VolleyFlow</h1><p>Gestiona jugadores, canchas, jornadas, partidos y pagos desde el teléfono.</p></section><div className="grid gap-4 md:grid-cols-3">{[['/sessions/new','Crear jornada','Configura cancha, costos y equipos.'],['/players','Jugadores','Niveles, historial y estado.'],['/sessions','Historial','Resultados, posiciones y liquidación.']].map(([href,title,desc])=><Link className="card" href={href} key={href}><h2 className="text-xl font-semibold">{title}</h2><p className="text-slate-600">{desc}</p></Link>)}</div></div>}
+import Link from 'next/link';
+export default function Dashboard() {
+  return (
+    <div className="space-y-6">
+      <section className="rounded-xl bg-primary p-6 text-white">
+        <p className="text-sm text-blue-100">Panel del organizador</p>
+        <h1 className="text-3xl font-bold">VolleyFlow</h1>
+        <p>Gestiona jugadores, canchas, jornadas, partidos y pagos desde el teléfono.</p>
+      </section>
+      <div className="grid gap-4 md:grid-cols-3">
+        {[
+          ['/sessions/new', 'Crear jornada', 'Configura cancha, costos y equipos.'],
+          ['/players', 'Jugadores', 'Niveles, historial y estado.'],
+          ['/sessions', 'Historial', 'Resultados, posiciones y liquidación.'],
+        ].map(([href, title, desc]) => (
+          <Link className="card" href={href} key={href}>
+            <h2 className="text-xl font-semibold">{title}</h2>
+            <p className="text-slate-600">{desc}</p>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}

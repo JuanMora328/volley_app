@@ -1,1 +1,13 @@
-export default function NewSession(){return <div className="space-y-4"><h1 className="text-3xl font-bold">Crear jornada</h1><section className="card grid gap-3"><input className="input" type="date"/><input className="input" placeholder="Cancha"/><input className="input" placeholder="Precio cancha"/><button className="btn">Guardar borrador</button></section></div>}
+export default function NewSession() {
+  return (
+    <div className="space-y-4">
+      <h1 className="text-3xl font-bold">Crear jornada</h1>
+      <section className="card grid gap-3">
+        <input className="input" type="date" />
+        <input className="input" placeholder="Cancha" />
+        <input className="input" placeholder="Precio cancha" />
+        <button className="btn">Guardar borrador</button>
+      </section>
+    </div>
+  );
+}
