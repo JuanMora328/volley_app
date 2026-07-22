@@ -1,0 +1,1 @@
+import Link from 'next/link';export default function SessionDetail(){const tabs=['players','teams','matches','payments','summary'];return <div className="space-y-4"><h1 className="text-3xl font-bold">Detalle de jornada</h1><div className="grid gap-3 md:grid-cols-5">{tabs.map(t=><Link className="card text-center" href={`/sessions/demo/${t}`} key={t}>{t}</Link>)}</div></div>}
