@@ -1,28 +1,7 @@
-# Dependencies
-node_modules/
-
-# Environment variables
+node_modules
+.next
+dist
+coverage
 .env
 .env.local
-.env.development
-.env.production
-.env.test
-!.env.example
-
-# Builds
-dist/
-.next/
-out/
-coverage/
-
-# Logs
-*.log
-pnpm-debug.log*
-
-# Operating systems
-.DS_Store
-Thumbs.db
-
-# Editors
-.idea/
-.vscode/
+*.tsbuildinfo
