@@ -1,1 +1,43 @@
-import { Body, Controller, Get, Module, Post, UnauthorizedException } from '@nestjs/common';import { JwtModule, JwtService } from '@nestjs/jwt';import { TypeOrmModule, InjectRepository } from '@nestjs/typeorm';import { IsEmail, IsString, MinLength } from 'class-validator';import * as argon2 from 'argon2';import { Repository } from 'typeorm';import { UserEntity } from '../database/entities';class LoginDto{@IsEmail() email!:string;@IsString()@MinLength(8) password!:string;}@Controller('auth') class AuthController{constructor(@InjectRepository(UserEntity) private users:Repository<UserEntity>,private jwt:JwtService){}@Post('login') async login(@Body() dto:LoginDto){const user=await this.users.findOne({where:{email:dto.email.toLowerCase(),active:true}}); if(!user||!(await argon2.verify(user.passwordHash,dto.password))) throw new UnauthorizedException('Credenciales inválidas'); return {accessToken:await this.jwt.signAsync({sub:user.id,email:user.email,role:user.role}),user:{id:user.id,name:user.name,email:user.email,role:user.role}};}@Get('me') me(){return {message:'Protegido por JWT en configuración completa'};}}@Module({imports:[TypeOrmModule.forFeature([UserEntity]),JwtModule.register({secret:process.env.JWT_SECRET ?? 'dev-secret-change-me',signOptions:{expiresIn:'8h'}})],controllers:[AuthController]}) export class AuthModule{}
+import { Body, Controller, Get, Module, Post, UnauthorizedException } from '@nestjs/common';
+import { JwtModule, JwtService } from '@nestjs/jwt';
+import { TypeOrmModule, InjectRepository } from '@nestjs/typeorm';
+import { IsEmail, IsString, MinLength } from 'class-validator';
+import * as argon2 from 'argon2';
+import { Repository } from 'typeorm';
+import { UserEntity } from '../database/entities';
+class LoginDto {
+  @IsEmail() email!: string;
+  @IsString() @MinLength(8) password!: string;
+}
+@Controller('auth')
+class AuthController {
+  constructor(
+    @InjectRepository(UserEntity) private users: Repository<UserEntity>,
+    private jwt: JwtService,
+  ) {}
+  @Post('login') async login(@Body() dto: LoginDto) {
+    const user = await this.users.findOne({
+      where: { email: dto.email.toLowerCase(), active: true },
+    });
+    if (!user || !(await argon2.verify(user.passwordHash, dto.password)))
+      throw new UnauthorizedException('Credenciales inválidas');
+    return {
+      accessToken: await this.jwt.signAsync({ sub: user.id, email: user.email, role: user.role }),
+      user: { id: user.id, name: user.name, email: user.email, role: user.role },
+    };
+  }
+  @Get('me') me() {
+    return { message: 'Protegido por JWT en configuración completa' };
+  }
+}
+@Module({
+  imports: [
+    TypeOrmModule.forFeature([UserEntity]),
+    JwtModule.register({
+      secret: process.env.JWT_SECRET ?? 'dev-secret-change-me',
+      signOptions: { expiresIn: '8h' },
+    }),
+  ],
+  controllers: [AuthController],
+})
+export class AuthModule {}

@@ -1,1 +1,11 @@
-export default function Page(){return <div className="space-y-4"><h1 className="text-3xl font-bold">Jornada · players</h1><section className="card">Vista mobile-first inspirada en Stitch para players, con acciones grandes y estados en español.</section></div>}
+export default function Page() {
+  return (
+    <div className="space-y-4">
+      <h1 className="text-3xl font-bold">Jornada · players</h1>
+      <section className="card">
+        Vista mobile-first inspirada en Stitch para players, con acciones grandes y estados en
+        español.
+      </section>
+    </div>
+  );
+}

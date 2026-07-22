@@ -1,1 +1,19 @@
-import { Check, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';@Entity('players')@Check('CHK_players_default_level','default_level between 1 and 5') export class PlayerEntity{@PrimaryGeneratedColumn('uuid') id!:string;@Column() name!:string;@Column({name:'default_level',type:'int'}) defaultLevel!:number;@Column({type:'text',nullable:true}) notes!:string|null;@Column({default:true}) active!:boolean;@CreateDateColumn({name:'created_at'}) createdAt!:Date;@UpdateDateColumn({name:'updated_at'}) updatedAt!:Date;}
+import {
+  Check,
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+@Entity('players')
+@Check('CHK_players_default_level', 'default_level between 1 and 5')
+export class PlayerEntity {
+  @PrimaryGeneratedColumn('uuid') id!: string;
+  @Column() name!: string;
+  @Column({ name: 'default_level', type: 'int' }) defaultLevel!: number;
+  @Column({ type: 'text', nullable: true }) notes!: string | null;
+  @Column({ default: true }) active!: boolean;
+  @CreateDateColumn({ name: 'created_at' }) createdAt!: Date;
+  @UpdateDateColumn({ name: 'updated_at' }) updatedAt!: Date;
+}
