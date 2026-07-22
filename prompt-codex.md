@@ -1,304 +1,567 @@
-Actúa como arquitecto de software senior y desarrollador full-stack. Construye de principio a fin una aplicación web llamada VolleyFlow para gestionar jornadas informales de voleibol.
+# VolleyFlow — Prompt maestro para Codex
+
+Actúa como arquitecto de software senior y desarrollador full-stack. Construye de principio a fin una aplicación web llamada **VolleyFlow** para gestionar jornadas informales de voleibol.
 
 Trabaja directamente sobre este repositorio. No te limites a generar ejemplos aislados: debes dejar una aplicación funcional, documentada, probada y preparada para despliegue.
+
+## Forma de trabajo inicial
 
 Antes de modificar código:
 
 1. Inspecciona todo el repositorio.
-2. Revisa los diseños y archivos existentes en design/stitch.
-3. Crea docs/IMPLEMENTATION_PLAN.md.
-4. Divide el trabajo en etapas verificables.
-5. Identifica cualquier contradicción entre el código exportado por Stitch y esta especificación.
-6. Utiliza Stitch únicamente como referencia visual. No copies una arquitectura deficiente del código generado.
-7. Continúa después con la implementación sin esperar confirmación.
+2. Lee completamente este archivo.
+3. Revisa todos los diseños y archivos existentes en `design/stitch`.
+4. Identifica la tecnología y formato del código exportado por Stitch.
+5. Utiliza Stitch como referencia visual y de experiencia de usuario, pero no copies una arquitectura deficiente.
+6. Crea `docs/IMPLEMENTATION_PLAN.md` con etapas verificables, dependencias y criterios de finalización.
+7. Inicializa el monorepo y los proyectos necesarios dentro de este repositorio.
+8. Continúa con la implementación sin esperar confirmación.
+9. Ejecuta validaciones después de cada etapa importante.
+10. Realiza commits locales pequeños y descriptivos cuando sea posible.
+11. No hagas `push`, no abras pull requests y no cambies el repositorio remoto.
 
-ARQUITECTURA
+No instales ni utilices otro ORM: toda la persistencia debe implementarse exclusivamente con **TypeORM**.
 
-Crea un monorepo con pnpm workspaces:
+---
 
-* apps/web: Next.js con App Router, TypeScript, Tailwind CSS y shadcn/ui.
-* apps/api: NestJS con TypeScript.
-* packages/shared: enums, tipos y contratos que puedan compartirse sin acoplar el frontend al ORM.
-* PostgreSQL como base de datos.
-* Typeorm como ORM.
-* Docker Compose para PostgreSQL local.
+# 1. Arquitectura
 
-Configura scripts raíz para:
+Crea un monorepo administrado con **pnpm workspaces**:
 
-* dev
-* dev:web
-* dev:api
-* build
-* lint
-* typecheck
-* test
-* test:e2e
-* format
+```text
+apps/
+  web/                    # Next.js
+  api/                    # NestJS
+packages/
+  shared/                 # Enums, tipos y contratos compartidos
+design/
+  stitch/                 # Diseños existentes
+docs/
+```
 
-FRONTEND
+Tecnologías obligatorias:
+
+- `apps/web`: Next.js con App Router, TypeScript, Tailwind CSS y shadcn/ui.
+- `apps/api`: NestJS con TypeScript.
+- `packages/shared`: enums, tipos y contratos compartidos sin acoplar el frontend a TypeORM.
+- PostgreSQL como base de datos.
+- TypeORM y `@nestjs/typeorm` como capa de persistencia.
+- Docker Compose para PostgreSQL local.
+- pnpm como único gestor de paquetes.
+
+Configura scripts en el `package.json` raíz:
+
+- `dev`
+- `dev:web`
+- `dev:api`
+- `build`
+- `lint`
+- `typecheck`
+- `test`
+- `test:unit`
+- `test:integration`
+- `test:e2e`
+- `format`
+
+Los comandos raíz deben ejecutar correctamente los scripts correspondientes del monorepo.
+
+---
+
+# 2. Frontend
 
 Utiliza:
 
-* Next.js App Router.
-* TypeScript estricto.
-* Tailwind CSS.
-* shadcn/ui.
-* TanStack Query para datos del servidor.
-* React Hook Form.
-* Zod.
-* Sonner o equivalente para notificaciones.
-* Lucide para iconos.
+- Next.js App Router.
+- TypeScript estricto.
+- Tailwind CSS.
+- shadcn/ui.
+- TanStack Query para datos del servidor.
+- React Hook Form.
+- Zod.
+- Sonner o equivalente para notificaciones.
+- Lucide para iconos.
 
 No utilices Redux salvo que exista una necesidad demostrable.
 
-El frontend debe ser mobile-first, responsive, accesible y estar completamente en español.
+El frontend debe ser:
 
-BACKEND
+- Mobile-first.
+- Responsive.
+- Accesible.
+- Completamente en español.
+- Optimizado para utilizarse rápidamente desde un teléfono durante los partidos.
+
+## Referencia visual de Stitch
+
+- Revisa todos los archivos en `design/stitch` antes de construir componentes.
+- Conserva la intención visual, jerarquía, navegación, espaciado, estados y experiencia de usuario.
+- Reutiliza componentes y tokens visuales.
+- No copies código exportado que sea duplicado, frágil o poco mantenible.
+- Si falta una variante responsive, constrúyela manteniendo el sistema visual existente.
+- Documenta en `docs/DESIGN_IMPLEMENTATION.md` cualquier diferencia importante respecto al diseño.
+
+---
+
+# 3. Backend
 
 Utiliza:
 
-* NestJS.
-* Prisma.
-* PostgreSQL.
-* Swagger.
-* class-validator y class-transformer.
-* ConfigModule.
-* Helmet.
-* CORS configurable.
-* Logs estructurados.
-* Endpoint GET /api/health.
+- NestJS.
+- PostgreSQL.
+- TypeORM.
+- `@nestjs/typeorm`.
+- Driver `pg`.
+- Swagger.
+- `class-validator` y `class-transformer`.
+- `ConfigModule` y `ConfigService`.
+- Helmet.
+- CORS configurable.
+- Logs estructurados.
+- Argon2 para contraseñas.
+- JWT para autenticación.
 
-Todos los endpoints deben utilizar el prefijo /api.
+Todos los endpoints deben utilizar el prefijo `/api`.
 
-AUTENTICACIÓN
+Crea el endpoint público:
+
+```text
+GET /api/health
+```
+
+La respuesta debe permitir validar que la API está operativa y, cuando sea apropiado, comprobar conectividad con la base de datos sin exponer información sensible.
+
+---
+
+# 4. TypeORM y PostgreSQL
+
+## Dependencias
+
+Incluye como mínimo:
+
+- `@nestjs/typeorm`
+- `typeorm`
+- `pg`
+- `dotenv`
+- `typeorm-ts-node-commonjs` o una alternativa compatible con la configuración del proyecto
+- `argon2`
+
+## Configuración
+
+Configura `TypeOrmModule.forRootAsync` con `ConfigModule` y `ConfigService`.
+
+La conexión normal de la aplicación debe utilizar:
+
+```text
+DATABASE_URL
+```
+
+La ejecución de migraciones debe utilizar:
+
+```text
+MIGRATION_DATABASE_URL
+```
+
+Cuando `MIGRATION_DATABASE_URL` no exista en desarrollo local, utiliza `DATABASE_URL` como respaldo.
+
+Crea:
+
+```text
+apps/api/src/database/data-source.ts
+```
+
+Este archivo debe exportar una instancia de `DataSource` válida para el CLI de TypeORM.
+
+Requisitos:
+
+- Debe funcionar con TypeScript en desarrollo.
+- Debe funcionar con JavaScript compilado en producción.
+- Comparte la misma colección de entidades entre NestJS y el DataSource.
+- Evita globs ambiguos que fallen después del build.
+- Usa una estrategia consistente de nombres `snake_case` para tablas, columnas, claves foráneas e índices.
+
+Configuración obligatoria:
+
+```text
+synchronize: false
+migrationsRun: false
+migrationsTableName: typeorm_migrations
+```
+
+También configura:
+
+- Logging según entorno.
+- SSL mediante variables de entorno.
+- Pool de conexiones limitado para proveedores gratuitos.
+- Reintentos de conexión en NestJS.
+- Timeouts razonables.
+
+Nunca uses `synchronize: true` como reemplazo de migraciones.
+
+## Repositories
+
+Usa `@InjectRepository(Entity)` en servicios para operaciones CRUD normales.
+
+Usa `QueryBuilder` únicamente cuando sea necesario para:
+
+- Filtros dinámicos.
+- Agregaciones.
+- Estadísticas.
+- Consultas complejas.
+- Carga controlada de relaciones.
+
+Evita problemas N+1 y evita cargar relaciones completas cuando solo se necesitan identificadores o campos específicos.
+
+## Transacciones
+
+Usa:
+
+```ts
+dataSource.transaction(async (manager) => {
+  // operaciones atómicas
+});
+```
+
+Utiliza transacciones para:
+
+- Reemplazar equipos generados.
+- Confirmar equipos.
+- Registrar resultados.
+- Deshacer el último partido.
+- Realizar liquidaciones.
+- Recalcular pagos.
+- Finalizar una jornada.
+
+Dentro de una transacción usa exclusivamente el `EntityManager` recibido. No mezcles repositorios externos con el manager transaccional.
+
+---
+
+# 5. Autenticación
 
 Implementa autenticación sencilla para organizadores.
 
 No debe existir registro público.
 
-Crea:
+Endpoints:
 
-* POST /api/auth/login
-* GET /api/auth/me
+```text
+POST /api/auth/login
+GET  /api/auth/me
+```
 
-El organizador inicial se crea de forma idempotente al iniciar la aplicación cuando no existe ningún usuario, utilizando:
+El organizador inicial debe crearse de forma idempotente mediante el seed utilizando:
 
-* SEED_ADMIN_EMAIL
-* SEED_ADMIN_PASSWORD
+- `SEED_ADMIN_NAME`
+- `SEED_ADMIN_EMAIL`
+- `SEED_ADMIN_PASSWORD`
 
-Hashea contraseñas con Argon2.
+Requisitos:
 
-Emite un JWT.
+- Hashea contraseñas con Argon2.
+- Emite un JWT.
+- Protege todos los endpoints excepto `/api/health` y `/api/auth/login`.
+- Swagger solo debe estar habilitado en desarrollo o mediante variable de entorno.
+- Implementa rate limiting para el login.
+- No reveles si un correo específico existe.
 
-Para esta primera versión, el frontend puede conservar el token en sessionStorage y enviarlo mediante Authorization: Bearer.
+Para esta primera versión, el frontend puede guardar el token en `sessionStorage` y enviarlo mediante:
 
-Protege todos los endpoints excepto:
+```text
+Authorization: Bearer <token>
+```
 
-* /api/health
-* /api/auth/login
-* Swagger únicamente en desarrollo o cuando esté habilitado por variable de entorno.
+Aísla la gestión de autenticación para permitir migrar posteriormente a access token y refresh token con cookies seguras.
 
-Incluye una abstracción que permita migrar posteriormente a access token y refresh token con cookies seguras.
+---
 
-MODELO DE DATOS
+# 6. Modelo de datos
 
-Crea, como mínimo, los siguientes modelos:
+Implementa como mínimo las siguientes entidades TypeORM.
 
-User
+## UserEntity
 
-* id UUID
-* name
-* email único
-* passwordHash
-* role
-* active
-* createdAt
-* updatedAt
+```text
+@Entity('users')
+id: UUID con @PrimaryGeneratedColumn('uuid')
+name: string
+email: string único
+passwordHash: string
+role: UserRole
+active: boolean
+createdAt: @CreateDateColumn
+updatedAt: @UpdateDateColumn
+```
 
-Player
+## PlayerEntity
 
-* id UUID
-* name
-* defaultLevel entero entre 1 y 5
-* notes opcional
-* active
-* createdAt
-* updatedAt
+```text
+@Entity('players')
+id: UUID
+name: string
+defaultLevel: entero entre 1 y 5
+notes: string nullable
+active: boolean
+createdAt
+updatedAt
+```
 
-Venue
+## VenueEntity
 
-* id UUID
-* name
-* address opcional
-* defaultCourtPrice entero
-* defaultGatoradePrice entero
-* active
-* createdAt
-* updatedAt
+```text
+@Entity('venues')
+id: UUID
+name: string
+address: string nullable
+defaultCourtPrice: integer
+defaultGatoradePrice: integer
+active: boolean
+createdAt
+updatedAt
+```
 
-GameSession
+## GameSessionEntity
 
-* id UUID
-* date
-* startTime opcional
-* venueId opcional
-* venueNameSnapshot
-* courtPrice entero
-* gatoradePrice entero
-* teamCount
-* defaultTargetScore
-* currentTargetScore
-* status
-* championTeamId opcional
-* createdAt
-* updatedAt
-* finishedAt opcional
+```text
+@Entity('game_sessions')
+id: UUID
+date: date
+startTime: time o datetime nullable
+venue: relación nullable
+venueNameSnapshot: string
+courtPrice: integer
+gatoradePrice: integer
+teamCount: integer
+defaultTargetScore: integer
+currentTargetScore: integer
+status: GameSessionStatus
+championTeam: relación nullable
+createdAt
+updatedAt
+finishedAt: datetime nullable
+```
 
-SessionPlayer
+## SessionPlayerEntity
 
-* id UUID
-* sessionId
-* playerId
-* playerNameSnapshot
-* levelSnapshot entre 1 y 5
-* includedInCourtSplit boolean
-* includedInGatoradeSplit boolean
-* courtAmount entero
-* gatoradeAmount entero
-* amountDue entero
-* amountPaid entero
-* paymentMethod opcional
-* paidAt opcional
-* createdAt
-* updatedAt
+```text
+@Entity('session_players')
+id: UUID
+session: relación obligatoria
+player: relación obligatoria
+playerNameSnapshot: string
+levelSnapshot: entero entre 1 y 5
+includedInCourtSplit: boolean
+includedInGatoradeSplit: boolean
+courtAmount: integer
+gatoradeAmount: integer
+amountDue: integer
+amountPaid: integer
+paymentMethod: PaymentMethod nullable
+paidAt: datetime nullable
+createdAt
+updatedAt
+```
 
-Team
+## TeamEntity
 
-* id UUID
-* sessionId
-* name
-* color opcional
-* initialRotationPosition opcional
-* generatedAutomatically
-* createdAt
-* updatedAt
+```text
+@Entity('teams')
+id: UUID
+session: relación obligatoria
+name: string
+color: string nullable
+initialRotationPosition: integer nullable
+generatedAutomatically: boolean
+confirmedAt: datetime nullable
+createdAt
+updatedAt
+```
 
-TeamPlayer
+## TeamPlayerEntity
 
-* teamId
-* sessionPlayerId
-* createdAt
+```text
+@Entity('team_players')
+id: UUID o clave primaria compuesta correctamente definida
+team: relación obligatoria
+sessionPlayer: relación obligatoria
+createdAt
+```
 
-Match
+## MatchEntity
 
-* id UUID
-* sessionId
-* sequence
-* teamAId
-* teamBId
-* teamAScore
-* teamBScore
-* targetScore
-* winnerTeamId
-* loserTeamId
-* startedAt opcional
-* finishedAt
-* createdAt
-* updatedAt
+```text
+@Entity('matches')
+id: UUID
+session: relación obligatoria
+sequence: integer
+teamA: relación obligatoria
+teamB: relación obligatoria
+teamAScore: integer
+teamBScore: integer
+targetScore: integer
+winnerTeam: relación obligatoria
+loserTeam: relación obligatoria
+startedAt: datetime nullable
+finishedAt: datetime
+createdAt
+updatedAt
+```
 
-Incluye índices, relaciones, restricciones únicas y estrategias de eliminación adecuadas.
+## Relaciones y restricciones
 
-No elimines físicamente jugadores o canchas que tengan historial. Utiliza active=false.
+Configura correctamente:
 
-ENUMS
+- `OneToMany`.
+- `ManyToOne`.
+- `JoinColumn`.
+- Índices.
+- Restricciones únicas.
+- `onDelete`.
+- Columnas `nullable`.
+
+No utilices cascadas indiscriminadamente.
+
+Protege el historial:
+
+- Los jugadores no se eliminan físicamente si tienen historial.
+- Las canchas no se eliminan físicamente si tienen historial.
+- Se utiliza `active=false` para desactivarlos.
+
+Restricciones mínimas:
+
+- Email único en `users`.
+- `session_id + player_id` único en `session_players`.
+- `team_id + session_player_id` único en `team_players`.
+- `session_id + sequence` único en `matches`.
+- Un `SessionPlayer` no puede pertenecer a más de un equipo de la misma jornada.
+- Los equipos y jugadores relacionados deben pertenecer a la misma jornada.
+
+Si una regla no puede garantizarse únicamente con una restricción simple de PostgreSQL, valídala transaccionalmente en el servicio de dominio y crea las pruebas correspondientes.
+
+---
+
+# 7. Enums compartidos
 
 Implementa como mínimo:
 
-UserRole
+## UserRole
 
-* ADMIN
-* ORGANIZER
+```text
+ADMIN
+ORGANIZER
+```
 
-GameSessionStatus
+## GameSessionStatus
 
-* DRAFT
-* TEAMS_CREATED
-* IN_PROGRESS
-* SETTLEMENT
-* FINISHED
-* CANCELLED
+```text
+DRAFT
+TEAMS_CREATED
+IN_PROGRESS
+SETTLEMENT
+FINISHED
+CANCELLED
+```
 
-PaymentMethod
+## PaymentMethod
 
-* CASH
-* TRANSFER
+```text
+CASH
+TRANSFER
+```
 
-REGLAS DE DINERO
+Los enums deben ubicarse en `packages/shared` o en una estructura compartida adecuada y no duplicarse entre entidades, DTOs y frontend.
 
-Todos los valores monetarios se guardan como enteros en COP.
+---
 
-Nunca utilices números de punto flotante para almacenar dinero.
+# 8. Reglas de dinero
 
-La división debe garantizar que:
+Todos los valores monetarios se guardan como enteros en pesos colombianos.
 
-* La suma de los valores individuales sea exactamente igual al total.
-* Los residuos se distribuyan determinísticamente.
-* Nunca se pierdan ni se creen pesos durante el cálculo.
+No utilices:
+
+- `float`.
+- `double precision`.
+- Decimales para valores monetarios.
+- Cálculos con punto flotante.
 
 Crea una función reutilizable:
 
+```ts
 distributeIntegerAmount(total, participantIds)
+```
 
-Debe retornar el valor exacto correspondiente a cada participante.
+Debe garantizar:
 
-JUGADORES
+- La suma de valores individuales es exactamente igual al total.
+- Los residuos se distribuyen determinísticamente.
+- Nunca se pierden ni se crean pesos.
+- El resultado no depende del orden accidental de una consulta de base de datos.
+- Valida totales negativos, lista vacía y participantes duplicados.
+
+---
+
+# 9. Jugadores
 
 Implementa:
 
-* Listar.
-* Buscar.
-* Crear.
-* Editar.
-* Activar.
-* Desactivar.
-* Consultar detalle.
+- Listar.
+- Buscar.
+- Crear.
+- Editar.
+- Activar.
+- Desactivar.
+- Consultar detalle.
+- Consultar historial básico cuando exista.
 
-El nivel permanente es de 1 a 5.
+El nivel permanente es un entero de 1 a 5.
 
-Cuando un jugador entra en una jornada se debe guardar playerNameSnapshot y levelSnapshot.
+Cuando un jugador entra en una jornada guarda:
+
+- `playerNameSnapshot`.
+- `levelSnapshot`.
 
 Cambiar posteriormente el nombre o nivel del jugador no debe alterar jornadas antiguas.
 
-CANCHAS
+---
+
+# 10. Canchas
 
 Implementa:
 
-* Listar.
-* Crear.
-* Editar.
-* Activar.
-* Desactivar.
+- Listar.
+- Crear.
+- Editar.
+- Activar.
+- Desactivar.
 
-Al seleccionar una cancha para una jornada, utiliza sus valores predeterminados, pero permite modificarlos únicamente para esa jornada.
+Al seleccionar una cancha para una jornada:
 
-JORNADAS
+- Copia sus valores predeterminados.
+- Permite modificarlos únicamente para esa jornada.
+- Guarda `venueNameSnapshot` para proteger el historial.
+
+---
+
+# 11. Jornadas
 
 Implementa:
 
-* Crear borrador.
-* Editar información mientras sea posible.
-* Seleccionar participantes.
-* Cambiar el nivel del participante únicamente para esa jornada.
-* Añadir jugador rápido.
-* Retirar participante antes de iniciar partidos.
-* Consultar detalle completo.
-* Listar historial con filtros.
-* Cancelar.
-* Finalizar.
+- Crear borrador.
+- Editar información mientras el estado lo permita.
+- Seleccionar participantes.
+- Cambiar el nivel del participante únicamente para esa jornada.
+- Añadir jugador rápido.
+- Retirar participante antes de iniciar partidos.
+- Consultar detalle completo.
+- Listar historial con búsqueda y filtros.
+- Cancelar.
+- Finalizar.
 
-No permitas retirar jugadores ni modificar equipos después de registrar el primer partido, salvo que exista una acción explícita y segura que reinicie todos los partidos.
+No permitas retirar jugadores ni modificar la composición de equipos después de registrar el primer partido.
 
-GENERACIÓN DE EQUIPOS
+Si implementas una acción para reiniciar equipos o partidos, debe ser explícita, destructiva, confirmada y ejecutarse dentro de una transacción.
+
+---
+
+# 12. Generación de equipos
 
 La generación debe ser aleatoria y equilibrada.
 
@@ -306,47 +569,49 @@ Condiciones:
 
 1. La diferencia de cantidad de jugadores entre equipos no puede ser superior a uno.
 2. El balance debe considerar principalmente el promedio de nivel.
-3. También debe considerar suma de nivel y tamaño del equipo.
+3. También debe considerar suma de nivel, tamaño y fuerza normalizada.
 4. Los jugadores del mismo nivel deben mezclarse aleatoriamente.
-5. Regenerar debe poder devolver una combinación diferente.
-6. No debe devolver una combinación claramente peor cuando existe otra más equilibrada.
-7. Los equipos pueden modificarse manualmente.
+5. Regenerar debe poder producir una combinación diferente.
+6. No debe devolver una combinación claramente peor cuando exista otra más equilibrada.
+7. Los equipos pueden modificarse manualmente antes de iniciar partidos.
 8. Un participante solo puede pertenecer a un equipo dentro de la jornada.
 
 Implementa un algoritmo que:
 
-1. Genere al menos 300 candidatos utilizando semillas aleatorias.
+1. Genere al menos 300 candidatos utilizando aleatoriedad.
 2. Respete los tamaños máximos permitidos.
-3. Distribuya inicialmente jugadores utilizando una estrategia serpiente o asignación al equipo con menor fuerza normalizada.
+3. Distribuya inicialmente jugadores mediante estrategia serpiente o asignación al equipo con menor fuerza normalizada.
 4. Realice intercambios locales entre equipos.
-5. Calcule una puntuación de balance usando:
-
-   * Diferencia máxima de nivel promedio.
-   * Varianza entre promedios.
-   * Diferencia de tamaños.
-   * Diferencia de fuerza normalizada.
-6. Ordene los candidatos por calidad.
-7. Elija aleatoriamente uno entre los mejores candidatos únicos.
-8. Retorne métricas de balance para mostrarlas en pantalla.
+5. Calcule una puntuación de balance utilizando:
+   - Diferencia máxima de promedio.
+   - Varianza entre promedios.
+   - Diferencia de tamaños.
+   - Diferencia de fuerza normalizada.
+6. Elimine candidatos duplicados.
+7. Ordene candidatos por calidad.
+8. Elija aleatoriamente uno entre los mejores candidatos únicos.
+9. Retorne métricas de balance para mostrarlas en pantalla.
 
 Permite:
 
-* Generar.
-* Regenerar.
-* Intercambiar dos jugadores.
-* Mover jugador.
-* Cambiar nombre de equipo.
-* Confirmar equipos.
+- Generar.
+- Regenerar.
+- Intercambiar dos jugadores.
+- Mover jugador.
+- Cambiar nombre del equipo.
+- Confirmar equipos.
 
-Utiliza transacciones en operaciones que reemplazan equipos.
+Las operaciones que reemplazan o confirman equipos deben ser transaccionales.
 
-ROTACIÓN DE PARTIDOS
+---
+
+# 13. Rotación de partidos
 
 Después de confirmar los equipos:
 
 1. Mezcla aleatoriamente los equipos.
-2. Guarda initialRotationPosition.
-3. Los dos primeros equipos juegan el partido inicial.
+2. Guarda `initialRotationPosition`.
+3. Los primeros dos equipos juegan el partido inicial.
 4. Los demás quedan en cola.
 5. El ganador permanece en cancha.
 6. El perdedor pasa al final de la cola.
@@ -355,833 +620,371 @@ Después de confirmar los equipos:
 
 La rotación no debe depender únicamente de un estado temporal del frontend.
 
-Debe poder reconstruirse usando:
+Debe reconstruirse usando:
 
-* Orden inicial de equipos.
-* Historial ordenado de partidos.
+- Orden inicial de equipos.
+- Historial ordenado de partidos.
 
 Crea un servicio de dominio que calcule:
 
-* Equipo en cancha A.
-* Equipo en cancha B.
-* Cola actual.
-* Siguiente equipo.
-* Número del siguiente partido.
+- Equipo A en cancha.
+- Equipo B en cancha.
+- Cola actual.
+- Siguiente equipo.
+- Número del siguiente partido.
 
-RESULTADOS
+No almacenes estados derivados innecesarios si pueden reconstruirse de manera segura.
 
-Cada partido debe almacenar su propio targetScore.
+---
 
-Modificar currentTargetScore afecta solamente partidos nuevos.
+# 14. Resultados y tabla de posiciones
 
-No debe alterar partidos registrados.
+Cada partido debe guardar su propio `targetScore`.
+
+Modificar `currentTargetScore` afecta únicamente partidos nuevos y nunca modifica partidos registrados.
 
 Valida:
 
-* No se permiten empates.
-* No se permiten puntajes negativos.
-* El ganador debe coincidir con el mayor puntaje.
-* Al menos uno de los equipos debe haber alcanzado el targetScore.
-* Ambos equipos deben pertenecer a la jornada.
-* Los equipos deben ser los correspondientes según la rotación actual.
+- No se permiten empates.
+- No se permiten puntajes negativos.
+- El ganador coincide con el mayor puntaje.
+- Al menos uno de los equipos alcanzó el `targetScore`.
+- Ambos equipos pertenecen a la jornada.
+- Los equipos corresponden a la rotación actual.
+- La jornada se encuentra en un estado válido.
 
 Cada victoria suma un punto global.
 
 Calcula para cada equipo:
 
-* Partidos jugados.
-* Ganados.
-* Perdidos.
-* Puntos globales.
-* Puntos a favor.
-* Puntos en contra.
-* Diferencia.
+- Partidos jugados.
+- Ganados.
+- Perdidos.
+- Puntos globales.
+- Puntos a favor.
+- Puntos en contra.
+- Diferencia.
 
-DESHACER RESULTADO
+Las estadísticas deben derivarse del historial registrado o actualizarse de forma consistente y transaccional.
+
+---
+
+# 15. Deshacer resultado
 
 Permite deshacer únicamente el último partido de una jornada activa.
 
 Al deshacerlo:
 
-* Elimina o revierte el último partido dentro de una transacción.
-* Reconstruye la rotación.
-* Reconstruye las estadísticas.
-* Devuelve el enfrentamiento correcto.
+- Elimina o revierte el último partido dentro de una transacción.
+- Reconstruye la rotación.
+- Reconstruye las estadísticas.
+- Devuelve el enfrentamiento correcto.
 
 No permitas eliminar libremente partidos intermedios.
 
-PAGOS Y LIQUIDACIÓN
+---
 
-El costo de cancha se divide entre todos los SessionPlayer con includedInCourtSplit=true.
+# 16. Pagos y liquidación
 
-El valor de Gatorades se divide entre todos los SessionPlayer que:
+El costo de cancha se divide entre todos los `SessionPlayer` con:
 
-* No pertenecen al equipo campeón.
-* Tienen includedInGatoradeSplit=true.
+```text
+includedInCourtSplit = true
+```
+
+El valor de Gatorades se divide entre los `SessionPlayer` que:
+
+- No pertenecen al equipo campeón.
+- Tienen `includedInGatoradeSplit=true`.
 
 El equipo campeón no paga Gatorades.
 
-Permite elegir manualmente el campeón, aunque el sistema debe sugerir el equipo con más victorias. En caso de empate, muestra que se requiere selección manual.
+Permite elegir manualmente el campeón. El sistema debe sugerir el equipo con más victorias. En caso de empate, muestra que se requiere selección manual.
 
 Después de elegir campeón:
 
-1. Calcula courtAmount.
-2. Calcula gatoradeAmount.
-3. Calcula amountDue.
-4. Conserva amountPaid.
-5. Actualiza el estado de pago derivado.
+1. Calcula `courtAmount`.
+2. Calcula `gatoradeAmount`.
+3. Calcula `amountDue`.
+4. Conserva `amountPaid`.
+5. Actualiza la información derivada de pago.
 
 Permite registrar:
 
-* amountPaid
-* paymentMethod
-* paidAt
+- `amountPaid`.
+- `paymentMethod`.
+- `paidAt`.
 
 Estados visuales derivados:
 
-* PENDING cuando amountPaid=0.
-* PARTIAL cuando amountPaid es mayor que 0 y menor que amountDue.
-* PAID cuando amountPaid es igual o superior a amountDue.
+```text
+PENDING: amountPaid = 0
+PARTIAL: amountPaid > 0 y amountPaid < amountDue
+PAID: amountPaid >= amountDue
+```
 
 No almacenes el estado si puede calcularse de manera segura.
 
-ENDPOINTS
+Define y documenta cómo tratar sobrepagos. Como mínimo, no deben romper los totales ni marcar valores negativos pendientes.
 
-Diseña una API REST clara, incluyendo como mínimo:
+---
 
-Auth
+# 17. API REST
 
-* POST /api/auth/login
-* GET /api/auth/me
+Diseña una API REST consistente, incluyendo como mínimo:
 
-Players
+## Auth
 
-* GET /api/players
-* POST /api/players
-* GET /api/players/:id
-* PATCH /api/players/:id
-* PATCH /api/players/:id/status
+```text
+POST /api/auth/login
+GET  /api/auth/me
+```
 
-Venues
+## Players
 
-* GET /api/venues
-* POST /api/venues
-* GET /api/venues/:id
-* PATCH /api/venues/:id
-* PATCH /api/venues/:id/status
+```text
+GET   /api/players
+POST  /api/players
+GET   /api/players/:id
+PATCH /api/players/:id
+PATCH /api/players/:id/status
+```
 
-Sessions
+## Venues
 
-* GET /api/sessions
-* POST /api/sessions
-* GET /api/sessions/:id
-* PATCH /api/sessions/:id
-* POST /api/sessions/:id/players
-* PATCH /api/sessions/:id/players/:sessionPlayerId
-* DELETE /api/sessions/:id/players/:sessionPlayerId
-* POST /api/sessions/:id/teams/generate
-* PUT /api/sessions/:id/teams
-* POST /api/sessions/:id/teams/confirm
-* POST /api/sessions/:id/rotation/start
-* GET /api/sessions/:id/rotation
-* PATCH /api/sessions/:id/target-score
-* POST /api/sessions/:id/matches
-* DELETE /api/sessions/:id/matches/latest
-* GET /api/sessions/:id/standings
-* POST /api/sessions/:id/settlement
-* PATCH /api/sessions/:id/payments/:sessionPlayerId
-* POST /api/sessions/:id/finish
-* POST /api/sessions/:id/cancel
-* GET /api/sessions/:id/summary
+```text
+GET   /api/venues
+POST  /api/venues
+GET   /api/venues/:id
+PATCH /api/venues/:id
+PATCH /api/venues/:id/status
+```
 
-Puedes ajustar rutas cuando exista una razón clara, pero mantén consistencia y documenta las decisiones.
+## Sessions
 
-VISTAS DEL FRONTEND
+```text
+GET    /api/sessions
+POST   /api/sessions
+GET    /api/sessions/:id
+PATCH  /api/sessions/:id
+POST   /api/sessions/:id/players
+PATCH  /api/sessions/:id/players/:sessionPlayerId
+DELETE /api/sessions/:id/players/:sessionPlayerId
+POST   /api/sessions/:id/teams/generate
+PUT    /api/sessions/:id/teams
+POST   /api/sessions/:id/teams/confirm
+POST   /api/sessions/:id/rotation/start
+GET    /api/sessions/:id/rotation
+PATCH  /api/sessions/:id/target-score
+POST   /api/sessions/:id/matches
+DELETE /api/sessions/:id/matches/latest
+GET    /api/sessions/:id/standings
+POST   /api/sessions/:id/settlement
+PATCH  /api/sessions/:id/payments/:sessionPlayerId
+POST   /api/sessions/:id/finish
+POST   /api/sessions/:id/cancel
+GET    /api/sessions/:id/summary
+```
 
-Implementa:
+Puedes ajustar rutas cuando exista una razón clara, pero mantén consistencia y documenta las decisiones en `docs/API.md`.
 
-* /login
-* /
-* /players
-* /players/[id]
-* /venues
-* /sessions
-* /sessions/new
-* /sessions/[id]
-* /sessions/[id]/players
-* /sessions/[id]/teams
-* /sessions/[id]/matches
-* /sessions/[id]/payments
-* /sessions/[id]/summary
+Todos los DTOs deben validarse en backend. No confíes únicamente en validaciones del frontend.
 
-Utiliza layouts responsive.
+---
 
-En móvil:
+# 18. Vistas del frontend
 
-* Barra de navegación inferior.
-* Acciones grandes.
-* Marcadores fáciles de tocar.
-* Formularios cómodos.
-* Evita tablas horizontales extensas.
+Implementa como mínimo:
 
-En escritorio:
+```text
+/login
+/
+/players
+/players/[id]
+/venues
+/sessions
+/sessions/new
+/sessions/[id]
+/sessions/[id]/players
+/sessions/[id]/teams
+/sessions/[id]/matches
+/sessions/[id]/payments
+/sessions/[id]/summary
+```
 
-* Sidebar.
-* Tablas completas.
-* Equipos en columnas.
-* Mejor aprovechamiento del espacio.
+Puedes utilizar pestañas o rutas anidadas siempre que la navegación sea clara y consistente con Stitch.
 
-CONTROL DE PARTIDO
+## Móvil
+
+- Barra de navegación inferior cuando corresponda.
+- Acciones grandes.
+- Marcadores fáciles de tocar.
+- Formularios cómodos.
+- Evita tablas horizontales extensas.
+- Mantén visibles las acciones importantes durante un partido.
+
+## Escritorio
+
+- Sidebar.
+- Tablas completas.
+- Equipos en columnas.
+- Mejor aprovechamiento del espacio.
+
+---
+
+# 19. Control del partido
 
 La vista de partido activo debe mostrar:
 
-* Número de partido.
-* Dos equipos.
-* Marcadores grandes.
-* Botones sumar y restar.
-* Puntaje objetivo.
-* Equipo que sigue.
-* Cola.
-* Botón registrar resultado.
-* Historial reciente.
-* Botón deshacer último resultado.
-* Tabla compacta.
+- Número de partido.
+- Dos equipos.
+- Marcadores grandes.
+- Botones para sumar y restar.
+- Puntaje objetivo.
+- Equipo que sigue.
+- Cola.
+- Botón para registrar resultado.
+- Historial reciente.
+- Botón para deshacer el último resultado.
+- Tabla de posiciones compacta.
 
 Solicita confirmación antes de registrar el resultado.
 
-No guardes cada cambio del marcador inmediatamente. Mantén el marcador como estado local y registra el partido al confirmar.
+No guardes cada cambio del marcador inmediatamente. Mantén el marcador como estado local y registra el partido únicamente al confirmar.
 
-EXPERIENCIA DE USUARIO
+Evita doble envío mediante estados de carga, bloqueo temporal e idempotencia razonable en backend.
+
+---
+
+# 20. Experiencia de usuario
 
 Implementa:
 
-* Skeletons.
-* Estados vacíos.
-* Manejo global de errores.
-* Toasts.
-* Confirmaciones destructivas.
-* Botones con estado de carga.
-* Formularios con mensajes claros.
-* Accesibilidad por teclado.
-* Etiquetas ARIA donde sean necesarias.
-* Contraste adecuado.
-* Formato monetario es-CO.
-* Fechas con configuración es-CO.
-
-PRISMA Y BASE DE DATOS
-
-Crea:
-
-* schema.prisma.
-* Migración inicial.
-* Seed de datos.
-* Datos de demostración opcionales.
-* Índices necesarios.
-* DATABASE_URL.
-* DIRECT_URL si el proveedor de producción lo requiere.
-* Comandos de migrate dev y migrate deploy.
-
-El seed debe crear:
-
-* Usuario administrador.
-* Al menos 12 jugadores de demostración.
-* Dos canchas de demostración.
-
-El seed no debe duplicar registros cuando se ejecuta nuevamente.
-
-DOCKER
-
-Crea docker-compose.yml para PostgreSQL local.
-
-Incluye healthcheck.
-
-No guardes archivos persistentes dentro del contenedor del backend.
-
-Crea un Dockerfile multi-stage para apps/api, compatible con un monorepo pnpm.
-
-El contenedor debe:
-
-* Instalar dependencias de forma reproducible.
-* Generar Prisma Client.
-* Compilar NestJS.
-* Ejecutar prisma migrate deploy antes de iniciar o mediante un entrypoint seguro.
-* Escuchar en process.env.PORT.
-* Exponer un healthcheck funcional.
-
-VARIABLES DE ENTORNO
-
-Crea archivos .env.example sin secretos reales.
-
-Backend:
-
-* NODE_ENV
-* PORT
-* DATABASE_URL
-* DIRECT_URL
-* JWT_SECRET
-* JWT_EXPIRES_IN
-* CORS_ORIGINS
-* SEED_ADMIN_NAME
-* SEED_ADMIN_EMAIL
-* SEED_ADMIN_PASSWORD
-* ENABLE_SWAGGER
-
-Frontend:
-
-* NEXT_PUBLIC_API_URL
-
-DOCUMENTACIÓN
-
-Crea:
-
-* README.md con instalación y ejecución.
-* docs/PRODUCT_SPEC.md.
-* docs/BUSINESS_RULES.md.
-* docs/DATA_MODEL.md.
-* docs/DEPLOYMENT.md.
-* docs/API.md.
-* AGENTS.md con convenciones para futuros agentes.
-
-Explica:
-
-* Flujo de una jornada.
-* Algoritmo de equipos.
-* Rotación.
-* Distribución de dinero.
-* Cómo deshacer el último partido.
-* Variables de entorno.
-* Despliegue.
-* Migraciones.
-* Seed.
-* Pruebas.
-
-PRUEBAS OBLIGATORIAS
-
-Crea pruebas unitarias para:
-
-1. División exacta de dinero.
-2. Distribución de residuos.
-3. Balance de equipos.
-4. Diferencia máxima de tamaño.
-5. Variedad entre regeneraciones.
-6. Rotación con dos equipos.
-7. Rotación con tres equipos.
-8. Rotación con cuatro equipos.
-9. Ganador que permanece.
-10. Perdedor que pasa al final.
-11. Cambio de targetScore sin alterar partidos anteriores.
-12. Tabla de posiciones.
-13. Deshacer último partido.
-14. División de Gatorades.
-15. Equipo campeón sin cobro de Gatorade.
-
-Crea pruebas de integración para:
-
-* Login.
-* Crear jugador.
-* Crear jornada.
-* Añadir jugadores.
-* Generar equipos.
-* Confirmar equipos.
-* Iniciar rotación.
-* Registrar partidos.
-* Deshacer último partido.
-* Liquidar.
-* Registrar pago.
-* Finalizar jornada.
-
-Crea pruebas E2E mínimas con Playwright para:
-
-1. Iniciar sesión.
-2. Crear una jornada.
-3. Seleccionar jugadores.
-4. Generar equipos.
-5. Registrar un partido.
-6. Consultar pagos.
-
-CALIDAD
-
-Utiliza:
-
-* TypeScript estricto.
-* ESLint.
-* Prettier.
-* Validaciones en frontend y backend.
-* Servicios de dominio para reglas importantes.
-* Transacciones.
-* Manejo consistente de errores.
-* DTOs claros.
-* Componentes pequeños.
-* Nombres expresivos.
-
-Evita:
-
-* any.
-* Lógica de negocio compleja en controladores.
-* Lógica crítica únicamente en el frontend.
-* Código duplicado.
-* Archivos gigantes.
-* TODO sin resolver.
-* Datos simulados permanentes en la interfaz.
-* Valores monetarios decimales.
-* Dependencia del orden visual para las reglas de negocio.
-
-CI
-
-Crea un workflow de GitHub Actions que ejecute:
-
-* Instalación con lockfile.
-* Lint.
-* Typecheck.
-* Pruebas.
-* Build.
-
-CRITERIOS DE ACEPTACIÓN
-
-La implementación se considera terminada cuando:
-
-1. El proyecto puede iniciarse siguiendo únicamente el README.
-2. Existe una migración inicial funcional.
-3. El usuario puede iniciar sesión.
-4. Se pueden crear jugadores y canchas.
-5. Se puede crear una jornada con diez o más jugadores.
-6. Se pueden generar dos, tres o más equipos.
-7. Regenerar produce combinaciones válidas y variadas.
-8. Los equipos se pueden editar manualmente.
-9. El partido inicial se selecciona aleatoriamente.
-10. El ganador permanece y el perdedor rota correctamente.
-11. Cada partido conserva su targetScore histórico.
-12. Las estadísticas coinciden con los resultados.
-13. Se puede deshacer el último resultado.
-14. Los costos individuales suman exactamente los costos totales.
-15. El campeón no paga Gatorades.
-16. Se pueden registrar pagos en efectivo o transferencia.
-17. Se puede finalizar y consultar una jornada histórica.
-18. La aplicación funciona en móvil y escritorio.
-19. Lint, typecheck, pruebas y build finalizan correctamente.
-20. No quedan TODO, mocks involuntarios ni funcionalidades simuladas.
-
-FORMA DE TRABAJO
-
-Implementa por etapas y realiza commits locales lógicos cuando sea posible.
-
-Después de cada etapa:
-
-* Ejecuta las pruebas relevantes.
-* Corrige los errores encontrados.
-* Actualiza la documentación.
-
-Al finalizar:
-
-1. Ejecuta instalación limpia.
-2. Ejecuta migraciones.
-3. Ejecuta lint.
-4. Ejecuta typecheck.
-5. Ejecuta todas las pruebas.
-6. Ejecuta build de web y API.
-7. Revisa el diff completo.
-8. Busca secretos o archivos .env incluidos accidentalmente.
-9. Entrega un resumen de lo implementado.
-10. Enumera cualquier limitación real que no hayas podido resolver.
-
-No afirmes que algo funciona sin haber ejecutado su validación correspondiente.
-
-IMPORTANTE: utiliza TypeORM. No instales ni utilices Prisma bajo ninguna circunstancia.
-
-ARQUITECTURA DE PERSISTENCIA
-
-Utiliza:
-
-* NestJS.
-* PostgreSQL.
-* TypeORM.
-* @nestjs/typeorm.
-* Driver pg.
-* Migraciones versionadas.
-* Repositories de TypeORM.
-* DataSource para migraciones y transacciones.
-* Entidades separadas por módulo.
-
-Dependencias principales del backend:
-
-* @nestjs/typeorm
-* typeorm
-* pg
-* dotenv
-* typeorm-ts-node-commonjs
-* argon2
-
-CONFIGURACIÓN DE TYPEORM
-
-Configura TypeOrmModule.forRootAsync utilizando ConfigModule y ConfigService.
-
-La conexión de la aplicación debe utilizar:
-
-* DATABASE_URL
-
-La ejecución de migraciones debe utilizar:
-
-* MIGRATION_DATABASE_URL cuando exista.
-* DATABASE_URL como respaldo en desarrollo local.
-
-Crea:
-
-apps/api/src/database/data-source.ts
-
-Este archivo debe exportar una instancia de DataSource válida para el CLI de TypeORM.
-
-La configuración debe funcionar tanto con archivos TypeScript durante desarrollo como con archivos JavaScript compilados en producción.
-
-Evita depender de globs ambiguos. Preferiblemente importa explícitamente las entidades en una colección centralizada que pueda reutilizarse entre TypeOrmModule y DataSource.
-
-Utiliza una estrategia consistente de nombres en snake_case para tablas, columnas, claves foráneas e índices.
-
-CONFIGURACIÓN OBLIGATORIA
-
-* synchronize: false
-* migrationsRun: false
-* logging configurable por entorno
-* ssl configurable mediante variables de entorno
-* pool limitado apropiadamente para servicios gratuitos
-* retryAttempts configurado en NestJS
-* migrationsTableName: typeorm_migrations
-
-Nunca utilices synchronize=true como reemplazo de migraciones.
-
-ENTIDADES
-
-Implementa como mínimo las siguientes entidades TypeORM:
-
-UserEntity
-
-* @Entity('users')
-* id UUID con @PrimaryGeneratedColumn('uuid')
-* name
-* email único
-* passwordHash
-* role enum
-* active
-* createdAt con @CreateDateColumn
-* updatedAt con @UpdateDateColumn
-
-PlayerEntity
-
-* @Entity('players')
-* id UUID
-* name
-* defaultLevel entero entre 1 y 5
-* notes nullable
-* active
-* createdAt
-* updatedAt
-
-VenueEntity
-
-* @Entity('venues')
-* id UUID
-* name
-* address nullable
-* defaultCourtPrice entero
-* defaultGatoradePrice entero
-* active
-* createdAt
-* updatedAt
-
-GameSessionEntity
-
-* @Entity('game_sessions')
-* id UUID
-* date
-* startTime nullable
-* venue nullable
-* venueNameSnapshot
-* courtPrice entero
-* gatoradePrice entero
-* teamCount entero
-* defaultTargetScore entero
-* currentTargetScore entero
-* status enum
-* championTeam nullable
-* createdAt
-* updatedAt
-* finishedAt nullable
-
-SessionPlayerEntity
-
-* @Entity('session_players')
-* id UUID
-* session
-* player
-* playerNameSnapshot
-* levelSnapshot entero entre 1 y 5
-* includedInCourtSplit boolean
-* includedInGatoradeSplit boolean
-* courtAmount entero
-* gatoradeAmount entero
-* amountDue entero
-* amountPaid entero
-* paymentMethod enum nullable
-* paidAt nullable
-* createdAt
-* updatedAt
-
-TeamEntity
-
-* @Entity('teams')
-* id UUID
-* session
-* name
-* color nullable
-* initialRotationPosition nullable
-* generatedAutomatically boolean
-* createdAt
-* updatedAt
-
-TeamPlayerEntity
-
-* @Entity('team_players')
-* id UUID o clave primaria compuesta correctamente definida
-* team
-* sessionPlayer
-* createdAt
-
-MatchEntity
-
-* @Entity('matches')
-* id UUID
-* session
-* sequence
-* teamA
-* teamB
-* teamAScore
-* teamBScore
-* targetScore
-* winnerTeam
-* loserTeam
-* startedAt nullable
-* finishedAt
-* createdAt
-* updatedAt
-
-RELACIONES
-
-Configura correctamente:
-
-* OneToMany.
-* ManyToOne.
-* OneToOne cuando aplique.
-* JoinColumn.
-* Índices.
-* Restricciones únicas.
-* onDelete.
-* nullable.
-
-No utilices cascade indiscriminadamente.
-
-Las eliminaciones deben proteger el historial.
-
-Jugadores y canchas con información histórica no se eliminan físicamente. Se desactivan utilizando active=false.
-
-Crea una restricción única para impedir que un SessionPlayer pertenezca más de una vez al mismo equipo o aparezca duplicado en la composición de equipos.
-
-Crea una restricción única para:
-
-* sessionId + sequence en matches.
-* teamId + sessionPlayerId en team_players.
-* email en users.
-
-COLUMNAS MONETARIAS
-
-Todos los valores monetarios se almacenan como integer en PostgreSQL.
-
-No utilices:
-
-* float.
-* double precision.
-* numeric con decimales.
-* transformaciones de punto flotante.
-
-Los valores representan pesos colombianos completos.
-
-ENUMS
-
-Utiliza columnas enum de TypeORM para:
-
-UserRole
-
-* ADMIN
-* ORGANIZER
-
-GameSessionStatus
-
-* DRAFT
-* TEAMS_CREATED
-* IN_PROGRESS
-* SETTLEMENT
-* FINISHED
-* CANCELLED
-
-PaymentMethod
-
-* CASH
-* TRANSFER
-
-Los enums deben ubicarse en módulos compartidos y no duplicarse entre entidades, DTOs y servicios.
-
-REPOSITORIES
-
-Utiliza:
-
-@InjectRepository(Entity)
-
-en los servicios correspondientes.
-
-No accedas directamente al DataSource para operaciones CRUD simples cuando un Repository sea suficiente.
-
-Utiliza QueryBuilder únicamente cuando:
-
-* Exista una consulta compleja.
-* Se necesiten filtros dinámicos.
-* Se calculen estadísticas.
-* Se necesiten agregaciones.
-* Se deban cargar relaciones de manera controlada.
-
-Evita problemas N+1.
-
-No cargues relaciones completas cuando solamente se requieren identificadores o campos específicos.
-
-TRANSACCIONES
-
-Utiliza:
-
-dataSource.transaction(async manager => {
-// operaciones
-});
-
-para operaciones críticas como:
-
-* Reemplazar equipos generados.
-* Confirmar equipos.
-* Registrar resultados.
-* Deshacer el último partido.
-* Realizar liquidaciones.
-* Recalcular pagos.
-* Finalizar una jornada.
-
-Dentro de una transacción utiliza exclusivamente el EntityManager recibido.
-
-No mezcles repositories externos con el manager transaccional.
-
-MIGRACIONES
+- Skeletons.
+- Estados vacíos.
+- Estado sin conexión.
+- Manejo global de errores.
+- Toasts.
+- Confirmaciones destructivas.
+- Botones con estado de carga.
+- Formularios con mensajes claros.
+- Accesibilidad por teclado.
+- Etiquetas ARIA cuando sean necesarias.
+- Contraste adecuado.
+- Formato monetario `es-CO`.
+- Fechas con configuración `es-CO`.
+- Diseño responsive en aproximadamente 390 px, tablet y 1440 px.
+
+No dejes datos simulados permanentes en la interfaz final.
+
+---
+
+# 21. Migraciones
 
 Crea una migración inicial real dentro de:
 
+```text
 apps/api/src/database/migrations
+```
 
 La migración debe:
 
-* Crear enums.
-* Crear tablas.
-* Crear índices.
-* Crear restricciones.
-* Crear relaciones.
-* Poder revertirse mediante down().
-* Ejecutarse sobre una base PostgreSQL vacía.
+- Crear enums.
+- Crear tablas.
+- Crear índices.
+- Crear restricciones.
+- Crear relaciones.
+- Poder revertirse con `down()`.
+- Ejecutarse sobre una base PostgreSQL vacía.
 
 Incluye scripts para:
 
-* migration:create
-* migration:generate
-* migration:run
-* migration:revert
-* migration:show
+- `migration:create`
+- `migration:generate`
+- `migration:run`
+- `migration:revert`
+- `migration:show`
 
-Ejemplos de comandos que deben documentarse:
+Documenta comandos equivalentes a:
 
+```bash
 pnpm --filter @volleyflow/api migration:generate --name=InitialSchema
 pnpm --filter @volleyflow/api migration:run
 pnpm --filter @volleyflow/api migration:revert
 pnpm --filter @volleyflow/api migration:show
+```
 
-Implementa scripts auxiliares para que el nombre de la migración pueda recibirse correctamente sin depender de comandos difíciles de usar en Windows, macOS o Linux.
+Implementa scripts auxiliares para que los comandos sean utilizables en macOS, Linux y Windows.
 
 Nunca generes migraciones automáticamente al iniciar la aplicación.
 
-SEED
+---
 
-Crea un seed idempotente utilizando TypeORM dentro de:
+# 22. Seed
 
+Crea un seed idempotente en:
+
+```text
 apps/api/src/database/seeds/run-seed.ts
+```
 
-El seed debe:
+Debe:
 
-* Inicializar el DataSource.
-* Crear el administrador cuando no exista.
-* Hashear la contraseña con Argon2.
-* Crear al menos 12 jugadores de demostración.
-* Crear dos canchas de demostración.
-* No duplicar información si se ejecuta nuevamente.
-* Cerrar correctamente el DataSource.
+- Inicializar el DataSource.
+- Crear el administrador cuando no exista.
+- Hashear la contraseña con Argon2.
+- Crear al menos 12 jugadores de demostración.
+- Crear dos canchas de demostración.
+- No duplicar información al ejecutarse nuevamente.
+- Cerrar correctamente el DataSource.
 
-Utiliza Repository.upsert cuando sea seguro y apropiado.
+Utiliza `Repository.upsert` cuando sea seguro y apropiado.
 
-Variables del administrador:
+Incluye:
 
-* SEED_ADMIN_NAME
-* SEED_ADMIN_EMAIL
-* SEED_ADMIN_PASSWORD
-
-Incluye el comando:
-
+```bash
 pnpm --filter @volleyflow/api seed
+```
 
-PRUEBAS
+Los datos de demostración deben poder deshabilitarse en producción mediante configuración.
 
-Para pruebas unitarias de servicios simples, crea mocks tipados de Repository.
+---
 
-Para pruebas de integración utiliza una base PostgreSQL de pruebas real.
+# 23. Docker
 
-No utilices SQLite como sustituto principal porque puede comportarse de forma diferente a PostgreSQL en:
+Crea `docker-compose.yml` para PostgreSQL local con:
 
-* Enums.
-* Restricciones.
-* Transacciones.
-* Índices.
-* Tipos de fecha.
-* Consultas.
-* Concurrencia.
+- Volumen persistente.
+- Healthcheck.
+- Variables configurables.
+- Puerto local documentado.
 
-Las pruebas de integración deben:
-
-* Crear una base o esquema aislado.
-* Ejecutar migraciones.
-* Limpiar datos entre escenarios.
-* Cerrar conexiones.
-* Evitar compartir datos entre tests.
-
-DOCKER
-
-Crea un Dockerfile multi-stage para el backend NestJS dentro del monorepo.
+Crea un Dockerfile multi-stage para `apps/api`, compatible con el monorepo pnpm.
 
 El contenedor debe:
 
-1. Instalar pnpm mediante Corepack.
+1. Habilitar pnpm mediante Corepack.
 2. Instalar dependencias usando el lockfile.
-3. Compilar packages/shared cuando sea necesario.
-4. Compilar apps/api.
-5. Copiar los archivos necesarios para las migraciones.
-6. Ejecutar migration:run antes de iniciar la aplicación mediante un entrypoint seguro.
-7. Ejecutar el código compilado de NestJS.
-8. Escuchar process.env.PORT.
+3. Compilar `packages/shared` cuando corresponda.
+4. Compilar `apps/api`.
+5. Copiar las migraciones compiladas.
+6. Ejecutar `migration:run` mediante un entrypoint seguro antes de iniciar.
+7. Detener el arranque si una migración falla.
+8. Ejecutar el NestJS compilado.
+9. Escuchar en `process.env.PORT`.
+10. Exponer un healthcheck funcional.
 
-No ejecutes comandos de TypeORM con ts-node dentro de la imagen final de producción si las migraciones ya están compiladas a JavaScript.
+No ejecutes TypeScript con `ts-node` dentro de la imagen final si las migraciones ya están compiladas a JavaScript.
 
-El entrypoint debe detener el inicio del servidor si una migración falla.
+---
 
-VARIABLES DE ENTORNO
+# 24. Variables de entorno
 
-Backend:
+Crea archivos `.env.example` sin secretos reales.
 
+## Backend
+
+```env
 NODE_ENV=
 PORT=
 DATABASE_URL=
@@ -1194,57 +997,307 @@ CORS_ORIGINS=
 SEED_ADMIN_NAME=
 SEED_ADMIN_EMAIL=
 SEED_ADMIN_PASSWORD=
+SEED_DEMO_DATA=
 ENABLE_SWAGGER=
+```
 
-Frontend:
+## Frontend
 
+```env
 NEXT_PUBLIC_API_URL=
+```
 
-No utilices DIRECT_URL, ya que no se está usando Prisma.
+Valida las variables obligatorias al iniciar y muestra errores claros sin revelar secretos.
 
-NEON
+## Neon
 
 Para Neon utiliza:
 
-* DATABASE_URL con la conexión pooled para la aplicación.
-* MIGRATION_DATABASE_URL con la conexión directa para ejecutar migraciones.
+- `DATABASE_URL` con conexión pooled para la aplicación.
+- `MIGRATION_DATABASE_URL` con conexión directa para migraciones.
 
-La configuración SSL debe funcionar correctamente en producción.
+La configuración SSL debe funcionar en producción sin desactivar globalmente la validación de certificados.
 
-No desactives la validación SSL globalmente.
+---
 
-DESPLIEGUE
+# 25. Documentación
+
+Crea:
+
+- `README.md` con instalación, ejecución y comandos.
+- `docs/PRODUCT_SPEC.md`.
+- `docs/BUSINESS_RULES.md`.
+- `docs/DATA_MODEL.md`.
+- `docs/DESIGN_IMPLEMENTATION.md`.
+- `docs/DEPLOYMENT.md`.
+- `docs/API.md`.
+- `docs/IMPLEMENTATION_PLAN.md`.
+- `AGENTS.md` con convenciones para futuros agentes.
+
+Documenta:
+
+- Arquitectura del monorepo.
+- Flujo de una jornada.
+- Algoritmo de equipos.
+- Rotación.
+- Distribución de dinero.
+- Deshacer último partido.
+- Variables de entorno.
+- Migraciones.
+- Seed.
+- Pruebas.
+- Despliegue.
+- Decisiones técnicas relevantes.
+
+---
+
+# 26. Pruebas
+
+## Pruebas unitarias obligatorias
+
+Crea pruebas para:
+
+1. División exacta de dinero.
+2. Distribución de residuos.
+3. Lista vacía o participantes duplicados en la distribución.
+4. Balance de equipos.
+5. Diferencia máxima de tamaño.
+6. Variedad entre regeneraciones.
+7. Rotación con dos equipos.
+8. Rotación con tres equipos.
+9. Rotación con cuatro equipos.
+10. Ganador que permanece.
+11. Perdedor que pasa al final.
+12. Cambio de `targetScore` sin alterar partidos anteriores.
+13. Tabla de posiciones.
+14. Deshacer último partido.
+15. División de Gatorades.
+16. Equipo campeón sin cobro de Gatorade.
+17. Validaciones de resultados inválidos.
+
+Para servicios simples usa mocks tipados de `Repository`.
+
+## Pruebas de integración
+
+Usa una base PostgreSQL real de pruebas.
+
+No utilices SQLite como sustituto principal porque puede comportarse distinto en enums, restricciones, transacciones, índices, fechas y consultas.
+
+Las pruebas deben:
+
+- Utilizar una base o esquema aislado.
+- Ejecutar migraciones.
+- Limpiar datos entre escenarios.
+- Cerrar conexiones.
+- Evitar datos compartidos entre pruebas.
+
+Cubre:
+
+- Login.
+- Crear jugador.
+- Crear cancha.
+- Crear jornada.
+- Añadir jugadores.
+- Generar equipos.
+- Confirmar equipos.
+- Iniciar rotación.
+- Registrar partidos.
+- Deshacer último partido.
+- Liquidar.
+- Registrar pago.
+- Finalizar jornada.
+- Acceso sin JWT.
+
+## Pruebas E2E
+
+Utiliza Playwright para cubrir como mínimo:
+
+1. Iniciar sesión.
+2. Crear una jornada.
+3. Seleccionar jugadores.
+4. Generar equipos.
+5. Registrar un partido.
+6. Consultar pagos.
+
+---
+
+# 27. Calidad
+
+Utiliza:
+
+- TypeScript estricto.
+- ESLint.
+- Prettier.
+- Validaciones en frontend y backend.
+- Servicios de dominio para reglas importantes.
+- Transacciones.
+- Manejo consistente de errores.
+- DTOs claros.
+- Componentes pequeños.
+- Nombres expresivos.
+
+Evita:
+
+- `any` sin una justificación excepcional.
+- Lógica compleja en controladores.
+- Lógica crítica únicamente en frontend.
+- Código duplicado.
+- Archivos gigantes.
+- `TODO` sin resolver.
+- Mocks permanentes.
+- Valores monetarios decimales.
+- Dependencia del orden visual para reglas de negocio.
+- Consultas N+1.
+- Datos sensibles en logs.
+
+---
+
+# 28. CI
+
+Crea un workflow de GitHub Actions que ejecute:
+
+1. Instalación con lockfile.
+2. Lint.
+3. Typecheck.
+4. Pruebas unitarias.
+5. Pruebas de integración con PostgreSQL de servicio.
+6. Build.
+
+Las pruebas E2E pueden ejecutarse en un workflow separado si requieren levantar los servicios completos.
+
+---
+
+# 29. Despliegue
+
+Prepara:
+
+- Frontend para Vercel.
+- Backend para Koyeb o Render mediante Docker.
+- PostgreSQL para Neon.
 
 Antes de iniciar NestJS en producción ejecuta:
 
+```bash
 pnpm --filter @volleyflow/api migration:run
+```
 
-No ejecutes:
+Documenta:
 
-* prisma generate
-* prisma migrate deploy
-* prisma db seed
+- Root directory y comandos del frontend.
+- Build context y Dockerfile del backend.
+- Healthcheck.
+- Variables de entorno.
+- Configuración CORS.
+- Ejecución de migraciones.
+- Seed inicial.
+- Conexiones pooled y directas de Neon.
 
-Elimina cualquier dependencia, archivo, script o documentación relacionada con Prisma.
+---
 
-AUDITORÍA FINAL
+# 30. Criterios de aceptación
 
-Antes de considerar el trabajo terminado verifica:
+La implementación se considera terminada cuando:
 
-1. Que no exista schema.prisma.
-2. Que no exista @prisma/client.
-3. Que no exista la dependencia prisma.
-4. Que no existan comandos prisma en package.json.
-5. Que todas las entidades estén registradas en TypeOrmModule.
-6. Que el DataSource del CLI utilice las mismas entidades.
-7. Que synchronize permanezca en false.
-8. Que la migración inicial pueda ejecutarse en una base vacía.
-9. Que migration:revert funcione.
-10. Que el seed sea idempotente.
-11. Que las transacciones utilicen correctamente EntityManager.
-12. Que el build incluya las migraciones compiladas.
-13. Que la aplicación funcione con PostgreSQL local y Neon.
-14. Que las pruebas no dejen conexiones abiertas.
-15. Que no existan referencias residuales a Prisma.
+1. El proyecto puede iniciarse siguiendo únicamente el README.
+2. El monorepo se inicializa correctamente con pnpm.
+3. Existe una migración inicial funcional.
+4. La migración puede ejecutarse en una base vacía.
+5. La migración puede revertirse.
+6. El seed es idempotente.
+7. El usuario puede iniciar sesión.
+8. Se pueden crear jugadores y canchas.
+9. Se puede crear una jornada con diez o más jugadores.
+10. Se pueden generar dos, tres o más equipos.
+11. Regenerar produce combinaciones válidas y variadas.
+12. Los equipos se pueden editar manualmente.
+13. El partido inicial se selecciona aleatoriamente.
+14. El ganador permanece y el perdedor rota correctamente.
+15. Cada partido conserva su `targetScore` histórico.
+16. Las estadísticas coinciden con los resultados.
+17. Se puede deshacer el último resultado.
+18. Los costos individuales suman exactamente los costos totales.
+19. El campeón no paga Gatorades.
+20. Se pueden registrar pagos en efectivo o transferencia.
+21. Se puede finalizar y consultar una jornada histórica.
+22. La aplicación funciona en móvil, tablet y escritorio.
+23. Los diseños implementados son coherentes con Stitch.
+24. Lint, typecheck, pruebas y build finalizan correctamente.
+25. No quedan funcionalidades simuladas, errores conocidos ocultos ni tareas críticas pendientes.
 
-Todas las demás reglas funcionales, vistas, endpoints, pruebas y criterios de aceptación del prompt original de VolleyFlow se mantienen sin cambios.
+---
+
+# 31. Ejecución por etapas
+
+Implementa en este orden recomendado:
+
+1. Inspección del repositorio y plan.
+2. Inicialización del monorepo.
+3. Configuración de calidad y scripts raíz.
+4. PostgreSQL local y TypeORM.
+5. Entidades y migración inicial.
+6. Autenticación y seed.
+7. Jugadores y canchas.
+8. Jornadas y participantes.
+9. Generación y edición de equipos.
+10. Rotación y resultados.
+11. Tabla de posiciones y deshacer.
+12. Liquidación y pagos.
+13. Implementación completa de vistas desde Stitch.
+14. Pruebas de integración y E2E.
+15. Docker, CI y documentación.
+16. Auditoría final.
+
+Después de cada etapa:
+
+- Ejecuta las pruebas relevantes.
+- Corrige los errores encontrados.
+- Actualiza la documentación.
+- Realiza un commit local descriptivo cuando sea posible.
+
+---
+
+# 32. Auditoría final obligatoria
+
+Antes de considerar el trabajo terminado:
+
+1. Ejecuta una instalación limpia con el lockfile.
+2. Levanta PostgreSQL local.
+3. Ejecuta la migración inicial sobre una base limpia.
+4. Ejecuta el seed dos veces y comprueba que no duplica datos.
+5. Ejecuta `migration:show`.
+6. Comprueba que `migration:revert` funciona en un entorno controlado y vuelve a aplicar la migración.
+7. Ejecuta lint.
+8. Ejecuta typecheck.
+9. Ejecuta pruebas unitarias.
+10. Ejecuta pruebas de integración.
+11. Ejecuta pruebas E2E.
+12. Ejecuta build del frontend.
+13. Ejecuta build del backend.
+14. Inicia ambos servicios localmente.
+15. Comprueba `/api/health`.
+16. Revisa el diff completo.
+17. Busca secretos y archivos `.env` incluidos accidentalmente.
+18. Verifica que todas las entidades estén registradas en NestJS y en el DataSource.
+19. Verifica que `synchronize` permanezca en `false`.
+20. Verifica que el build incluya las migraciones compiladas.
+21. Verifica que las transacciones utilicen correctamente `EntityManager`.
+22. Verifica que las pruebas no dejen conexiones abiertas.
+23. Comprueba que no se instaló ni utilizó otro ORM.
+24. Busca errores ortográficos en la interfaz en español.
+25. Prueba manualmente el flujo completo con al menos 10 jugadores y 3 equipos.
+
+Al finalizar entrega un resumen con:
+
+- Etapas completadas.
+- Arquitectura creada.
+- Funcionalidades implementadas.
+- Decisiones relevantes.
+- Migraciones y seeds creados.
+- Pruebas ejecutadas.
+- Resultado de lint, typecheck y build.
+- Commits locales realizados.
+- Limitaciones reales pendientes.
+- Pasos exactos para ejecutar localmente.
+- Pasos exactos para desplegar.
+
+No afirmes que algo funciona sin haber ejecutado su validación correspondiente. No ocultes pruebas fallidas ni limitaciones reales.
