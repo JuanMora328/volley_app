@@ -9,11 +9,11 @@ import {
 @Entity('users')
 export class UserEntity {
   @PrimaryGeneratedColumn('uuid') id!: string;
-  @Column() name!: string;
-  @Column({ unique: true }) email!: string;
-  @Column({ name: 'password_hash' }) passwordHash!: string;
+  @Column({ type: 'varchar' }) name!: string;
+  @Column({ type: 'varchar', unique: true }) email!: string;
+  @Column({ name: 'password_hash', type: 'varchar' }) passwordHash!: string;
   @Column({ type: 'enum', enum: UserRole, default: UserRole.ORGANIZER }) role!: UserRole;
-  @Column({ default: true }) active!: boolean;
+  @Column({ type: 'boolean', default: true }) active!: boolean;
   @CreateDateColumn({ name: 'created_at' }) createdAt!: Date;
   @UpdateDateColumn({ name: 'updated_at' }) updatedAt!: Date;
 }

@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { PlayersModule } from './players/players.module';
 import { VenuesModule } from './venues/venues.module';
 import { SessionsModule } from './sessions/sessions.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -40,6 +41,7 @@ import { SessionsModule } from './sessions/sessions.module';
     PlayersModule,
     VenuesModule,
     SessionsModule,
+    DashboardModule,
   ],
 })
 export class AppModule {}
