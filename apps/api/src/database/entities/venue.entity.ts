@@ -9,7 +9,7 @@ import {
 export class VenueEntity {
   @PrimaryGeneratedColumn('uuid') id!: string;
   @Column() name!: string;
-  @Column({ nullable: true }) address!: string | null;
+  @Column({ type: 'text', nullable: true }) address!: string | null;
   @Column({ name: 'default_court_price', type: 'int', default: 0 }) defaultCourtPrice!: number;
   @Column({ name: 'default_gatorade_price', type: 'int', default: 0 })
   defaultGatoradePrice!: number;
