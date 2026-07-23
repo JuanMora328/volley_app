@@ -116,6 +116,21 @@ La configuración local por defecto usa:
 - Base de datos: `volleyflow`
 - Puerto: `5432`
 
+
+## Migraciones de base de datos
+
+Las migraciones **no se corren automáticamente** al levantar la API, ni con Docker local ni con Neon. La API tiene `migrationsRun` desactivado para evitar cambios de esquema inesperados en ambientes compartidos o productivos.
+
+Para correr migraciones manualmente contra la base configurada en tus variables de entorno:
+
+```bash
+pnpm --filter @volleyflow/api migration:run
+```
+
+El comando usa `MIGRATION_DATABASE_URL` si está definida; si no, usa `DATABASE_URL`. Por eso, para Neon debes pegar el connection string de Neon en esas variables antes de ejecutar la migración.
+
+> Nota: actualmente el comando busca migraciones en `apps/api/src/database/migrations`. Si todavía no existen archivos de migración, no habrá cambios para aplicar.
+
 ## Levantar el backend
 
 Antes de iniciar la API, los scripts de desarrollo compilan automáticamente `@volleyflow/shared`. Esto evita errores como `Cannot find module '@volleyflow/shared'` cuando la API importa enums y tipos compartidos.
