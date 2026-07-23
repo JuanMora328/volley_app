@@ -29,6 +29,11 @@ design/     Referencias visuales y prototipos
 
 ## Configuración de variables de entorno
 
+Puedes trabajar con una base de datos local en Docker **o** con una base de datos remota como Neon. La diferencia está únicamente en el valor de `DATABASE_URL`:
+
+- **Docker local:** usa la URL del `docker-compose.yml`: `postgres://volleyflow:volleyflow@localhost:5432/volleyflow`.
+- **Neon u otro PostgreSQL remoto:** reemplaza `DATABASE_URL` y `MIGRATION_DATABASE_URL` por el connection string que te entregue el proveedor. En Neon normalmente también debes usar `DATABASE_SSL=true`.
+
 El repositorio incluye archivos de ejemplo para que puedas copiarlos y completar tus valores locales:
 
 ```bash
@@ -37,7 +42,39 @@ cp apps/api/.env.example apps/api/.env
 cp apps/web/.env.example apps/web/.env.local
 ```
 
-> Nota: si ejecutas los servicios desde la raíz con `pnpm dev`, asegúrate de que las variables estén disponibles para cada proceso. Para desarrollo local suele ser suficiente mantener `.env` en la raíz y también los archivos específicos de cada app cuando necesites sobreescribir valores.
+> Nota: si ejecutas los servicios desde la raíz con `pnpm dev`, asegúrate de que las variables estén disponibles para cada proceso. Para desarrollo local puedes usar `.env` en la raíz y también los archivos específicos de cada app cuando necesites sobreescribir valores.
+
+
+### Docker local vs Neon
+
+#### Opción A: PostgreSQL local con Docker
+
+Usa esta opción si quieres desarrollar sin depender de servicios externos. Levanta el contenedor con:
+
+```bash
+docker compose up -d postgres
+```
+
+Y deja estas variables:
+
+```env
+DATABASE_URL=postgres://volleyflow:volleyflow@localhost:5432/volleyflow
+MIGRATION_DATABASE_URL=postgres://volleyflow:volleyflow@localhost:5432/volleyflow
+DATABASE_SSL=false
+```
+
+#### Opción B: PostgreSQL remoto con Neon
+
+Usa esta opción si quieres conectar la API a una base de datos en Neon. No necesitas levantar el servicio `postgres` de Docker; solo reemplaza las variables por el connection string de Neon:
+
+```env
+DATABASE_URL=postgresql://USER:PASSWORD@HOST/DB?sslmode=require
+MIGRATION_DATABASE_URL=postgresql://USER:PASSWORD@HOST/DB?sslmode=require
+DATABASE_SSL=true
+DATABASE_SSL_REJECT_UNAUTHORIZED=false
+```
+
+> Importante: no subas credenciales reales al repositorio. Los archivos `.env.example` son solo plantillas.
 
 ### Variables principales del backend
 
@@ -80,6 +117,8 @@ La configuración local por defecto usa:
 - Puerto: `5432`
 
 ## Levantar el backend
+
+Antes de iniciar la API, los scripts de desarrollo compilan automáticamente `@volleyflow/shared`. Esto evita errores como `Cannot find module '@volleyflow/shared'` cuando la API importa enums y tipos compartidos.
 
 1. Copia y completa las variables de entorno:
 
