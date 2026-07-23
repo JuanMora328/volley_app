@@ -17,7 +17,7 @@ export class TeamEntity {
   @JoinColumn({ name: 'session_id' })
   session!: GameSessionEntity;
   @Column() name!: string;
-  @Column({ nullable: true }) color!: string | null;
+  @Column({ type: 'text', nullable: true }) color!: string | null;
   @Column({ name: 'initial_rotation_position', type: 'int', nullable: true })
   initialRotationPosition!: number | null;
   @Column({ name: 'generated_automatically', default: true }) generatedAutomatically!: boolean;

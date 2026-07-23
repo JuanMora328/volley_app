@@ -32,7 +32,7 @@ design/     Referencias visuales y prototipos
 Puedes trabajar con una base de datos local en Docker **o** con una base de datos remota como Neon. La diferencia está únicamente en el valor de `DATABASE_URL`:
 
 - **Docker local:** usa la URL del `docker-compose.yml`: `postgres://volleyflow:volleyflow@localhost:5432/volleyflow`.
-- **Neon u otro PostgreSQL remoto:** reemplaza `DATABASE_URL` y `MIGRATION_DATABASE_URL` por el connection string que te entregue el proveedor. En Neon normalmente también debes usar `DATABASE_SSL=true`.
+- **Neon u otro PostgreSQL remoto:** reemplaza `DATABASE_URL` y `MIGRATION_DATABASE_URL` por el connection string que te entregue el proveedor. En Neon normalmente también debes usar `DATABASE_SSL=true` y `sslmode=verify-full` en el connection string.
 
 El repositorio incluye archivos de ejemplo para que puedas copiarlos y completar tus valores locales:
 
@@ -68,10 +68,10 @@ DATABASE_SSL=false
 Usa esta opción si quieres conectar la API a una base de datos en Neon. No necesitas levantar el servicio `postgres` de Docker; solo reemplaza las variables por el connection string de Neon:
 
 ```env
-DATABASE_URL=postgresql://USER:PASSWORD@HOST/DB?sslmode=require
-MIGRATION_DATABASE_URL=postgresql://USER:PASSWORD@HOST/DB?sslmode=require
+DATABASE_URL=postgresql://USER:PASSWORD@HOST/DB?sslmode=verify-full
+MIGRATION_DATABASE_URL=postgresql://USER:PASSWORD@HOST/DB?sslmode=verify-full
 DATABASE_SSL=true
-DATABASE_SSL_REJECT_UNAUTHORIZED=false
+DATABASE_SSL_REJECT_UNAUTHORIZED=true
 ```
 
 > Importante: no subas credenciales reales al repositorio. Los archivos `.env.example` son solo plantillas.
