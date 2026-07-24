@@ -14,6 +14,24 @@ if (!databaseUrl) {
   throw new Error('DATABASE_URL o MIGRATION_DATABASE_URL es requerido para TypeORM.');
 }
 
+function resolveSslOption(url: string, sslEnv?: string, rejectUnauthorizedEnv?: string) {
+  if (sslEnv === 'true') {
+    return { rejectUnauthorized: rejectUnauthorizedEnv !== 'false' };
+  }
+
+  if (sslEnv === 'false') {
+    return false;
+  }
+
+  return /[?&]sslmode=/.test(url) ? undefined : false;
+}
+
+const ssl = resolveSslOption(
+  databaseUrl,
+  process.env.DATABASE_SSL,
+  process.env.DATABASE_SSL_REJECT_UNAUTHORIZED,
+);
+
 export default new DataSource({
   type: 'postgres',
   url: databaseUrl,
@@ -23,10 +41,7 @@ export default new DataSource({
   migrationsRun: false,
   migrationsTableName: 'typeorm_migrations',
   logging: process.env.NODE_ENV === 'development',
-  ssl:
-    process.env.DATABASE_SSL === 'true'
-      ? { rejectUnauthorized: process.env.DATABASE_SSL_REJECT_UNAUTHORIZED !== 'false' }
-      : false,
+  ...(ssl === undefined ? {} : { ssl }),
   extra: {
     max: Number(process.env.DATABASE_POOL_MAX ?? 5),
     connectionTimeoutMillis: 5000,
