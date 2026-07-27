@@ -178,9 +178,11 @@ export default function NewSession() {
             <b className="text-[#0051d5]">{Object.keys(selected).length} seleccionados</b>
           </div>
           <div className="relative">
-            <Search className="absolute left-3 top-3 text-slate-400" size={20} />
+            <span className="pointer-events-none absolute inset-y-0 left-0 flex w-12 items-center justify-center text-slate-400">
+              <Search aria-hidden="true" size={20} />
+            </span>
             <input
-              className="input pl-10"
+              className="input pl-12"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Buscar jugador"
@@ -229,18 +231,20 @@ export default function NewSession() {
                 ? 'La distribución tendrá equipos con un jugador de diferencia.'
                 : 'La distribución será exacta.'}
           </p>
-          <div className="flex gap-3">
-            <button className="btn-secondary flex-1" onClick={() => setStep(1)}>
-              <ArrowLeft /> Volver
+          <div className="grid grid-cols-2 gap-3">
+            <button className="btn-secondary w-full" onClick={() => setStep(1)}>
+              <ArrowLeft aria-hidden="true" size={20} />
+              <span>Volver</span>
             </button>
             <button
-              className="btn flex-1"
+              className="btn w-full"
               disabled={
                 Object.keys(selected).length < (session?.teamCount ?? 2) || savePlayers.isPending
               }
               onClick={() => savePlayers.mutate()}
             >
-              Continuar <ArrowRight />
+              <span>Continuar</span>
+              <ArrowRight aria-hidden="true" size={20} />
             </button>
           </div>
         </section>

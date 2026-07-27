@@ -173,11 +173,11 @@ export default function TeamsPage() {
               );
             })}
           </div>
-          <div className="grid gap-3 sm:grid-cols-3">
+          <div className={`grid gap-3 ${editing ? 'sm:grid-cols-2' : 'sm:grid-cols-3'}`}>
             {editing ? (
               <>
                 <button
-                  className="btn-secondary"
+                  className="btn-secondary w-full"
                   onClick={() => {
                     setDraft(s.teams);
                     setEditing(false);
@@ -185,30 +185,36 @@ export default function TeamsPage() {
                 >
                   Cancelar
                 </button>
-                <button className="btn" disabled={save.isPending} onClick={() => save.mutate()}>
-                  <Save /> Guardar cambios
+                <button
+                  className="btn w-full"
+                  disabled={save.isPending}
+                  onClick={() => save.mutate()}
+                >
+                  <Save aria-hidden="true" size={20} />
+                  <span>Guardar cambios</span>
                 </button>
               </>
             ) : (
               <>
                 <button
-                  className="btn-secondary"
+                  className="btn-secondary w-full"
                   disabled={!s.allowedActions.manageTeams || generate.isPending}
                   onClick={() => {
                     if (window.confirm('¿Reemplazar la composición actual?')) generate.mutate();
                   }}
                 >
-                  <RefreshCw /> Regenerar
+                  <RefreshCw aria-hidden="true" size={20} />
+                  <span>Regenerar</span>
                 </button>
                 <button
-                  className="btn-secondary"
+                  className="btn-secondary w-full"
                   disabled={!s.allowedActions.manageTeams}
                   onClick={() => setEditing(true)}
                 >
-                  Editar manualmente
+                  <span>Editar manualmente</span>
                 </button>
                 <button
-                  className="btn"
+                  className="btn w-full"
                   disabled={!s.allowedActions.confirmTeams || confirm.isPending}
                   onClick={() => {
                     if (
@@ -219,7 +225,8 @@ export default function TeamsPage() {
                       confirm.mutate();
                   }}
                 >
-                  <CheckCircle /> Confirmar equipos
+                  <CheckCircle aria-hidden="true" size={20} />
+                  <span>Confirmar equipos</span>
                 </button>
               </>
             )}
