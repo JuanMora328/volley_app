@@ -22,6 +22,6 @@ Todos los endpoints usan `/api`, JSON y, salvo `health` y `auth/login`, requiere
 | PATCH  | `/venues/:id`        | Edita datos y precios                                              |
 | PATCH  | `/venues/:id/status` | Cambia `{ active }` sin eliminación física                         |
 
-Los listados aceptan `search`, `status=active|inactive|all`, `page` (desde 1), `limit` (1–100), `sortBy=name|createdAt` y `sortOrder=ASC|DESC`. Responden `{ items, meta: { total, page, limit, totalPages } }`.
+Los listados aceptan `search`, `status=active|inactive|all`, `page` (desde 1), `limit` (1–100), `sortBy=name|createdAt` y `sortOrder=ASC|DESC`. Jugadores también acepta `sortBy=defaultLevel`; la interfaz lo utiliza de forma descendente. Responden `{ items, meta: { total, page, limit, totalPages } }`.
 
 Los nombres se recortan y no pueden quedar vacíos. El nivel es entero de 1 a 5. Los precios son pesos COP enteros no negativos. Un UUID inexistente responde 404 y un token ausente o inválido responde 401.

@@ -46,3 +46,13 @@ export const cop = new Intl.NumberFormat('es-CO', {
   currency: 'COP',
   maximumFractionDigits: 0,
 });
+
+export function parseCopInput(value: string): number {
+  const digits = value.replace(/\D/g, '');
+  return digits ? Number(digits) : 0;
+}
+
+export function formatCopInput(value: string | number | undefined): string {
+  const amount = typeof value === 'number' ? value : parseCopInput(value ?? '');
+  return new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(amount);
+}

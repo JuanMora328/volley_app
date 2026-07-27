@@ -24,13 +24,17 @@ function repository() {
       let active: boolean | undefined;
       let skip = 0;
       let take = 12;
+      let sortField = 'name';
+      let sortOrder: 'ASC' | 'DESC' = 'ASC';
       return {
         andWhere(sql: string, params: any) {
           if (sql.includes('ILIKE')) search = params.search.slice(1, -1).toLowerCase();
           if (sql.includes('active')) active = params.active;
           return this;
         },
-        orderBy() {
+        orderBy(field: string, order: 'ASC' | 'DESC') {
+          sortField = field.split('.')[1];
+          sortOrder = order;
           return this;
         },
         skip(value: number) {
@@ -47,6 +51,11 @@ function repository() {
               (!search || x.name.toLowerCase().includes(search)) &&
               (active === undefined || x.active === active),
           );
+          filtered.sort((a, b) => {
+            const comparison =
+              a[sortField] > b[sortField] ? 1 : a[sortField] < b[sortField] ? -1 : 0;
+            return sortOrder === 'DESC' ? -comparison : comparison;
+          });
           return [filtered.slice(skip, skip + take), filtered.length];
         },
       };
@@ -88,6 +97,16 @@ describe('PlayersService', () => {
       Object.assign(new ListPlayersDto(), { status: RecordStatus.INACTIVE }),
     );
     expect(inactive.items).toHaveLength(1);
+  });
+  it('ordena jugadores por nivel descendente', async () => {
+    const service = new PlayersService(repository());
+    await service.create({ name: 'Nivel dos', defaultLevel: 2 });
+    await service.create({ name: 'Nivel cinco', defaultLevel: 5 });
+    await service.create({ name: 'Nivel cuatro', defaultLevel: 4 });
+    const result = await service.list(
+      Object.assign(new ListPlayersDto(), { sortBy: 'defaultLevel', sortOrder: 'DESC' }),
+    );
+    expect(result.items.map((player) => player.defaultLevel)).toEqual([5, 4, 2]);
   });
   it('responde 404 para un jugador inexistente', async () => {
     await expect(new PlayersService(repository()).get(crypto.randomUUID())).rejects.toMatchObject({

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { playerSchema, venueSchema } from '../community';
+import { formatCopInput, parseCopInput, playerSchema, venueSchema } from '../community';
 describe('formularios de comunidad', () => {
   it('valida creación y edición de jugador', () => {
     expect(playerSchema.parse({ name: ' Ana ', defaultLevel: '3', notes: '' })).toMatchObject({
@@ -25,5 +25,9 @@ describe('formularios de comunidad', () => {
       venueSchema.safeParse({ name: 'Central', defaultCourtPrice: 1.5, defaultGatoradePrice: 0 })
         .success,
     ).toBe(false);
+  });
+  it('formatea valores COP con puntos de miles sin enviar decimales', () => {
+    expect(formatCopInput(120000)).toBe('120.000');
+    expect(parseCopInput('1.250.000')).toBe(1250000);
   });
 });

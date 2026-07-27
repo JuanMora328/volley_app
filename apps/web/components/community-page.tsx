@@ -5,7 +5,16 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { api, getToken } from '../lib/api';
-import { cop, Paginated, Player, playerSchema, Venue, venueSchema } from '../lib/community';
+import {
+  cop,
+  formatCopInput,
+  Paginated,
+  parseCopInput,
+  Player,
+  playerSchema,
+  Venue,
+  venueSchema,
+} from '../lib/community';
 import { useRouter } from 'next/navigation';
 
 type Kind = 'players' | 'venues';
@@ -18,6 +27,7 @@ export function CommunityPage({ kind }: { kind: Kind }) {
   const [status, setStatus] = useState('active');
   const [page, setPage] = useState(1);
   const [editing, setEditing] = useState<Item | null | undefined>(undefined);
+  const [confirmingStatus, setConfirmingStatus] = useState<Item | null>(null);
   const router = useRouter();
   const client = useQueryClient();
   useEffect(() => {
@@ -28,7 +38,7 @@ export function CommunityPage({ kind }: { kind: Kind }) {
     queryKey: [kind, search, status, page],
     queryFn: () =>
       api<Paginated<Item>>(
-        `/${kind}?search=${encodeURIComponent(search)}&status=${status}&page=${page}&limit=12&sortBy=name&sortOrder=ASC`,
+        `/${kind}?search=${encodeURIComponent(search)}&status=${status}&page=${page}&limit=12&sortBy=${isPlayers ? 'defaultLevel' : 'name'}&sortOrder=${isPlayers ? 'DESC' : 'ASC'}`,
       ),
     retry: false,
   });
@@ -43,13 +53,10 @@ export function CommunityPage({ kind }: { kind: Kind }) {
       toast.success(
         value.active ? `${title.slice(0, -1)} reactivado` : `${title.slice(0, -1)} desactivado`,
       );
+      setConfirmingStatus(null);
     },
     onError: () => toast.error('No pudimos actualizar el estado'),
   });
-  function changeStatus(item: Item) {
-    if (item.active && !window.confirm(`¿Deseas desactivar a “${item.name}”?`)) return;
-    statusMutation.mutate({ id: item.id, active: !item.active });
-  }
   return (
     <div className="space-y-6">
       <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -65,11 +72,11 @@ export function CommunityPage({ kind }: { kind: Kind }) {
         </button>
       </header>
       <section className="card flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <label className="relative block flex-1">
-          <Search className="absolute left-3 top-3.5 text-slate-500" size={20} />
+        <label className="flex min-h-12 flex-1 items-center gap-3 rounded-xl border border-slate-300 bg-white px-4 focus-within:border-secondary focus-within:ring-2 focus-within:ring-blue-100">
+          <Search className="shrink-0 text-slate-500" size={20} aria-hidden="true" />
           <span className="sr-only">Buscar</span>
           <input
-            className="input pl-10"
+            className="min-w-0 flex-1 border-0 bg-transparent py-3 outline-none placeholder:text-slate-400"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={isPlayers ? 'Buscar jugadores...' : 'Buscar por nombre o dirección...'}
@@ -122,7 +129,7 @@ export function CommunityPage({ kind }: { kind: Kind }) {
                   item={item}
                   isPlayer={isPlayers}
                   onEdit={() => setEditing(item)}
-                  onStatus={() => changeStatus(item)}
+                  onStatus={() => setConfirmingStatus(item)}
                 />
               ))}
             </div>
@@ -152,6 +159,17 @@ export function CommunityPage({ kind }: { kind: Kind }) {
       )}
       {editing !== undefined && (
         <CommunityForm kind={kind} item={editing} close={() => setEditing(undefined)} />
+      )}
+      {confirmingStatus && (
+        <StatusConfirmationModal
+          item={confirmingStatus}
+          kind={kind}
+          pending={statusMutation.isPending}
+          close={() => setConfirmingStatus(null)}
+          confirm={() =>
+            statusMutation.mutate({ id: confirmingStatus.id, active: !confirmingStatus.active })
+          }
+        />
       )}
     </div>
   );
@@ -221,6 +239,79 @@ function Price({ label, value }: { label: string; value: number }) {
     </div>
   );
 }
+function StatusConfirmationModal({
+  item,
+  kind,
+  pending,
+  close,
+  confirm,
+}: {
+  item: Item;
+  kind: Kind;
+  pending: boolean;
+  close(): void;
+  confirm(): void;
+}) {
+  const activating = !item.active;
+  const recordLabel = kind === 'players' ? 'jugador' : 'cancha';
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="status-confirmation-title"
+      className="fixed inset-0 z-[70] flex items-end bg-slate-950/50 p-0 backdrop-blur-sm sm:items-center sm:justify-center sm:p-4"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget && !pending) close();
+      }}
+    >
+      <section className="w-full rounded-t-3xl bg-white p-6 shadow-2xl sm:max-w-md sm:rounded-3xl">
+        <div className="mb-4 flex items-start justify-between gap-4">
+          <div
+            className={`rounded-2xl p-3 ${activating ? 'bg-lime-100 text-lime-800' : 'bg-red-100 text-red-700'}`}
+          >
+            {kind === 'players' ? <UserRound /> : <MapPin />}
+          </div>
+          <button
+            type="button"
+            aria-label="Cerrar confirmación"
+            disabled={pending}
+            className="rounded-full p-2 text-slate-500 hover:bg-slate-100 disabled:opacity-50"
+            onClick={close}
+          >
+            <X />
+          </button>
+        </div>
+        <h2 id="status-confirmation-title" className="text-2xl font-bold text-primary">
+          {activating ? '¿Reactivar' : '¿Desactivar'} {recordLabel}?
+        </h2>
+        <p className="mt-2 text-slate-600">
+          {activating
+            ? `“${item.name}” volverá a estar disponible en los listados activos.`
+            : `“${item.name}” se conservará en el historial y podrás reactivarlo después.`}
+        </p>
+        <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+          <button
+            type="button"
+            disabled={pending}
+            className="min-h-12 rounded-xl border border-slate-300 px-5 font-semibold text-slate-700 disabled:opacity-50"
+            onClick={close}
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            disabled={pending}
+            className={`inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-5 font-semibold text-white disabled:opacity-60 ${activating ? 'bg-secondary' : 'bg-red-600'}`}
+            onClick={confirm}
+          >
+            {pending && <Loader2 className="animate-spin" size={18} />}
+            {activating ? 'Sí, reactivar' : 'Sí, desactivar'}
+          </button>
+        </div>
+      </section>
+    </div>
+  );
+}
 function CommunityForm({ kind, item, close }: { kind: Kind; item: Item | null; close(): void }) {
   const isPlayers = kind === 'players';
   const client = useQueryClient();
@@ -228,6 +319,8 @@ function CommunityForm({ kind, item, close }: { kind: Kind; item: Item | null; c
     register,
     handleSubmit,
     setError,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: item
@@ -318,24 +411,22 @@ function CommunityForm({ kind, item, close }: { kind: Kind; item: Item | null; c
               label="Valor habitual de cancha (COP)"
               error={errors.defaultCourtPrice?.message as string}
             >
-              <input
-                type="number"
-                min="0"
-                step="1"
-                className="input"
-                {...register('defaultCourtPrice')}
+              <MoneyInput
+                name="defaultCourtPrice"
+                value={watch('defaultCourtPrice')}
+                register={register}
+                setValue={setValue}
               />
             </Field>
             <Field
               label="Valor habitual de Gatorades (COP)"
               error={errors.defaultGatoradePrice?.message as string}
             >
-              <input
-                type="number"
-                min="0"
-                step="1"
-                className="input"
-                {...register('defaultGatoradePrice')}
+              <MoneyInput
+                name="defaultGatoradePrice"
+                value={watch('defaultGatoradePrice')}
+                register={register}
+                setValue={setValue}
               />
             </Field>
           </>
@@ -344,6 +435,39 @@ function CommunityForm({ kind, item, close }: { kind: Kind; item: Item | null; c
           {mutation.isPending && <Loader2 className="animate-spin" />}Guardar
         </button>
       </form>
+    </div>
+  );
+}
+function MoneyInput({
+  name,
+  value,
+  register,
+  setValue,
+}: {
+  name: 'defaultCourtPrice' | 'defaultGatoradePrice';
+  value: string | number | undefined;
+  register: ReturnType<typeof useForm<FormData>>['register'];
+  setValue: ReturnType<typeof useForm<FormData>>['setValue'];
+}) {
+  const registration = register(name);
+  return (
+    <div className="flex min-h-12 items-center rounded-xl border border-slate-300 bg-white px-4 focus-within:border-secondary focus-within:ring-2 focus-within:ring-blue-100">
+      <span className="mr-2 font-semibold text-slate-500">$</span>
+      <input
+        {...registration}
+        type="text"
+        inputMode="numeric"
+        autoComplete="off"
+        className="min-w-0 flex-1 border-0 bg-transparent py-3 outline-none"
+        value={formatCopInput(value)}
+        onChange={(event) =>
+          setValue(name, parseCopInput(event.target.value), {
+            shouldDirty: true,
+            shouldValidate: true,
+          })
+        }
+      />
+      <span className="ml-2 text-sm font-medium text-slate-400">COP</span>
     </div>
   );
 }

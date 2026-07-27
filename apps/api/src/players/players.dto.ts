@@ -18,6 +18,7 @@ export enum RecordStatus {
 }
 export enum PlayerSort {
   NAME = 'name',
+  LEVEL = 'defaultLevel',
   CREATED_AT = 'createdAt',
 }
 export enum SortOrder {
