@@ -11,13 +11,13 @@
     "test:unit": "vitest run --passWithNoTests",
     "test:integration": "echo 'integration requiere PostgreSQL local'",
     "test:e2e": "echo 'e2e pendiente de entorno'",
-    "migration:run": "typeorm-ts-node-commonjs -d src/database/data-source.ts migration:run",
+    "migration:run": "tsx ./node_modules/typeorm/cli.js -d src/database/data-source.ts migration:run",
     "seed": "tsx src/database/seed.ts",
     "lint:check": "eslint \"src/**/*.ts\"",
-    "migration:create": "typeorm-ts-node-commonjs migration:create src/database/migrations/$npm_config_name",
-    "migration:generate": "typeorm-ts-node-commonjs -d src/database/data-source.ts migration:generate src/database/migrations/$npm_config_name",
-    "migration:revert": "typeorm-ts-node-commonjs -d src/database/data-source.ts migration:revert",
-    "migration:show": "typeorm-ts-node-commonjs -d src/database/data-source.ts migration:show",
+    "migration:create": "tsx ./node_modules/typeorm/cli.js migration:create src/database/migrations/$npm_config_name",
+    "migration:generate": "tsx ./node_modules/typeorm/cli.js -d src/database/data-source.ts migration:generate src/database/migrations/$npm_config_name",
+    "migration:revert": "tsx ./node_modules/typeorm/cli.js -d src/database/data-source.ts migration:revert",
+    "migration:show": "tsx ./node_modules/typeorm/cli.js -d src/database/data-source.ts migration:show",
     "db:check": "node -e \"require('dotenv').config(); const { Client } = require('pg'); const url = process.env.MIGRATION_DATABASE_URL || process.env.DATABASE_URL; if (!url) throw new Error('DATABASE_URL o MIGRATION_DATABASE_URL requerido'); const c = new Client({ connectionString: url, ssl: { rejectUnauthorized: false }, connectionTimeoutMillis: 5000 }); c.connect().then(async () => { console.log('connected'); console.table((await c.query('select current_database(), current_user')).rows); await c.end(); }).catch((e) => { console.error(e); process.exit(1); });\"",
     "db:tables": "node -e \"require('dotenv').config(); const { Client } = require('pg'); const url = process.env.MIGRATION_DATABASE_URL || process.env.DATABASE_URL; if (!url) throw new Error('DATABASE_URL o MIGRATION_DATABASE_URL requerido'); const c = new Client({ connectionString: url, ssl: { rejectUnauthorized: false }, connectionTimeoutMillis: 5000 }); c.connect().then(async () => { console.table((await c.query('select table_schema, table_name from information_schema.tables where table_schema = \\'public\\' order by table_name')).rows); await c.end(); }).catch((e) => { console.error(e); process.exit(1); });\""
   },
@@ -50,7 +50,6 @@
     "eslint": "^9.17.0",
     "tsx": "^4.19.2",
     "typescript": "^5.6.3",
-    "typeorm-ts-node-commonjs": "^0.3.20",
     "vitest": "^2.1.8"
   }
 }
