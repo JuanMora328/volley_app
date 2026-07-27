@@ -14,6 +14,6 @@ export class UserEntity {
   @Column({ name: 'password_hash', type: 'varchar' }) passwordHash!: string;
   @Column({ type: 'enum', enum: UserRole, default: UserRole.ORGANIZER }) role!: UserRole;
   @Column({ type: 'boolean', default: true }) active!: boolean;
-  @CreateDateColumn({ name: 'created_at' }) createdAt!: Date;
-  @UpdateDateColumn({ name: 'updated_at' }) updatedAt!: Date;
+  @CreateDateColumn({ name: 'created_at', type: 'timestamptz' }) createdAt!: Date;
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' }) updatedAt!: Date;
 }

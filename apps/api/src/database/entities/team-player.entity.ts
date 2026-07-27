@@ -19,5 +19,5 @@ export class TeamPlayerEntity {
   @ManyToOne(() => SessionPlayerEntity, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'session_player_id' })
   sessionPlayer!: SessionPlayerEntity;
-  @CreateDateColumn({ name: 'created_at' }) createdAt!: Date;
+  @CreateDateColumn({ name: 'created_at', type: 'timestamptz' }) createdAt!: Date;
 }

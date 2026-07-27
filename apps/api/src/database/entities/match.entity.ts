@@ -40,6 +40,6 @@ export class MatchEntity {
   loserTeam!: TeamEntity;
   @Column({ name: 'started_at', type: 'timestamptz', nullable: true }) startedAt!: Date | null;
   @Column({ name: 'finished_at', type: 'timestamptz' }) finishedAt!: Date;
-  @CreateDateColumn({ name: 'created_at' }) createdAt!: Date;
-  @UpdateDateColumn({ name: 'updated_at' }) updatedAt!: Date;
+  @CreateDateColumn({ name: 'created_at', type: 'timestamptz' }) createdAt!: Date;
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' }) updatedAt!: Date;
 }

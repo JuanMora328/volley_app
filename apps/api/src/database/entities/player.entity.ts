@@ -10,10 +10,10 @@ import {
 @Check('CHK_players_default_level', 'default_level between 1 and 5')
 export class PlayerEntity {
   @PrimaryGeneratedColumn('uuid') id!: string;
-  @Column() name!: string;
+  @Column({ type: 'varchar' }) name!: string;
   @Column({ name: 'default_level', type: 'int' }) defaultLevel!: number;
   @Column({ type: 'text', nullable: true }) notes!: string | null;
-  @Column({ default: true }) active!: boolean;
-  @CreateDateColumn({ name: 'created_at' }) createdAt!: Date;
-  @UpdateDateColumn({ name: 'updated_at' }) updatedAt!: Date;
+  @Column({ type: 'boolean', default: true }) active!: boolean;
+  @CreateDateColumn({ name: 'created_at', type: 'timestamptz' }) createdAt!: Date;
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' }) updatedAt!: Date;
 }
