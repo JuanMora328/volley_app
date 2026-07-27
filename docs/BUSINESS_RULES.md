@@ -14,3 +14,7 @@
 Se generan al menos 300 candidatos. Se mezclan empates de nivel, se asignan jugadores por fuerza promedio respetando capacidades válidas y se aplican intercambios locales. Se deduplican composiciones, se ordenan por una puntuación ponderada y se elige con variedad dentro del grupo óptimo. Una semilla hace reproducible el resultado.
 
 Las métricas incluyen tamaño, suma y promedio por equipo; globalmente diferencia máxima de promedios, diferencia de tamaños, varianza, diferencia de fuerza normalizada, puntuación y categoría (`EXCELENTE`, `BUENO`, `MEJORABLE`).
+
+## Competición
+
+El sorteo es reemplazable hasta iniciar el primer partido. El ganador permanece, el perdedor va al final de la cola y entra el primero; con dos equipos ambos vuelven a jugar. Un resultado no admite empate y uno de los marcadores debe alcanzar el objetivo capturado al iniciar. Solo se revierte el último resultado y cualquier partido activo posterior. Cancelar conserva toda la información y bloquea el juego; eliminar exige `ELIMINAR` y ejecuta un DELETE físico irreversible del agregado, sin borrar jugadores, canchas ni usuarios permanentes.

@@ -1,11 +1,10 @@
 'use client';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Calendar,
   CreditCard,
   LayoutDashboard,
   Loader2,
-  LockKeyhole,
   MapPin,
   Shield,
   Trophy,
@@ -14,11 +13,22 @@ import {
   Volleyball,
 } from 'lucide-react';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { api } from '../../../lib/api';
 import { money, SessionDetail } from '../../../lib/sessions';
 export default function SessionDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const destructive = useMutation({
+    mutationFn: ({ path, method, body }: { path: string; method: string; body?: object }) =>
+      api(path, { method, body: body ? JSON.stringify(body) : undefined }),
+    onSuccess: async (_, variables) => {
+      await queryClient.invalidateQueries({ queryKey: ['sessions'] });
+      if (variables.method === 'DELETE') router.push('/sessions');
+      else void query.refetch();
+    },
+  });
   const query = useQuery({
     queryKey: ['session', id],
     queryFn: () => api<SessionDetail>(`/sessions/${id}`),
@@ -79,7 +89,13 @@ export default function SessionDetailPage() {
           <Shield aria-hidden="true" size={20} />
           <span className="text-xs font-semibold sm:text-sm">Equipos</span>
         </Link>
-        <PendingSection icon={<Trophy aria-hidden="true" size={20} />} label="Partidos" />
+        <Link
+          className="col-span-3 flex min-h-16 flex-col items-center justify-center gap-1 rounded-xl px-2 py-2 text-secondary hover:bg-blue-50 sm:col-span-1"
+          href={`/sessions/${id}/matches`}
+        >
+          <Trophy size={20} />
+          <span className="text-xs font-semibold sm:text-sm">Partidos</span>
+        </Link>
         <PendingSection icon={<CreditCard aria-hidden="true" size={20} />} label="Pagos" />
       </nav>
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -112,6 +128,43 @@ export default function SessionDetailPage() {
           </Link>
         )}
       </section>
+      <section className="card border-red-200">
+        <h2 className="text-xl font-bold">Acciones de la jornada</h2>
+        <p className="my-3 text-sm text-slate-600">
+          Cancelar conserva la jornada y su historial en modo de solo lectura. Eliminar borra
+          físicamente todo el agregado.
+        </p>
+        <div className="flex flex-wrap gap-3">
+          {s.status !== 'CANCELLED' && (
+            <button
+              className="rounded-xl border border-amber-500 px-4 py-3 font-bold text-amber-800"
+              onClick={() =>
+                confirm(
+                  'Cancelar conservará la jornada y su historial, pero no permitirá continuar jugando. ¿Continuar?',
+                ) && destructive.mutate({ path: `/sessions/${id}/cancel`, method: 'POST' })
+              }
+            >
+              Cancelar jornada
+            </button>
+          )}
+          <button
+            className="rounded-xl bg-red-700 px-4 py-3 font-bold text-white"
+            onClick={() => {
+              const value = prompt(
+                'Esta acción eliminará permanentemente la jornada, sus equipos, participantes y partidos. No se puede deshacer. Escribe ELIMINAR.',
+              );
+              if (value === 'ELIMINAR')
+                destructive.mutate({
+                  path: `/sessions/${id}`,
+                  method: 'DELETE',
+                  body: { confirmation: value },
+                });
+            }}
+          >
+            Eliminar permanentemente
+          </button>
+        </div>
+      </section>
     </div>
   );
 }
@@ -130,7 +183,7 @@ function PendingSection({ icon, label }: { icon: React.ReactNode; label: string 
       className="relative col-span-3 flex min-h-16 cursor-not-allowed sm:col-span-1 flex-col items-center justify-center gap-1 rounded-xl bg-slate-50 px-2 py-2 text-center text-slate-400"
     >
       <span className="absolute right-2 top-2">
-        <LockKeyhole aria-hidden="true" size={12} />
+        <span aria-hidden="true">•</span>
       </span>
       {icon}
       <span className="text-xs font-semibold sm:text-sm">{label}</span>

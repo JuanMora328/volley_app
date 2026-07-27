@@ -8,7 +8,7 @@ La aplicación usa exclusivamente PostgreSQL y TypeORM (`synchronize: false`). C
 | 1. Acceso y visión general         | ✅        | Login, layout protegido y dashboard                                          | `User`, auth JWT, seed admin, dashboard                                                  | Login, token, protección y dashboard vacío                                          |
 | 2. Jugadores y canchas             | ✅        | Listados mobile-first `/players` y `/venues`, formularios, filtros y estados | `Player`, `Venue`; CRUD sin DELETE; paginación; migración y seed demo                    | Validación, búsqueda, edición, baja lógica, conteo de activos, UI vacía/error/carga |
 | 3. Preparación de jornada          | ✅        | Crear jornada en tres pasos, participantes, detalle y equipos                | `GameSession`, `SessionPlayer`, `Team`, `TeamPlayer`; endpoints de borrador y generación | Persistencia del wizard, cupos, niveles y balance reproducible                      |
-| 4. Partidos y competición          | Pendiente | Sorteo, partido activo, historial y posiciones                               | `Match`; rotación, resultados y standings                                                | Reglas de turno, integridad de marcadores y reconstrucción                          |
+| 4. Partidos y competición          | ✅        | Sorteo, partido activo, historial y posiciones                               | `Match`; rotación, resultados y standings                                                | Reglas de turno, integridad de marcadores y reconstrucción                          |
 | 5. Pagos y cierre                  | Pendiente | Pagos, liquidación y cierre                                                  | Pagos y snapshots de liquidación                                                         | Dinero entero, distribución exacta e inmutabilidad al cerrar                        |
 | 6. Perfil, historial y ajustes     | Pendiente | Perfil, historial y reglas generales                                         | Consultas históricas y configuración                                                     | Permisos, filtros y trazabilidad                                                    |
 | 7. Auditoría, pruebas y despliegue | Pendiente | Accesibilidad, observabilidad y operación                                    | Auditoría, seguridad y pipeline                                                          | E2E PostgreSQL, rendimiento, respaldo y despliegue                                  |
@@ -26,3 +26,7 @@ Ejecutar migraciones y seed sobre PostgreSQL, validar los flujos autenticados de
 ## Fase 3 terminada
 
 Se implementaron el wizard de tres pasos, detalle, lista, generación/edición/confirmación de equipos, dashboard real, entidades y migración transaccional. La confirmación termina en `TEAMS_CREATED`; partidos, rotación y pagos permanecen fuera de alcance. Las pruebas de dominio cubren tamaños 5/2, 10/2, 10/3 y 13/4, reproducibilidad, extremos de nivel y métricas.
+
+## Fase 4 terminada
+
+Se implementaron sorteo transaccional, reconstrucción ganador-se-queda, partido activo, snapshots de objetivo, resultados, historial, posiciones, deshacer, cancelación y eliminación física. La migración agrega restricciones e índice parcial. Pagos, campeón y liquidación permanecen fuera de alcance.

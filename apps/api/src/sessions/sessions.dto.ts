@@ -13,6 +13,7 @@ import {
   Max,
   Min,
   ValidateNested,
+  Equals,
 } from 'class-validator';
 import { GameSessionStatus } from '@volleyflow/shared';
 export class CreateSessionDto {
@@ -24,6 +25,9 @@ export class CreateSessionDto {
   @IsInt() @Min(0) gatoradePrice!: number;
   @IsInt() @Min(2) teamCount!: number;
   @IsInt() @Min(1) defaultTargetScore!: number;
+}
+export class DeleteSessionDto {
+  @Equals('ELIMINAR') confirmation!: string;
 }
 export class UpdateSessionDto extends PartialType(CreateSessionDto) {}
 export class ListSessionsDto {

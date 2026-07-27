@@ -20,6 +20,7 @@ import {
   SaveTeamsDto,
   UpdateSessionDto,
   UpdateSessionPlayerDto,
+  DeleteSessionDto,
 } from './sessions.dto';
 import { SessionsService } from './sessions.service';
 @ApiTags('sessions')
@@ -67,5 +68,8 @@ export class SessionsController {
   }
   @Post(':id/cancel') cancel(@Param('id') id: string) {
     return this.service.cancel(id);
+  }
+  @Delete(':id') delete(@Param('id') id: string, @Body() dto: DeleteSessionDto) {
+    return this.service.delete(id, dto.confirmation);
   }
 }
