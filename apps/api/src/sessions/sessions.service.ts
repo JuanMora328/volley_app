@@ -63,6 +63,8 @@ export class SessionsService {
         venue,
         venueNameSnapshot: snapshot,
         courtPrice: dto.courtPrice,
+        courtHourlyPrice: dto.courtPrice,
+        courtDurationMinutes: 60,
         gatoradePrice: dto.gatoradePrice,
         teamCount: dto.teamCount,
         defaultTargetScore: dto.defaultTargetScore,
@@ -87,6 +89,7 @@ export class SessionsService {
       venueNameSnapshot: snapshot,
       ...(dto.defaultTargetScore ? { currentTargetScore: dto.defaultTargetScore } : {}),
     });
+    if (dto.courtPrice !== undefined) session.courtHourlyPrice = dto.courtPrice;
     return this.sessions.save(session);
   }
   async detail(id: string) {

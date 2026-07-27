@@ -21,3 +21,15 @@ Los errores de estado o composición retornan `400`, los duplicados `409` y recu
 ## Fase 4 — competición
 
 Todas las rutas requieren JWT. `POST /sessions/:id/rotation/draw` (y `redraw`) persiste un orden aleatorio; `GET /rotation` reconstruye enfrentamiento y cola. `POST /matches/start` crea el único partido activo y toma un snapshot del objetivo. `POST /matches/:matchId/result` confirma el marcador. `GET /matches` admite `status`, `order`, `page` y `limit`; `GET /standings` deriva la tabla. `DELETE /matches/latest` revierte exclusivamente el último resultado. `PATCH /target-score` cambia solo el próximo objetivo. `POST /cancel` conserva el agregado en solo lectura. `DELETE /sessions/:id`, con JSON `{ "confirmation": "ELIMINAR" }`, lo elimina físicamente.
+
+# Liquidación y cierre (Fase 5)
+
+- `GET /api/sessions/:id/settlement`: datos, posiciones y sugerencia de campeón.
+- `POST /api/sessions/:id/settlement/preview`: calcula sin persistir.
+- `POST /api/sessions/:id/settlement`: confirma el snapshot financiero.
+- `GET /api/sessions/:id/payments`: recaudo, saldos, créditos y participantes.
+- `PATCH /api/sessions/:id/payments/:sessionPlayerId`: corrige un pago completo, parcial o superior al saldo.
+- `POST /api/sessions/:id/finish`: cierra; requiere `confirmPendingPayments` si hay deuda.
+- `GET /api/sessions/:id/summary`: resumen deportivo y financiero final.
+
+Todos requieren JWT. Los montos son enteros en COP.

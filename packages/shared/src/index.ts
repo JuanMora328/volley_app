@@ -18,7 +18,7 @@ export enum PaymentMethod {
   CASH = 'CASH',
   TRANSFER = 'TRANSFER',
 }
-export type PaymentStatus = 'PENDING' | 'PARTIAL' | 'PAID';
+export type PaymentStatus = 'PENDING' | 'PARTIAL' | 'PAID' | 'NOT_REQUIRED';
 export interface PlayerDto {
   id: string;
   name: string;
@@ -75,13 +75,27 @@ export function distributeIntegerAmount(
 ): Record<string, number> {
   if (!Number.isInteger(total) || total < 0)
     throw new Error('El total debe ser un entero no negativo');
-  if (participantIds.length === 0) throw new Error('Debe existir al menos un participante');
+  if (participantIds.length === 0) {
+    if (total === 0) return {};
+    throw new Error('Debe existir al menos un participante');
+  }
   const sorted = [...participantIds].sort();
   if (new Set(sorted).size !== sorted.length)
     throw new Error('No se permiten participantes duplicados');
   const base = Math.floor(total / sorted.length);
   const remainder = total % sorted.length;
   return Object.fromEntries(sorted.map((id, index) => [id, base + (index < remainder ? 1 : 0)]));
+}
+
+export function calculateCourtTotal(hourlyPrice: number, durationMinutes: number): number {
+  if (!Number.isInteger(hourlyPrice) || hourlyPrice < 0)
+    throw new Error('La tarifa por hora debe ser un entero no negativo');
+  if (!Number.isInteger(durationMinutes) || durationMinutes < 30 || durationMinutes % 30 !== 0)
+    throw new Error('La duración debe estar en intervalos de 30 minutos');
+  const product = hourlyPrice * durationMinutes;
+  if (!Number.isSafeInteger(product) || product % 60 !== 0)
+    throw new Error('La tarifa no permite un total exacto para esa duración');
+  return product / 60;
 }
 export interface TeamCandidatePlayer {
   id: string;
@@ -311,6 +325,7 @@ export function calculateStandings(teams: TeamDto[], matches: MatchDto[]): Stand
     .map((row, index) => ({ ...row, position: index + 1 }));
 }
 export function derivePaymentStatus(amountDue: number, amountPaid: number): PaymentStatus {
+  if (amountDue === 0) return 'NOT_REQUIRED';
   if (amountPaid <= 0) return 'PENDING';
   if (amountPaid < amountDue) return 'PARTIAL';
   return 'PAID';
