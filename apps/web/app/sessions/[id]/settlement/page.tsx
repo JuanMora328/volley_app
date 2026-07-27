@@ -11,7 +11,13 @@ import { money } from '../../../../lib/sessions';
 import { settlementSchema } from '../../../../lib/settlements';
 type Form = z.infer<typeof settlementSchema>;
 type Setup = {
-  session: { status: string; courtPrice: number; gatoradePrice: number };
+  session: {
+    status: string;
+    courtPrice: number;
+    courtHourlyPrice: number;
+    courtDurationMinutes: number;
+    gatoradePrice: number;
+  };
   teams: Array<{ id: string; name: string; players: Array<{ id: string; name: string }> }>;
   participants: Array<{ id: string; name: string; team: { name: string } | null }>;
   standings: Array<{
@@ -53,16 +59,24 @@ export default function SettlementPage() {
     queryFn: () => api<Setup>(`/sessions/${id}/settlement`),
   });
   const form = useForm<Form>({
-    defaultValues: { championTeamId: '', courtPrice: 0, gatoradePrice: 0 },
+    defaultValues: {
+      championTeamId: '',
+      courtHourlyPrice: 0,
+      courtDurationMinutes: 60,
+      gatoradePrice: 0,
+    },
   });
   const champion = form.watch('championTeamId');
+  const courtDurationMinutes = form.watch('courtDurationMinutes');
+  const courtHourlyPrice = form.watch('courtHourlyPrice');
   useEffect(() => {
     if (!setup.data) return;
     setCourtIds(setup.data.participants.map((p) => p.id));
     setGatoradeIds(setup.data.participants.map((p) => p.id));
-    form.setValue('courtPrice', setup.data.session.courtPrice);
+    form.setValue('courtHourlyPrice', setup.data.session.courtHourlyPrice);
+    form.setValue('courtDurationMinutes', setup.data.session.courtDurationMinutes);
     form.setValue('gatoradePrice', setup.data.session.gatoradePrice);
-    setCourtPriceDisplay(formatInteger(setup.data.session.courtPrice));
+    setCourtPriceDisplay(formatInteger(setup.data.session.courtHourlyPrice));
     setGatoradePriceDisplay(formatInteger(setup.data.session.gatoradePrice));
     if (setup.data.suggestion.championTeamId)
       form.setValue('championTeamId', setup.data.suggestion.championTeamId);
@@ -175,9 +189,9 @@ export default function SettlementPage() {
           ))}
         </div>
       </section>
-      <form className="grid gap-4 sm:grid-cols-2">
+      <form className="grid gap-4 sm:grid-cols-3">
         <label className="card font-bold">
-          Valor cancha (COP)
+          Valor por hora (COP)
           <input
             className="input mt-2"
             inputMode="numeric"
@@ -185,10 +199,30 @@ export default function SettlementPage() {
             onChange={(event) => {
               const value = parseInteger(event.target.value);
               setCourtPriceDisplay(formatInteger(value));
-              form.setValue('courtPrice', value);
+              form.setValue('courtHourlyPrice', value);
               setPreview(null);
             }}
           />
+        </label>
+        <label className="card font-bold">
+          Tiempo jugado
+          <select
+            className="input mt-2"
+            {...form.register('courtDurationMinutes', { valueAsNumber: true })}
+            onChange={(event) => {
+              form.setValue('courtDurationMinutes', Number(event.target.value));
+              setPreview(null);
+            }}
+          >
+            {[60, 90, 120, 150, 180, 210, 240].map((minutes) => (
+              <option key={minutes} value={minutes}>
+                {durationLabel(minutes)}
+              </option>
+            ))}
+          </select>
+          <small className="mt-2 block font-normal text-slate-500">
+            Total cancha: {money((courtHourlyPrice * courtDurationMinutes) / 60)}
+          </small>
         </label>
         <label className="card font-bold">
           Valor Gatorades (COP)
@@ -280,7 +314,10 @@ export default function SettlementPage() {
           <p className={preview.validationMatches ? 'text-green-700' : 'text-red-700'}>
             Validación: {money(preview.distributedTotal)} de {money(preview.expectedTotal)}
           </p>
-          <button className="btn-primary w-full" onClick={confirm}>
+          <button
+            className="btn w-full bg-secondary text-white shadow-lg hover:bg-blue-700"
+            onClick={confirm}
+          >
             Continuar para finalizar jornada
           </button>
         </section>
@@ -295,4 +332,10 @@ function parseInteger(value: string) {
 
 function formatInteger(value: number) {
   return new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(value);
+}
+
+function durationLabel(minutes: number) {
+  const hours = Math.floor(minutes / 60);
+  const remainder = minutes % 60;
+  return `${hours} ${hours === 1 ? 'hora' : 'horas'}${remainder ? ` y ${remainder} minutos` : ''}`;
 }

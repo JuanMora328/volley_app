@@ -67,6 +67,9 @@ export default function SummaryPage() {
         <Metric label="Recaudado" value={money(s.paidTotal)} />
         <Metric label="Pendiente" value={money(s.pendingTotal)} />
       </section>
+      <p className="rounded-xl bg-blue-50 p-3 text-sm text-blue-900">
+        Cancha: {durationSummary(s.courtDurationMinutes)} a {money(s.courtHourlyPrice)} por hora.
+      </p>
       <section className="card">
         <h2 className="text-xl font-bold">Tabla final</h2>
         {s.standings.map((row) => (
@@ -154,4 +157,10 @@ function Metric({ label, value }: { label: string; value: string }) {
       <p className="text-xl font-extrabold text-secondary">{value}</p>
     </div>
   );
+}
+
+function durationSummary(minutes: number) {
+  const hours = Math.floor(minutes / 60);
+  const remainder = minutes % 60;
+  return `${hours} ${hours === 1 ? 'hora' : 'horas'}${remainder ? ` y ${remainder} minutos` : ''}`;
 }

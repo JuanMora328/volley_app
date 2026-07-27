@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import {
   calculateStandings,
+  calculateCourtTotal,
   derivePaymentStatus,
   distributeIntegerAmount,
   GameSessionStatus,
@@ -42,6 +43,8 @@ export class SettlementsService {
       session: {
         ...this.sessionInfo(data.session),
         courtPrice: data.session.courtPrice,
+        courtHourlyPrice: data.session.courtHourlyPrice || data.session.courtPrice,
+        courtDurationMinutes: data.session.courtDurationMinutes || 60,
         gatoradePrice: data.session.gatoradePrice,
       },
       teams: data.teams.map((team) => ({
@@ -82,7 +85,10 @@ export class SettlementsService {
       const data = await this.load(manager, id, true);
       this.ensureCanPreview(data.session);
       const result = this.calculate(data, dto);
-      data.session.courtPrice = dto.courtPrice;
+      const courtPrice = this.courtTotal(dto.courtHourlyPrice, dto.courtDurationMinutes);
+      data.session.courtHourlyPrice = dto.courtHourlyPrice;
+      data.session.courtDurationMinutes = dto.courtDurationMinutes;
+      data.session.courtPrice = courtPrice;
       data.session.gatoradePrice = dto.gatoradePrice;
       data.session.championTeam = data.teams.find((team) => team.id === dto.championTeamId)!;
       data.session.settledAt = new Date();
@@ -189,6 +195,7 @@ export class SettlementsService {
   }
 
   private calculate(data: Awaited<ReturnType<SettlementsService['load']>>, dto: SettlementDto) {
+    const courtPrice = this.courtTotal(dto.courtHourlyPrice, dto.courtDurationMinutes);
     const champion = data.teams.find((team) => team.id === dto.championTeamId);
     if (!champion) throw new BadRequestException('El campeón no pertenece a la jornada');
     const championIds = new Set(
@@ -214,7 +221,7 @@ export class SettlementsService {
     let court: Record<string, number>;
     let gatorade: Record<string, number>;
     try {
-      court = distributeIntegerAmount(dto.courtPrice, courtIds);
+      court = distributeIntegerAmount(courtPrice, courtIds);
       gatorade = distributeIntegerAmount(dto.gatoradePrice, gatoradeIds);
     } catch (error) {
       throw new BadRequestException((error as Error).message);
@@ -239,11 +246,13 @@ export class SettlementsService {
     const distributed = participants.reduce((sum, player) => sum + player.amountDue, 0);
     return {
       champion: { id: champion.id, name: champion.name },
-      courtPrice: dto.courtPrice,
+      courtHourlyPrice: dto.courtHourlyPrice,
+      courtDurationMinutes: dto.courtDurationMinutes,
+      courtPrice,
       gatoradePrice: dto.gatoradePrice,
-      expectedTotal: dto.courtPrice + dto.gatoradePrice,
+      expectedTotal: courtPrice + dto.gatoradePrice,
       distributedTotal: distributed,
-      validationMatches: distributed === dto.courtPrice + dto.gatoradePrice,
+      validationMatches: distributed === courtPrice + dto.gatoradePrice,
       courtPayerCount: courtIds.length,
       gatoradePayerCount: gatoradeIds.length,
       participants,
@@ -271,6 +280,8 @@ export class SettlementsService {
         ? { id: data.session.championTeam.id, name: data.session.championTeam.name }
         : null,
       courtPrice: data.session.courtPrice,
+      courtHourlyPrice: data.session.courtHourlyPrice,
+      courtDurationMinutes: data.session.courtDurationMinutes,
       gatoradePrice: data.session.gatoradePrice,
       expectedTotal: participants.reduce((sum, player) => sum + player.amountDue, 0),
       paidTotal: participants.reduce(
@@ -353,6 +364,14 @@ export class SettlementsService {
       ].includes(session.status)
     )
       throw new ConflictException('Confirma los equipos antes de liquidar');
+  }
+
+  private courtTotal(hourlyPrice: number, durationMinutes: number) {
+    try {
+      return calculateCourtTotal(hourlyPrice, durationMinutes);
+    } catch (error) {
+      throw new BadRequestException((error as Error).message);
+    }
   }
   private async load(manager: EntityManager, id: string, lock = false) {
     const session = await manager.findOne(GameSessionEntity, {

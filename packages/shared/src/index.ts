@@ -86,6 +86,17 @@ export function distributeIntegerAmount(
   const remainder = total % sorted.length;
   return Object.fromEntries(sorted.map((id, index) => [id, base + (index < remainder ? 1 : 0)]));
 }
+
+export function calculateCourtTotal(hourlyPrice: number, durationMinutes: number): number {
+  if (!Number.isInteger(hourlyPrice) || hourlyPrice < 0)
+    throw new Error('La tarifa por hora debe ser un entero no negativo');
+  if (!Number.isInteger(durationMinutes) || durationMinutes < 30 || durationMinutes % 30 !== 0)
+    throw new Error('La duración debe estar en intervalos de 30 minutos');
+  const product = hourlyPrice * durationMinutes;
+  if (!Number.isSafeInteger(product) || product % 60 !== 0)
+    throw new Error('La tarifa no permite un total exacto para esa duración');
+  return product / 60;
+}
 export interface TeamCandidatePlayer {
   id: string;
   level: number;

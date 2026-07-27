@@ -1,7 +1,8 @@
 import { z } from 'zod';
 export const settlementSchema = z.object({
   championTeamId: z.string().uuid('Selecciona un campeón'),
-  courtPrice: z.coerce.number().int().min(0),
+  courtHourlyPrice: z.coerce.number().int().min(0),
+  courtDurationMinutes: z.coerce.number().int().min(30).multipleOf(30),
   gatoradePrice: z.coerce.number().int().min(0),
 });
 export const paymentSchema = z
@@ -40,6 +41,8 @@ export type PaymentSummary = {
   };
   champion: { id: string; name: string } | null;
   courtPrice: number;
+  courtHourlyPrice: number;
+  courtDurationMinutes: number;
   gatoradePrice: number;
   expectedTotal: number;
   paidTotal: number;

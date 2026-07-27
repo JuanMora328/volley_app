@@ -20,3 +20,5 @@ Migración reversible: `1770000000000-CreateSessionsAndTeams.ts`.
 # Snapshot financiero de Fase 5
 
 `game_sessions.settled_at` registra la confirmación de la liquidación y `finished_at` el cierre definitivo. `session_players` conserva inclusiones, componentes de cancha/Gatorades, valor debido, valor pagado, método y fecha. El estado, pendiente y crédito son derivados y no se duplican en la base de datos.
+
+`game_sessions.court_hourly_price` conserva la tarifa por hora y `court_duration_minutes` el tiempo jugado en intervalos de 30 minutos. `court_price` conserva el costo total confirmado (`tarifa × minutos / 60`).

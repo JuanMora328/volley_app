@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { derivePaymentStatus, distributeIntegerAmount } from './index.js';
+import { calculateCourtTotal, derivePaymentStatus, distributeIntegerAmount } from './index.js';
 
 describe('distributeIntegerAmount', () => {
   it.each([
@@ -40,4 +40,17 @@ describe('derivePaymentStatus', () => {
   ])('deriva el estado', (due, paid, status) =>
     expect(derivePaymentStatus(due as number, paid as number)).toBe(status),
   );
+});
+
+describe('calculateCourtTotal', () => {
+  it.each([
+    [70000, 60, 70000],
+    [70000, 90, 105000],
+    [70000, 120, 140000],
+  ])('calcula %i por %i minutos', (hourly, minutes, total) => {
+    expect(calculateCourtTotal(hourly, minutes)).toBe(total);
+  });
+  it('rechaza duraciones fuera de intervalos de media hora', () => {
+    expect(() => calculateCourtTotal(70000, 75)).toThrow();
+  });
 });

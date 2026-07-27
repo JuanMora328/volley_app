@@ -25,6 +25,9 @@ export class GameSessionEntity {
   venue!: VenueEntity | null;
   @Column({ name: 'venue_name_snapshot', type: 'varchar' }) venueNameSnapshot!: string;
   @Column({ name: 'court_price', type: 'int', default: 0 }) courtPrice!: number;
+  @Column({ name: 'court_hourly_price', type: 'int', default: 0 }) courtHourlyPrice!: number;
+  @Column({ name: 'court_duration_minutes', type: 'int', default: 60 })
+  courtDurationMinutes!: number;
   @Column({ name: 'gatorade_price', type: 'int', default: 0 }) gatoradePrice!: number;
   @Column({ name: 'team_count', type: 'int', default: 2 }) teamCount!: number;
   @Column({ name: 'default_target_score', type: 'int', default: 21 }) defaultTargetScore!: number;
