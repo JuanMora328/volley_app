@@ -44,7 +44,6 @@ cp apps/web/.env.example apps/web/.env.local
 
 > Nota: si ejecutas los servicios desde la raíz con `pnpm dev`, asegúrate de que las variables estén disponibles para cada proceso. Para desarrollo local puedes usar `.env` en la raíz y también los archivos específicos de cada app cuando necesites sobreescribir valores.
 
-
 ### Docker local vs Neon
 
 #### Opción A: PostgreSQL local con Docker
@@ -116,7 +115,6 @@ La configuración local por defecto usa:
 - Base de datos: `volleyflow`
 - Puerto: `5432`
 
-
 ## Migraciones de base de datos
 
 Las migraciones **no se corren automáticamente** al levantar la API, ni con Docker local ni con Neon. La API tiene `migrationsRun` desactivado para evitar cambios de esquema inesperados en ambientes compartidos o productivos.
@@ -159,13 +157,19 @@ Por defecto, la API queda disponible en:
 - Health check: `http://localhost:3001/api/health`
 - Swagger: `http://localhost:3001/api/docs` cuando `NODE_ENV=development` o `SWAGGER_ENABLED=true`.
 
-### Seed de usuario administrador
+### Seed de administrador y datos de demostración
 
 Para crear el usuario administrador definido en tus variables `SEED_ADMIN_*`:
 
 ```bash
 pnpm --filter @volleyflow/api seed
 ```
+
+El seed es idempotente y también incorpora 12 jugadores y 2 canchas cuando no existen. Ejecútalo después de `migration:run`.
+
+## Gestión de comunidad y sedes
+
+Con una sesión iniciada, `/players` y `/venues` consumen la API real. Ambas vistas ofrecen búsqueda, estado, paginación, creación, edición y activación/desactivación; los importes de canchas se presentan en COP.
 
 ## Levantar el frontend
 
@@ -214,3 +218,5 @@ pnpm --filter @volleyflow/web test
 - `docs/API.md`: endpoints disponibles y contratos principales.
 - `docs/DESIGN_IMPLEMENTATION.md`: guía de implementación visual.
 - `docs/IMPLEMENTATION_PLAN.md`: plan técnico del proyecto.
+- `docs/DATA_MODEL.md`: tablas y restricciones.
+- `docs/BUSINESS_RULES.md`: invariantes de dominio.

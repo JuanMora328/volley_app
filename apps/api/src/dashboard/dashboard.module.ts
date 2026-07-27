@@ -1,16 +1,20 @@
 import { Controller, Get, Module, UseGuards } from '@nestjs/common';
 import { AuthModule } from '../auth/auth.module';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { TypeOrmModule, InjectRepository } from '@nestjs/typeorm';
+import { PlayerEntity } from '../database/entities';
+import { Repository } from 'typeorm';
 
 @Controller('dashboard')
 @UseGuards(JwtAuthGuard)
-class DashboardController {
+export class DashboardController {
+  constructor(@InjectRepository(PlayerEntity) private readonly players: Repository<PlayerEntity>) {}
   @Get()
-  getDashboard() {
+  async getDashboard() {
     return {
       activeSession: null,
       stats: {
-        activePlayers: 0,
+        activePlayers: await this.players.countBy({ active: true }),
         completedSessions: 0,
         pendingPayments: 0,
         registeredMatches: 0,
@@ -20,5 +24,8 @@ class DashboardController {
   }
 }
 
-@Module({ imports: [AuthModule], controllers: [DashboardController] })
+@Module({
+  imports: [AuthModule, TypeOrmModule.forFeature([PlayerEntity])],
+  controllers: [DashboardController],
+})
 export class DashboardModule {}
