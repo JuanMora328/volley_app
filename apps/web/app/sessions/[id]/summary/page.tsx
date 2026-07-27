@@ -63,12 +63,15 @@ export default function SummaryPage() {
       </header>
       <section className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Metric label="Cancha" value={money(s.courtPrice)} />
-        <Metric label="Gatorades" value={money(s.gatoradePrice)} />
+        <Metric label="Gatorades" value={money(s.gatoradeTotal)} />
         <Metric label="Recaudado" value={money(s.paidTotal)} />
         <Metric label="Pendiente" value={money(s.pendingTotal)} />
       </section>
       <p className="rounded-xl bg-blue-50 p-3 text-sm text-blue-900">
         Cancha: {durationSummary(s.courtDurationMinutes)} a {money(s.courtHourlyPrice)} por hora.
+        <br />
+        Gatorades: {money(s.gatoradePrice)} por unidad × {s.gatoradeWinnerCount} ganadores ={' '}
+        {money(s.gatoradeTotal)}.
       </p>
       <section className="card">
         <h2 className="text-xl font-bold">Tabla final</h2>
@@ -127,7 +130,7 @@ export default function SummaryPage() {
         </div>
       </section>
       <p className="text-sm text-slate-500">
-        Liquidada: {new Date(s.settledAt).toLocaleString('es-CO')}
+        Distribución confirmada: {new Date(s.settledAt).toLocaleString('es-CO')}
         {s.finishedAt && ` · Cerrada: ${new Date(s.finishedAt).toLocaleString('es-CO')}`}
       </p>
       {s.session.status !== 'FINISHED' && (

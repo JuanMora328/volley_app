@@ -44,6 +44,8 @@ export type PaymentSummary = {
   courtHourlyPrice: number;
   courtDurationMinutes: number;
   gatoradePrice: number;
+  gatoradeWinnerCount: number;
+  gatoradeTotal: number;
   expectedTotal: number;
   paidTotal: number;
   pendingTotal: number;

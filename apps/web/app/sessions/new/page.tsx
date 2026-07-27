@@ -146,10 +146,10 @@ export default function NewSession() {
             </Field>
           )}
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Valor cancha">
+            <Field label="Valor por hora">
               <input className="input" type="number" {...form.register('courtPrice')} />
             </Field>
-            <Field label="Gatorades estimados">
+            <Field label="Gatorade por unidad">
               <input className="input" type="number" {...form.register('gatoradePrice')} />
             </Field>
             <Field label="Cantidad de equipos">
@@ -261,7 +261,7 @@ export default function NewSession() {
             <Summary label="Fecha" value={`${session.date} ${session.startTime ?? ''}`} />
             <Summary label="Cancha" value={session.venueNameSnapshot} />
             <Summary label="Cancha" value={money(session.courtPrice)} />
-            <Summary label="Gatorades" value={money(session.gatoradePrice)} />
+            <Summary label="Gatorade por unidad" value={money(session.gatoradePrice)} />
             <Summary label="Equipos" value={String(session.teamCount)} />
             <Summary label="Puntaje" value={String(session.defaultTargetScore)} />
           </dl>

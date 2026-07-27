@@ -29,8 +29,8 @@ Se implementaron el wizard de tres pasos, detalle, lista, generación/edición/c
 
 ## Fase 4 terminada
 
-Se implementaron sorteo transaccional, reconstrucción ganador-se-queda, partido activo, snapshots de objetivo, resultados, historial, posiciones, deshacer, cancelación y eliminación física. La migración agrega restricciones e índice parcial. Pagos, campeón y liquidación permanecen fuera de alcance.
+Se implementaron sorteo transaccional, reconstrucción ganador-se-queda, partido activo, snapshots de objetivo, resultados, historial, posiciones, deshacer, cancelación y eliminación física. La migración agrega restricciones e índice parcial. La finalización financiera se completa en la Fase 5.
 
 ## Fase 5 terminada
 
-Se implementaron la sugerencia deportiva de campeón sin desempate alfabético, vista previa y confirmación transaccional, reparto entero exacto, exclusiones, pagos parciales y sobrepagos, cierre con deudores y pagos posteriores. Las rutas web `/settlement`, `/payments` y `/summary` consumen la API real y mantienen confirmaciones explícitas.
+Se implementaron la sugerencia deportiva de campeón sin desempate alfabético, vista previa y confirmación transaccional, reparto entero exacto, exclusiones, pagos parciales y sobrepagos, cierre con deudores y pagos posteriores. La cancha deriva su total entero de tarifa por hora y duración; Gatorade deriva su total del precio unitario por cada campeón y se distribuye solo entre perdedores. Las rutas web `/settlement`, `/payments` y `/summary` consumen la API real, conservan pagos al recalcular y mantienen confirmaciones explícitas.

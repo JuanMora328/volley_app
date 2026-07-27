@@ -35,6 +35,12 @@ type Preview = {
   validationMatches: boolean;
   courtPayerCount: number;
   gatoradePayerCount: number;
+  courtHourlyPrice: number;
+  courtDurationMinutes: number;
+  courtPrice: number;
+  gatoradePrice: number;
+  gatoradeWinnerCount: number;
+  gatoradeTotal: number;
   warnings: string[];
   participants: Array<{
     id: string;
@@ -118,8 +124,8 @@ export default function SettlementPage() {
       !preview ||
       !window.confirm(
         setup.data?.session.status === 'SETTLEMENT'
-          ? '¿Reemplazar la liquidación actual conservando sus pagos?'
-          : '¿Confirmar esta liquidación?',
+          ? '¿Reemplazar la distribución actual conservando sus pagos?'
+          : '¿Confirmar esta distribución financiera?',
       )
     )
       return;
@@ -129,11 +135,11 @@ export default function SettlementPage() {
   if (setup.isLoading)
     return (
       <div className="card">
-        <Loader2 className="animate-spin" /> Cargando liquidación…
+        <Loader2 className="animate-spin" /> Preparando la finalización…
       </div>
     );
   if (!setup.data)
-    return <div className="card text-red-700">No se pudo preparar la liquidación.</div>;
+    return <div className="card text-red-700">No se pudo preparar la finalización.</div>;
   const championPlayers = new Set(
     setup.data.teams.find((team) => team.id === champion)?.players.map((p) => p.id) ?? [],
   );
@@ -221,11 +227,17 @@ export default function SettlementPage() {
             ))}
           </select>
           <small className="mt-2 block font-normal text-slate-500">
-            Total cancha: {money((courtHourlyPrice * courtDurationMinutes) / 60)}
+            Total cancha:{' '}
+            {money(
+              Number.isSafeInteger(courtHourlyPrice * courtDurationMinutes) &&
+                (courtHourlyPrice * courtDurationMinutes) % 60 === 0
+                ? (courtHourlyPrice * courtDurationMinutes) / 60
+                : 0,
+            )}
           </small>
         </label>
         <label className="card font-bold">
-          Valor Gatorades (COP)
+          Valor por Gatorade (COP)
           <input
             className="input mt-2"
             inputMode="numeric"
@@ -237,6 +249,10 @@ export default function SettlementPage() {
               setPreview(null);
             }}
           />
+          <small className="mt-2 block font-normal text-slate-500">
+            Ganadores: {championPlayers.size} · Total:{' '}
+            {money(form.watch('gatoradePrice') * championPlayers.size)}
+          </small>
         </label>
       </form>
       <section className="card">
@@ -314,8 +330,13 @@ export default function SettlementPage() {
           <p className={preview.validationMatches ? 'text-green-700' : 'text-red-700'}>
             Validación: {money(preview.distributedTotal)} de {money(preview.expectedTotal)}
           </p>
+          <p className="rounded-xl bg-blue-50 p-3 text-sm text-blue-900">
+            Gatorades: {money(preview.gatoradePrice)} por unidad × {preview.gatoradeWinnerCount}{' '}
+            ganadores = {money(preview.gatoradeTotal)}.
+          </p>
           <button
             className="btn w-full bg-secondary text-white shadow-lg hover:bg-blue-700"
+            disabled={request.isPending}
             onClick={confirm}
           >
             Continuar para finalizar jornada
