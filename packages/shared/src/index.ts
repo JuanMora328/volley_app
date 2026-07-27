@@ -62,6 +62,7 @@ export interface BalanceMetrics {
   sizeDiff: number;
   normalizedStrengthDiff: number;
   score: number;
+  label: 'EXCELENTE' | 'BUENO' | 'MEJORABLE';
 }
 export function distributeIntegerAmount(
   total: number,
@@ -87,8 +88,28 @@ export interface GeneratedTeam {
   players: TeamCandidatePlayer[];
   metrics?: BalanceMetrics;
 }
-const shuffle = <T>(items: T[]) => [...items].sort(() => Math.random() - 0.5);
-function metrics(teams: GeneratedTeam[]): BalanceMetrics {
+function seededRandom(seed?: string | number) {
+  if (seed === undefined) return Math.random;
+  let state = String(seed)
+    .split('')
+    .reduce((value, character) => Math.imul(value ^ character.charCodeAt(0), 16777619), 2166136261);
+  return () => {
+    state += 0x6d2b79f5;
+    let value = state;
+    value = Math.imul(value ^ (value >>> 15), value | 1);
+    value ^= value + Math.imul(value ^ (value >>> 7), value | 61);
+    return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function shuffle<T>(items: T[], random: () => number) {
+  const result = [...items];
+  for (let index = result.length - 1; index > 0; index--) {
+    const target = Math.floor(random() * (index + 1));
+    [result[index], result[target]] = [result[target], result[index]];
+  }
+  return result;
+}
+export function calculateBalanceMetrics(teams: GeneratedTeam[]): BalanceMetrics {
   const sizes = teams.map((t) => t.players.length);
   const sums = teams.map((t) => t.players.reduce((a, p) => a + p.level, 0));
   const avgs = sums.map((s, i) => s / (sizes[i] || 1));
@@ -99,33 +120,90 @@ function metrics(teams: GeneratedTeam[]): BalanceMetrics {
   const normalized = sums.map((s, i) => s / Math.max(1, sizes[i]));
   const normalizedStrengthDiff = Math.max(...normalized) - Math.min(...normalized);
   const score = maxAverageDiff * 4 + averageVariance * 2 + sizeDiff * 3 + normalizedStrengthDiff;
-  return { maxAverageDiff, averageVariance, sizeDiff, normalizedStrengthDiff, score };
+  const label = score <= 0.35 ? 'EXCELENTE' : score <= 1.5 ? 'BUENO' : 'MEJORABLE';
+  return { maxAverageDiff, averageVariance, sizeDiff, normalizedStrengthDiff, score, label };
 }
 export function generateBalancedTeams(
   players: TeamCandidatePlayer[],
   teamCount: number,
-  iterations = 300,
+  options: number | { iterations?: number; seed?: string | number } = 300,
 ): { teams: GeneratedTeam[]; metrics: BalanceMetrics } {
   if (teamCount < 2) throw new Error('Se requieren al menos dos equipos');
   if (players.length < teamCount) throw new Error('Debe haber al menos un jugador por equipo');
+  if (
+    players.some(
+      (player) => !Number.isInteger(player.level) || player.level < 1 || player.level > 5,
+    )
+  )
+    throw new Error('Los niveles deben estar entre 1 y 5');
+  if (new Set(players.map((player) => player.id)).size !== players.length)
+    throw new Error('No se permiten participantes duplicados');
+  const settings = typeof options === 'number' ? { iterations: options } : options;
+  const random = seededRandom(settings.seed);
+  const capacities = Array.from(
+    { length: teamCount },
+    (_, index) =>
+      Math.floor(players.length / teamCount) + (index < players.length % teamCount ? 1 : 0),
+  );
   const candidates: { teams: GeneratedTeam[]; metrics: BalanceMetrics; key: string }[] = [];
-  for (let i = 0; i < Math.max(300, iterations); i++) {
-    const ordered = shuffle([...players].sort((a, b) => b.level - a.level));
+  for (let i = 0; i < Math.max(300, settings.iterations ?? 300); i++) {
+    const levelGroups = new Map<number, TeamCandidatePlayer[]>();
+    players.forEach((player) =>
+      levelGroups.set(player.level, [...(levelGroups.get(player.level) ?? []), player]),
+    );
+    const ordered = [...levelGroups.entries()]
+      .sort((a, b) => b[0] - a[0])
+      .flatMap(([, group]) => shuffle(group, random));
     const teams = Array.from({ length: teamCount }, (_, idx) => ({
       name: `Equipo ${String.fromCharCode(65 + idx)}`,
       players: [] as TeamCandidatePlayer[],
     }));
-    for (const p of ordered) {
-      teams
-        .sort(
-          (a, b) =>
-            a.players.reduce((s, x) => s + x.level, 0) / (a.players.length || 1) -
-              b.players.reduce((s, x) => s + x.level, 0) / (b.players.length || 1) ||
-            a.players.length - b.players.length,
-        )[0]
-        .players.push(p);
+    const shuffledCapacities = shuffle(capacities, random);
+    for (const player of ordered) {
+      const available = teams.filter(
+        (team, index) => team.players.length < shuffledCapacities[index],
+      );
+      const minimum = Math.min(
+        ...available.map(
+          (team) =>
+            team.players.reduce((sum, item) => sum + item.level, 0) /
+            Math.max(1, team.players.length),
+        ),
+      );
+      const best = available.filter(
+        (team) =>
+          Math.abs(
+            team.players.reduce((sum, item) => sum + item.level, 0) /
+              Math.max(1, team.players.length) -
+              minimum,
+          ) < 0.00001,
+      );
+      best[Math.floor(random() * best.length)].players.push(player);
     }
-    const m = metrics(teams);
+    // Intercambios locales: conserva tamaños y acepta solo mejoras.
+    let improved = true;
+    while (improved) {
+      improved = false;
+      const baseline = calculateBalanceMetrics(teams).score;
+      outer: for (let a = 0; a < teams.length; a++)
+        for (let b = a + 1; b < teams.length; b++)
+          for (let x = 0; x < teams[a].players.length; x++)
+            for (let y = 0; y < teams[b].players.length; y++) {
+              [teams[a].players[x], teams[b].players[y]] = [
+                teams[b].players[y],
+                teams[a].players[x],
+              ];
+              if (calculateBalanceMetrics(teams).score + 1e-9 < baseline) {
+                improved = true;
+                break outer;
+              }
+              [teams[a].players[x], teams[b].players[y]] = [
+                teams[b].players[y],
+                teams[a].players[x],
+              ];
+            }
+    }
+    const m = calculateBalanceMetrics(teams);
     const key = teams
       .map((t) =>
         t.players
@@ -140,8 +218,11 @@ export function generateBalancedTeams(
   const unique = [...new Map(candidates.map((c) => [c.key, c])).values()].sort(
     (a, b) => a.metrics.score - b.metrics.score,
   );
-  const pool = unique.slice(0, Math.max(1, Math.ceil(unique.length * 0.1)));
-  const chosen = pool[Math.floor(Math.random() * pool.length)];
+  const bestScore = unique[0].metrics.score;
+  const pool = unique
+    .filter((candidate) => candidate.metrics.score <= bestScore + 0.15)
+    .slice(0, 20);
+  const chosen = pool[Math.floor(random() * pool.length)];
   return {
     teams: chosen.teams.map((t) => ({ ...t, metrics: chosen.metrics })),
     metrics: chosen.metrics,

@@ -1,6 +1,7 @@
 import { GameSessionStatus } from '@volleyflow/shared';
 import {
   Column,
+  Check,
   CreateDateColumn,
   Entity,
   JoinColumn,
@@ -11,6 +12,10 @@ import {
 import { VenueEntity } from './venue.entity';
 import { TeamEntity } from './team.entity';
 @Entity('game_sessions')
+@Check(
+  'CHK_sessions_values',
+  'court_price >= 0 and gatorade_price >= 0 and team_count >= 2 and default_target_score > 0 and current_target_score > 0',
+)
 export class GameSessionEntity {
   @PrimaryGeneratedColumn('uuid') id!: string;
   @Column({ type: 'date' }) date!: string;

@@ -15,6 +15,10 @@ import { PlayerEntity } from './player.entity';
 @Entity('session_players')
 @Index(['session', 'player'], { unique: true })
 @Check('CHK_session_players_level', 'level_snapshot between 1 and 5')
+@Check(
+  'CHK_session_players_money',
+  'court_amount >= 0 and gatorade_amount >= 0 and amount_due >= 0 and amount_paid >= 0',
+)
 export class SessionPlayerEntity {
   @PrimaryGeneratedColumn('uuid') id!: string;
   @ManyToOne(() => GameSessionEntity, { nullable: false, onDelete: 'CASCADE' })

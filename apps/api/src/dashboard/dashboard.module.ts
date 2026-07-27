@@ -2,30 +2,55 @@ import { Controller, Get, Module, UseGuards } from '@nestjs/common';
 import { AuthModule } from '../auth/auth.module';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { TypeOrmModule, InjectRepository } from '@nestjs/typeorm';
-import { PlayerEntity } from '../database/entities';
-import { Repository } from 'typeorm';
+import { GameSessionEntity, PlayerEntity } from '../database/entities';
+import { In, Repository } from 'typeorm';
+import { GameSessionStatus } from '@volleyflow/shared';
 
 @Controller('dashboard')
 @UseGuards(JwtAuthGuard)
 export class DashboardController {
-  constructor(@InjectRepository(PlayerEntity) private readonly players: Repository<PlayerEntity>) {}
+  constructor(
+    @InjectRepository(PlayerEntity) private readonly players: Repository<PlayerEntity>,
+    @InjectRepository(GameSessionEntity) private readonly sessions: Repository<GameSessionEntity>,
+  ) {}
   @Get()
   async getDashboard() {
+    const [activeSession, recentSessions, completedSessions] = await Promise.all([
+      this.sessions.findOne({
+        where: { status: In([GameSessionStatus.DRAFT, GameSessionStatus.TEAMS_CREATED]) },
+        order: { date: 'DESC' },
+      }),
+      this.sessions.find({ order: { date: 'DESC' }, take: 5 }),
+      this.sessions.countBy({ status: GameSessionStatus.FINISHED }),
+    ]);
     return {
-      activeSession: null,
+      activeSession: activeSession
+        ? {
+            id: activeSession.id,
+            title: activeSession.venueNameSnapshot,
+            date: activeSession.date,
+            venueName: activeSession.venueNameSnapshot,
+            statusLabel: activeSession.status,
+          }
+        : null,
       stats: {
         activePlayers: await this.players.countBy({ active: true }),
-        completedSessions: 0,
+        completedSessions,
         pendingPayments: 0,
         registeredMatches: 0,
       },
-      recentSessions: [],
+      recentSessions: recentSessions.map((session) => ({
+        id: session.id,
+        title: session.venueNameSnapshot,
+        date: session.date,
+        status: session.status,
+      })),
     };
   }
 }
 
 @Module({
-  imports: [AuthModule, TypeOrmModule.forFeature([PlayerEntity])],
+  imports: [AuthModule, TypeOrmModule.forFeature([PlayerEntity, GameSessionEntity])],
   controllers: [DashboardController],
 })
 export class DashboardModule {}

@@ -220,3 +220,14 @@ pnpm --filter @volleyflow/web test
 - `docs/IMPLEMENTATION_PLAN.md`: plan técnico del proyecto.
 - `docs/DATA_MODEL.md`: tablas y restricciones.
 - `docs/BUSINESS_RULES.md`: invariantes de dominio.
+
+## Fase 3: jornadas y equipos
+
+Rutas web: `/sessions`, `/sessions/new`, `/sessions/:id` y `/sessions/:id/teams`. El wizard guarda un borrador real, participantes con snapshots y equipos equilibrados. Consulta `docs/API.md`, `docs/DATA_MODEL.md` y `docs/BUSINESS_RULES.md`.
+
+```bash
+pnpm install --frozen-lockfile
+pnpm --filter @volleyflow/api migration:run
+pnpm --filter @volleyflow/api seed
+pnpm dev
+```
