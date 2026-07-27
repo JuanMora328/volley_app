@@ -26,10 +26,10 @@ export class MatchEntity {
   @JoinColumn({ name: 'session_id' })
   session!: GameSessionEntity;
   @Column({ type: 'int' }) sequence!: number;
-  @ManyToOne(() => TeamEntity, { nullable: false, onDelete: 'RESTRICT' })
+  @ManyToOne(() => TeamEntity, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'team_a_id' })
   teamA!: TeamEntity;
-  @ManyToOne(() => TeamEntity, { nullable: false, onDelete: 'RESTRICT' })
+  @ManyToOne(() => TeamEntity, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'team_b_id' })
   teamB!: TeamEntity;
   @Column({ name: 'team_a_score', type: 'int', default: 0 }) teamAScore!: number;
