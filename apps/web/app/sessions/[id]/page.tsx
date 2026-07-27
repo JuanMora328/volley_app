@@ -1,6 +1,18 @@
 'use client';
 import { useQuery } from '@tanstack/react-query';
-import { Calendar, Loader2, MapPin, Users, Volleyball } from 'lucide-react';
+import {
+  Calendar,
+  CreditCard,
+  LayoutDashboard,
+  Loader2,
+  LockKeyhole,
+  MapPin,
+  Shield,
+  Trophy,
+  Users,
+  UsersRound,
+  Volleyball,
+} from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { api } from '../../../lib/api';
@@ -41,26 +53,34 @@ export default function SessionDetailPage() {
           </span>
         </div>
       </header>
-      <nav className="flex gap-2 overflow-auto">
-        {[
-          ['', 'Resumen'],
-          ['#players', 'Jugadores'],
-          ['teams', 'Equipos'],
-        ].map(([path, label]) => (
-          <Link
-            className="rounded-full border bg-white px-4 py-2"
-            key={label}
-            href={path === 'teams' ? `/sessions/${id}/teams` : `/sessions/${id}${path}`}
-          >
-            {label}
-          </Link>
-        ))}
-        <span className="rounded-full bg-slate-100 px-4 py-2 text-slate-400">
-          Partidos · pendiente
-        </span>
-        <span className="rounded-full bg-slate-100 px-4 py-2 text-slate-400">
-          Pagos · pendiente
-        </span>
+      <nav
+        aria-label="Secciones de la jornada"
+        className="grid grid-cols-6 gap-2 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm sm:grid-cols-5"
+      >
+        <Link
+          aria-current="page"
+          className="col-span-2 flex min-h-16 flex-col items-center justify-center gap-1 rounded-xl bg-secondary sm:col-span-1 px-2 py-2 text-center text-white shadow-sm"
+          href={`/sessions/${id}`}
+        >
+          <LayoutDashboard aria-hidden="true" size={20} />
+          <span className="text-xs font-bold sm:text-sm">Resumen</span>
+        </Link>
+        <Link
+          className="col-span-2 flex min-h-16 flex-col items-center justify-center gap-1 rounded-xl px-2 sm:col-span-1 py-2 text-center text-slate-600 transition hover:bg-blue-50 hover:text-secondary"
+          href="#players"
+        >
+          <UsersRound aria-hidden="true" size={20} />
+          <span className="text-xs font-semibold sm:text-sm">Jugadores</span>
+        </Link>
+        <Link
+          className="col-span-2 flex min-h-16 flex-col items-center justify-center gap-1 rounded-xl px-2 sm:col-span-1 py-2 text-center text-slate-600 transition hover:bg-blue-50 hover:text-secondary"
+          href={`/sessions/${id}/teams`}
+        >
+          <Shield aria-hidden="true" size={20} />
+          <span className="text-xs font-semibold sm:text-sm">Equipos</span>
+        </Link>
+        <PendingSection icon={<Trophy aria-hidden="true" size={20} />} label="Partidos" />
+        <PendingSection icon={<CreditCard aria-hidden="true" size={20} />} label="Pagos" />
       </nav>
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Metric label="Cancha" value={money(s.courtPrice)} />
@@ -101,5 +121,20 @@ function Metric({ label, value }: { label: string; value: string }) {
       <p className="text-sm text-slate-500">{label}</p>
       <strong className="text-xl">{value}</strong>
     </article>
+  );
+}
+function PendingSection({ icon, label }: { icon: React.ReactNode; label: string }) {
+  return (
+    <span
+      aria-disabled="true"
+      className="relative col-span-3 flex min-h-16 cursor-not-allowed sm:col-span-1 flex-col items-center justify-center gap-1 rounded-xl bg-slate-50 px-2 py-2 text-center text-slate-400"
+    >
+      <span className="absolute right-2 top-2">
+        <LockKeyhole aria-hidden="true" size={12} />
+      </span>
+      {icon}
+      <span className="text-xs font-semibold sm:text-sm">{label}</span>
+      <span className="sr-only">Pendiente</span>
+    </span>
   );
 }

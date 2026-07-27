@@ -1,6 +1,6 @@
 'use client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { CheckCircle, RefreshCw, Save, Shuffle } from 'lucide-react';
+import { CheckCircle, Loader2, RefreshCw, Save, Shuffle, X } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -16,6 +16,9 @@ export default function TeamsPage() {
   });
   const [draft, setDraft] = useState<SessionTeam[]>([]);
   const [editing, setEditing] = useState(false);
+  const [confirmation, setConfirmation] = useState<'generate' | 'regenerate' | 'confirm' | null>(
+    null,
+  );
   useEffect(() => {
     if (query.data && !editing) setDraft(query.data.teams);
   }, [query.data, editing]);
@@ -23,6 +26,7 @@ export default function TeamsPage() {
   const generate = useMutation({
     mutationFn: () => api(`/sessions/${id}/teams/generate`, { method: 'POST', body: '{}' }),
     onSuccess: () => {
+      setConfirmation(null);
       refresh();
       toast.success('Equipos equilibrados generados');
     },
@@ -41,6 +45,7 @@ export default function TeamsPage() {
         }),
       }),
     onSuccess: () => {
+      setConfirmation(null);
       setEditing(false);
       refresh();
       toast.success('Composición guardada');
@@ -50,6 +55,7 @@ export default function TeamsPage() {
   const confirm = useMutation({
     mutationFn: () => api(`/sessions/${id}/teams/confirm`, { method: 'POST', body: '{}' }),
     onSuccess: () => {
+      setConfirmation(null);
       toast.success('Equipos confirmados');
       router.push(`/sessions/${id}`);
     },
@@ -98,7 +104,7 @@ export default function TeamsPage() {
           <button
             className="btn mx-auto"
             disabled={!s.allowedActions.manageTeams || generate.isPending}
-            onClick={() => generate.mutate()}
+            onClick={() => setConfirmation('generate')}
           >
             Generar equipos equilibrados
           </button>
@@ -199,9 +205,7 @@ export default function TeamsPage() {
                 <button
                   className="btn-secondary w-full"
                   disabled={!s.allowedActions.manageTeams || generate.isPending}
-                  onClick={() => {
-                    if (window.confirm('¿Reemplazar la composición actual?')) generate.mutate();
-                  }}
+                  onClick={() => setConfirmation('regenerate')}
                 >
                   <RefreshCw aria-hidden="true" size={20} />
                   <span>Regenerar</span>
@@ -216,14 +220,7 @@ export default function TeamsPage() {
                 <button
                   className="btn w-full"
                   disabled={!s.allowedActions.confirmTeams || confirm.isPending}
-                  onClick={() => {
-                    if (
-                      window.confirm(
-                        'Después de confirmar no podrás editar participantes ni equipos. ¿Continuar?',
-                      )
-                    )
-                      confirm.mutate();
-                  }}
+                  onClick={() => setConfirmation('confirm')}
                 >
                   <CheckCircle aria-hidden="true" size={20} />
                   <span>Confirmar equipos</span>
@@ -233,6 +230,89 @@ export default function TeamsPage() {
           </div>
         </>
       )}
+      {confirmation && (
+        <TeamConfirmationModal
+          action={confirmation}
+          pending={generate.isPending || confirm.isPending}
+          close={() => setConfirmation(null)}
+          accept={() => {
+            if (confirmation === 'confirm') confirm.mutate();
+            else generate.mutate();
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
+function TeamConfirmationModal({
+  action,
+  pending,
+  close,
+  accept,
+}: {
+  action: 'generate' | 'regenerate' | 'confirm';
+  pending: boolean;
+  close(): void;
+  accept(): void;
+}) {
+  const confirming = action === 'confirm';
+  const regenerating = action === 'regenerate';
+  const title = confirming
+    ? '¿Confirmar los equipos?'
+    : regenerating
+      ? '¿Regenerar los equipos?'
+      : '¿Generar equipos equilibrados?';
+  const description = confirming
+    ? 'Esta composición quedará bloqueada y la jornada avanzará al estado Equipos creados. Después no podrás editar jugadores ni equipos.'
+    : regenerating
+      ? 'La composición actual será reemplazada por una nueva alternativa equilibrada. Los participantes no cambiarán.'
+      : 'Crearemos una propuesta usando el nivel de los jugadores y tamaños equilibrados. Podrás revisarla antes de confirmar.';
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="team-confirmation-title"
+      className="fixed inset-0 z-[70] flex items-end bg-slate-950/50 p-0 backdrop-blur-sm sm:items-center sm:justify-center sm:p-4"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget && !pending) close();
+      }}
+    >
+      <section className="w-full rounded-t-3xl bg-white p-6 shadow-2xl sm:max-w-md sm:rounded-3xl">
+        <div className="mb-4 flex items-start justify-between gap-4">
+          <div
+            className={`rounded-2xl p-3 ${confirming ? 'bg-lime-100 text-lime-800' : 'bg-blue-100 text-secondary'}`}
+          >
+            {confirming ? <CheckCircle aria-hidden="true" /> : <Shuffle aria-hidden="true" />}
+          </div>
+          <button
+            type="button"
+            aria-label="Cerrar confirmación"
+            disabled={pending}
+            className="rounded-full p-2 text-slate-500 hover:bg-slate-100 disabled:opacity-50"
+            onClick={close}
+          >
+            <X aria-hidden="true" />
+          </button>
+        </div>
+        <h2 id="team-confirmation-title" className="text-2xl font-bold text-primary">
+          {title}
+        </h2>
+        <p className="mt-2 text-slate-600">{description}</p>
+        <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+          <button type="button" className="btn-secondary" disabled={pending} onClick={close}>
+            Cancelar
+          </button>
+          <button type="button" className="btn" disabled={pending} onClick={accept}>
+            {pending && <Loader2 className="animate-spin" aria-hidden="true" size={18} />}
+            {confirming
+              ? 'Sí, confirmar equipos'
+              : regenerating
+                ? 'Sí, regenerar'
+                : 'Generar equipos'}
+          </button>
+        </div>
+      </section>
     </div>
   );
 }
