@@ -1,6 +1,7 @@
 'use client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
+  AlertTriangle,
   Calendar,
   CreditCard,
   LayoutDashboard,
@@ -8,26 +9,35 @@ import {
   MapPin,
   Shield,
   Trophy,
+  Trash2,
   Users,
   UsersRound,
   Volleyball,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { api } from '../../../lib/api';
 import { money, SessionDetail } from '../../../lib/sessions';
 export default function SessionDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const queryClient = useQueryClient();
+  const [actionDialog, setActionDialog] = useState<'cancel' | 'delete' | null>(null);
+  const [deleteConfirmation, setDeleteConfirmation] = useState('');
+  const [actionError, setActionError] = useState('');
   const destructive = useMutation({
     mutationFn: ({ path, method, body }: { path: string; method: string; body?: object }) =>
       api(path, { method, body: body ? JSON.stringify(body) : undefined }),
     onSuccess: async (_, variables) => {
+      setActionDialog(null);
+      setDeleteConfirmation('');
+      setActionError('');
       await queryClient.invalidateQueries({ queryKey: ['sessions'] });
       if (variables.method === 'DELETE') router.push('/sessions');
       else void query.refetch();
     },
+    onError: (error: Error) => setActionError(error.message),
   });
   const query = useQuery({
     queryKey: ['session', id],
@@ -131,18 +141,18 @@ export default function SessionDetailPage() {
       <section className="card border-red-200">
         <h2 className="text-xl font-bold">Acciones de la jornada</h2>
         <p className="my-3 text-sm text-slate-600">
-          Cancelar conserva la jornada y su historial en modo de solo lectura. Eliminar borra
+          Cancelar no es lo mismo que finalizar: conserva la jornada y su historial, pero impide
+          continuar jugando. Finalizar será parte del cierre deportivo y financiero. Eliminar borra
           físicamente todo el agregado.
         </p>
         <div className="flex flex-wrap gap-3">
           {s.status !== 'CANCELLED' && (
             <button
               className="rounded-xl border border-amber-500 px-4 py-3 font-bold text-amber-800"
-              onClick={() =>
-                confirm(
-                  'Cancelar conservará la jornada y su historial, pero no permitirá continuar jugando. ¿Continuar?',
-                ) && destructive.mutate({ path: `/sessions/${id}/cancel`, method: 'POST' })
-              }
+              onClick={() => {
+                setActionError('');
+                setActionDialog('cancel');
+              }}
             >
               Cancelar jornada
             </button>
@@ -150,18 +160,137 @@ export default function SessionDetailPage() {
           <button
             className="rounded-xl bg-red-700 px-4 py-3 font-bold text-white"
             onClick={() => {
-              const value = prompt(
-                'Esta acción eliminará permanentemente la jornada, sus equipos, participantes y partidos. No se puede deshacer. Escribe ELIMINAR.',
-              );
-              if (value === 'ELIMINAR')
-                destructive.mutate({
-                  path: `/sessions/${id}`,
-                  method: 'DELETE',
-                  body: { confirmation: value },
-                });
+              setActionError('');
+              setDeleteConfirmation('');
+              setActionDialog('delete');
             }}
           >
             Eliminar permanentemente
+          </button>
+        </div>
+      </section>
+      {actionDialog === 'cancel' && (
+        <SessionActionDialog
+          icon={<AlertTriangle size={32} />}
+          tone="warning"
+          title="¿Cancelar esta jornada?"
+          description="Cancelar conservará la jornada, sus equipos, participantes y partidos, pero quedará en modo de solo lectura y no podrás continuar jugando. Esto no finaliza ni liquida la jornada."
+          error={actionError}
+          pending={destructive.isPending}
+          confirmLabel="Sí, cancelar jornada"
+          onClose={() => setActionDialog(null)}
+          onConfirm={() => destructive.mutate({ path: `/sessions/${id}/cancel`, method: 'POST' })}
+        />
+      )}
+      {actionDialog === 'delete' && (
+        <SessionActionDialog
+          icon={<Trash2 size={32} />}
+          tone="danger"
+          title="Eliminar jornada permanentemente"
+          description="Esta acción eliminará la jornada, sus equipos, participantes y partidos. No se puede deshacer."
+          error={actionError}
+          pending={destructive.isPending}
+          confirmLabel="Eliminar permanentemente"
+          confirmDisabled={deleteConfirmation.trim() !== 'ELIMINAR'}
+          onClose={() => setActionDialog(null)}
+          onConfirm={() =>
+            destructive.mutate({
+              path: `/sessions/${id}`,
+              method: 'DELETE',
+              body: { confirmation: deleteConfirmation.trim() },
+            })
+          }
+        >
+          <label className="mt-5 block text-left text-sm font-bold" htmlFor="delete-confirmation">
+            Escribe <span className="text-red-700">ELIMINAR</span> para confirmar
+          </label>
+          <input
+            autoComplete="off"
+            autoFocus
+            className="input mt-2 w-full"
+            id="delete-confirmation"
+            onChange={(event) => setDeleteConfirmation(event.target.value)}
+            placeholder="ELIMINAR"
+            value={deleteConfirmation}
+          />
+        </SessionActionDialog>
+      )}
+    </div>
+  );
+}
+function SessionActionDialog({
+  icon,
+  tone,
+  title,
+  description,
+  error,
+  pending,
+  confirmLabel,
+  confirmDisabled = false,
+  onClose,
+  onConfirm,
+  children,
+}: {
+  icon: React.ReactNode;
+  tone: 'warning' | 'danger';
+  title: string;
+  description: string;
+  error: string;
+  pending: boolean;
+  confirmLabel: string;
+  confirmDisabled?: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+  children?: React.ReactNode;
+}) {
+  const danger = tone === 'danger';
+  return (
+    <div
+      className="fixed inset-0 z-50 grid place-items-center bg-slate-950/60 p-4 backdrop-blur-sm"
+      onMouseDown={(event) => !pending && event.target === event.currentTarget && onClose()}
+      role="presentation"
+    >
+      <section
+        aria-describedby="session-action-description"
+        aria-labelledby="session-action-title"
+        aria-modal="true"
+        className="w-full max-w-md rounded-3xl bg-white p-6 text-center shadow-2xl"
+        role="dialog"
+      >
+        <div
+          className={`mx-auto grid size-16 place-items-center rounded-full ${danger ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'}`}
+        >
+          {icon}
+        </div>
+        <h2 className="mt-4 text-2xl font-black" id="session-action-title">
+          {title}
+        </h2>
+        <p className="mt-3 text-slate-600" id="session-action-description">
+          {description}
+        </p>
+        {children}
+        {error && (
+          <p
+            className="mt-4 rounded-xl bg-red-50 p-3 text-sm font-semibold text-red-700"
+            role="alert"
+          >
+            {error}
+          </p>
+        )}
+        <div className="mt-6 grid grid-cols-2 gap-3">
+          <button
+            className="rounded-xl border border-slate-300 px-4 py-3 font-bold"
+            disabled={pending}
+            onClick={onClose}
+          >
+            Volver
+          </button>
+          <button
+            className={`rounded-xl px-4 py-3 font-bold text-white disabled:cursor-not-allowed disabled:opacity-50 ${danger ? 'bg-red-700' : 'bg-amber-600'}`}
+            disabled={confirmDisabled || pending}
+            onClick={onConfirm}
+          >
+            {pending ? 'Procesando…' : confirmLabel}
           </button>
         </div>
       </section>
