@@ -46,6 +46,8 @@ export default function MatchControlPage() {
   const qc = useQueryClient();
   const [scores, setScores] = useState([0, 0]);
   const [notice, setNotice] = useState('');
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [automaticPromptKey, setAutomaticPromptKey] = useState<string | null>(null);
   const rotation = useQuery({
     queryKey: ['rotation', id],
     queryFn: () => api<Rotation>(`/sessions/${id}/rotation`),
@@ -84,10 +86,28 @@ export default function MatchControlPage() {
   });
   const r = rotation.data,
     active = r?.activeMatch;
-  useEffect(
-    () => setScores([active?.teamAScore ?? 0, active?.teamBScore ?? 0]),
-    [active?.id, active?.teamAScore, active?.teamBScore],
-  );
+  useEffect(() => {
+    setScores([active?.teamAScore ?? 0, active?.teamBScore ?? 0]);
+    setConfirmOpen(false);
+    setAutomaticPromptKey(null);
+  }, [active?.id, active?.teamAScore, active?.teamBScore]);
+  useEffect(() => {
+    if (!active) return;
+    const reachedTarget = Math.max(...scores) >= active.targetScore;
+    const promptKey = `${active.id}:${scores[0]}:${scores[1]}`;
+    if (reachedTarget && scores[0] !== scores[1] && automaticPromptKey !== promptKey) {
+      setAutomaticPromptKey(promptKey);
+      setConfirmOpen(true);
+    }
+  }, [active, automaticPromptKey, scores]);
+  const submitResult = () => {
+    if (!active) return;
+    setConfirmOpen(false);
+    action.mutate({
+      path: `/sessions/${id}/matches/${active.id}/result`,
+      body: { teamAScore: scores[0], teamBScore: scores[1] },
+    });
+  };
   if (rotation.isLoading)
     return (
       <div className="card flex gap-2">
@@ -165,13 +185,7 @@ export default function MatchControlPage() {
                 <button
                   className="btn w-full"
                   disabled={action.isPending}
-                  onClick={() => {
-                    if (confirm(`¿Registrar ${scores[0]} – ${scores[1]}?`))
-                      action.mutate({
-                        path: `/sessions/${id}/matches/${active.id}/result`,
-                        body: { teamAScore: scores[0], teamBScore: scores[1] },
-                      });
-                  }}
+                  onClick={() => setConfirmOpen(true)}
                 >
                   Registrar resultado
                 </button>
@@ -282,6 +296,15 @@ export default function MatchControlPage() {
           Volver a la jornada
         </Link>
       </section>
+      {confirmOpen && active && (
+        <ResultConfirmationModal
+          match={active}
+          scores={scores}
+          pending={action.isPending}
+          onEdit={() => setConfirmOpen(false)}
+          onConfirm={submitResult}
+        />
+      )}
     </div>
   );
 }
@@ -302,8 +325,8 @@ function TeamCard({ team }: { team?: Team }) {
 }
 function Score({ value, set }: { value: number; set: (n: number) => void }) {
   return (
-    <div className="rounded-2xl bg-slate-100 p-3">
-      <strong className="block text-6xl">{value}</strong>
+    <div className="rounded-2xl bg-slate-100 p-3 text-center">
+      <strong className="block w-full text-center text-6xl tabular-nums">{value}</strong>
       <div className="mt-3 flex justify-center gap-2">
         <button
           aria-label="Restar punto"
@@ -320,6 +343,74 @@ function Score({ value, set }: { value: number; set: (n: number) => void }) {
           <Plus />
         </button>
       </div>
+    </div>
+  );
+}
+function ResultConfirmationModal({
+  match,
+  scores,
+  pending,
+  onEdit,
+  onConfirm,
+}: {
+  match: Match;
+  scores: number[];
+  pending: boolean;
+  onEdit: () => void;
+  onConfirm: () => void;
+}) {
+  const winner = scores[0] > scores[1] ? match.teamA : match.teamB;
+  const hasWinner = scores[0] !== scores[1] && Math.max(...scores) >= match.targetScore;
+  return (
+    <div
+      className="fixed inset-0 z-50 grid place-items-center bg-slate-950/60 p-4 backdrop-blur-sm"
+      role="presentation"
+      onMouseDown={(event) => event.target === event.currentTarget && onEdit()}
+    >
+      <section
+        aria-describedby="result-dialog-description"
+        aria-labelledby="result-dialog-title"
+        aria-modal="true"
+        className="w-full max-w-sm rounded-3xl bg-white p-6 text-center shadow-2xl"
+        role="dialog"
+      >
+        <div className="mx-auto grid size-16 place-items-center rounded-full bg-lime-300 text-slate-900">
+          <Trophy size={32} />
+        </div>
+        <p className="mt-4 text-xs font-black uppercase tracking-widest text-secondary">
+          Partido #{match.sequence}
+        </p>
+        <h2 className="mt-1 text-2xl font-black" id="result-dialog-title">
+          {hasWinner ? `${winner.name} llegó al puntaje máximo` : 'Revisa el marcador'}
+        </h2>
+        <p className="mt-3 text-slate-600" id="result-dialog-description">
+          {hasWinner
+            ? `¿Deseas finalizar el partido y registrar a ${winner.name} como ganador?`
+            : `Para finalizar, un equipo debe superar al rival y alcanzar ${match.targetScore} puntos.`}
+        </p>
+        <div className="my-5 grid grid-cols-[1fr_auto_1fr] items-center gap-3 rounded-2xl bg-slate-100 p-4">
+          <div>
+            <p className="truncate text-sm font-bold">{match.teamA.name}</p>
+            <strong className="text-4xl tabular-nums">{scores[0]}</strong>
+          </div>
+          <span className="font-black text-slate-400">–</span>
+          <div>
+            <p className="truncate text-sm font-bold">{match.teamB.name}</p>
+            <strong className="text-4xl tabular-nums">{scores[1]}</strong>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <button
+            className="rounded-xl border border-slate-300 px-4 py-3 font-bold"
+            onClick={onEdit}
+          >
+            Editar marcador
+          </button>
+          <button className="btn" disabled={!hasWinner || pending} onClick={onConfirm}>
+            {pending ? 'Registrando…' : 'Finalizar partido'}
+          </button>
+        </div>
+      </section>
     </div>
   );
 }
