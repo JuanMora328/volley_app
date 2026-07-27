@@ -62,3 +62,14 @@ export const money = (value: number) =>
     currency: 'COP',
     maximumFractionDigits: 0,
   }).format(value);
+
+const sessionStatusLabels: Record<string, string> = {
+  DRAFT: 'Borrador',
+  TEAMS_CREATED: 'Equipos confirmados',
+  IN_PROGRESS: 'En progreso',
+  SETTLEMENT: 'En liquidación',
+  FINISHED: 'Finalizada',
+  CANCELLED: 'Cancelada',
+};
+
+export const sessionStatusLabel = (status: string) => sessionStatusLabels[status] ?? status;

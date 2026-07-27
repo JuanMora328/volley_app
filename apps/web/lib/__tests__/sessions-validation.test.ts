@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { money, sessionSchema } from '../sessions';
+import { money, sessionSchema, sessionStatusLabel } from '../sessions';
 describe('formulario de jornada', () => {
   const valid = {
     date: '2026-08-01',
@@ -18,4 +18,11 @@ describe('formulario de jornada', () => {
         .success,
     ).toBe(false));
   it('formatea COP en es-CO', () => expect(money(120000)).toContain('120.000'));
+  it('presenta los estados de la jornada en español', () => {
+    expect(sessionStatusLabel('DRAFT')).toBe('Borrador');
+    expect(sessionStatusLabel('TEAMS_CREATED')).toBe('Equipos confirmados');
+    expect(sessionStatusLabel('IN_PROGRESS')).toBe('En progreso');
+    expect(sessionStatusLabel('FINISHED')).toBe('Finalizada');
+    expect(sessionStatusLabel('CANCELLED')).toBe('Cancelada');
+  });
 });

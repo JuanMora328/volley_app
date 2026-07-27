@@ -50,7 +50,7 @@ export default function Login() {
           <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#091426] text-white shadow-xl">
             <Volleyball size={40} />
           </div>
-          <h1 className="text-3xl font-bold tracking-tight text-[#091426]">VolleyFlow</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-[#091426]">Gestión de vóley</h1>
           <p className="mt-2 text-base text-[#45474c]">Organiza tus partidos sin perder el ritmo</p>
         </div>
         <form
@@ -104,9 +104,7 @@ export default function Login() {
             </button>
           </div>
         </form>
-        <p className="mt-8 text-center text-xs text-[#45474c]/70">
-          © 2026 VolleyFlow Professional Sports Management
-        </p>
+        <p className="mt-8 text-center text-xs text-[#45474c]/70">© 2026 Gestión deportiva</p>
       </section>
     </main>
   );

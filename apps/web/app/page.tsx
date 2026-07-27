@@ -4,6 +4,7 @@ import { CalendarDays, Loader2, PlusCircle, Users, Wallet, Volleyball } from 'lu
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { api, DashboardResponse, getToken } from '../lib/api';
+import { sessionStatusLabel } from '../lib/sessions';
 
 export default function Dashboard() {
   const router = useRouter();
@@ -96,7 +97,7 @@ export default function Dashboard() {
                       {session.title}
                       <small className="block text-slate-500">{session.date}</small>
                     </span>
-                    <b>{session.status}</b>
+                    <b>{sessionStatusLabel(session.status)}</b>
                   </button>
                 ))
               : 'Todavía no hay jornadas registradas.'}

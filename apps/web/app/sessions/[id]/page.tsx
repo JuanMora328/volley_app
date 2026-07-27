@@ -18,7 +18,7 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { api } from '../../../lib/api';
-import { money, SessionDetail } from '../../../lib/sessions';
+import { money, SessionDetail, sessionStatusLabel } from '../../../lib/sessions';
 export default function SessionDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
@@ -57,7 +57,7 @@ export default function SessionDetailPage() {
       <header className="rounded-3xl bg-[#1e293b] p-6 text-white">
         <div className="flex justify-between">
           <div>
-            <p className="text-lime-300">{s.status}</p>
+            <p className="text-lime-300">{sessionStatusLabel(s.status)}</p>
             <h1 className="text-3xl font-bold">{s.venueNameSnapshot}</h1>
           </div>
           <Volleyball size={38} />
@@ -190,7 +190,7 @@ export default function SessionDetailPage() {
           description="Esta acción eliminará la jornada, sus equipos, participantes y partidos. No se puede deshacer."
           error={actionError}
           pending={destructive.isPending}
-          confirmLabel="Eliminar permanentemente"
+          confirmLabel="Eliminar"
           confirmDisabled={deleteConfirmation.trim() !== 'ELIMINAR'}
           onClose={() => setActionDialog(null)}
           onConfirm={() =>
@@ -286,7 +286,7 @@ function SessionActionDialog({
             Volver
           </button>
           <button
-            className={`rounded-xl px-4 py-3 font-bold text-white disabled:cursor-not-allowed disabled:opacity-50 ${danger ? 'bg-red-700' : 'bg-amber-600'}`}
+            className={`min-w-0 whitespace-normal break-words rounded-xl px-3 py-3 text-sm font-bold leading-tight text-white disabled:cursor-not-allowed disabled:opacity-50 sm:px-4 sm:text-base ${danger ? 'bg-red-700' : 'bg-amber-600'}`}
             disabled={confirmDisabled || pending}
             onClick={onConfirm}
           >

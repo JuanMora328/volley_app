@@ -120,7 +120,7 @@ export default function MatchControlPage() {
       <header className="rounded-3xl bg-[#172033] p-6 text-white">
         <p className="font-bold text-lime-300">COMPETICIÓN EN VIVO</p>
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-black">VolleyFlow</h1>
+          <h1 className="text-3xl font-black">Partido en juego</h1>
           <Trophy className="text-lime-300" size={38} />
         </div>
       </header>
