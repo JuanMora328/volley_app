@@ -39,7 +39,11 @@ export class SettlementsService {
       first.difference === second.difference &&
       first.pointsFor === second.pointsFor;
     return {
-      session: this.sessionInfo(data.session),
+      session: {
+        ...this.sessionInfo(data.session),
+        courtPrice: data.session.courtPrice,
+        gatoradePrice: data.session.gatoradePrice,
+      },
       teams: data.teams.map((team) => ({
         id: team.id,
         name: team.name,

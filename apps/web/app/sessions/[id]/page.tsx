@@ -116,7 +116,7 @@ export default function SessionDetailPage() {
       </nav>
       <div className="grid gap-3 sm:grid-cols-2">
         <Link className="btn-secondary text-center" href={`/sessions/${id}/settlement`}>
-          Liquidación
+          Finalizar jornada
         </Link>
         <Link className="btn-secondary text-center" href={`/sessions/${id}/summary`}>
           Resumen final

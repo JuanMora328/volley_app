@@ -11,7 +11,7 @@ import { money } from '../../../../lib/sessions';
 import { settlementSchema } from '../../../../lib/settlements';
 type Form = z.infer<typeof settlementSchema>;
 type Setup = {
-  session: { status: string };
+  session: { status: string; courtPrice: number; gatoradePrice: number };
   teams: Array<{ id: string; name: string; players: Array<{ id: string; name: string }> }>;
   participants: Array<{ id: string; name: string; team: { name: string } | null }>;
   standings: Array<{
@@ -46,6 +46,8 @@ export default function SettlementPage() {
   const [gatoradeIds, setGatoradeIds] = useState<string[]>([]);
   const [preview, setPreview] = useState<Preview | null>(null);
   const [error, setError] = useState('');
+  const [courtPriceDisplay, setCourtPriceDisplay] = useState('0');
+  const [gatoradePriceDisplay, setGatoradePriceDisplay] = useState('0');
   const setup = useQuery({
     queryKey: ['settlement-setup', id],
     queryFn: () => api<Setup>(`/sessions/${id}/settlement`),
@@ -58,6 +60,10 @@ export default function SettlementPage() {
     if (!setup.data) return;
     setCourtIds(setup.data.participants.map((p) => p.id));
     setGatoradeIds(setup.data.participants.map((p) => p.id));
+    form.setValue('courtPrice', setup.data.session.courtPrice);
+    form.setValue('gatoradePrice', setup.data.session.gatoradePrice);
+    setCourtPriceDisplay(formatInteger(setup.data.session.courtPrice));
+    setGatoradePriceDisplay(formatInteger(setup.data.session.gatoradePrice));
     if (setup.data.suggestion.championTeamId)
       form.setValue('championTeamId', setup.data.suggestion.championTeamId);
   }, [setup.data, form]);
@@ -125,7 +131,7 @@ export default function SettlementPage() {
         </Link>
         <div>
           <p className="text-sm font-bold text-secondary">FASE DE CIERRE</p>
-          <h1 className="text-3xl font-extrabold">Resumen de liquidación</h1>
+          <h1 className="text-3xl font-extrabold">Finalizar jornada</h1>
         </div>
       </header>
       <section className="card">
@@ -145,7 +151,8 @@ export default function SettlementPage() {
           <option value="">Seleccionar equipo</option>
           {setup.data.teams.map((team) => (
             <option key={team.id} value={team.id}>
-              {team.name}
+              {team.name} ·{' '}
+              {setup.data.standings.find((row) => row.team.id === team.id)?.points ?? 0} puntos
             </option>
           ))}
         </select>
@@ -153,14 +160,49 @@ export default function SettlementPage() {
           <p className="text-sm text-red-700">{form.formState.errors.championTeamId.message}</p>
         )}
       </section>
+      <section className="card">
+        <h2 className="mb-3 text-xl font-bold">Puntos por equipo</h2>
+        <div className="space-y-2">
+          {setup.data.standings.map((row) => (
+            <div
+              className="grid grid-cols-[2rem_1fr_auto] items-center gap-3 rounded-xl bg-slate-50 p-3"
+              key={row.team.id}
+            >
+              <b className="text-secondary">#{row.position}</b>
+              <span className="font-semibold">{row.team.name}</span>
+              <b>{row.points} puntos</b>
+            </div>
+          ))}
+        </div>
+      </section>
       <form className="grid gap-4 sm:grid-cols-2">
         <label className="card font-bold">
-          Valor cancha
-          <input className="input mt-2" inputMode="numeric" {...form.register('courtPrice')} />
+          Valor cancha (COP)
+          <input
+            className="input mt-2"
+            inputMode="numeric"
+            value={courtPriceDisplay}
+            onChange={(event) => {
+              const value = parseInteger(event.target.value);
+              setCourtPriceDisplay(formatInteger(value));
+              form.setValue('courtPrice', value);
+              setPreview(null);
+            }}
+          />
         </label>
         <label className="card font-bold">
-          Valor Gatorades
-          <input className="input mt-2" inputMode="numeric" {...form.register('gatoradePrice')} />
+          Valor Gatorades (COP)
+          <input
+            className="input mt-2"
+            inputMode="numeric"
+            value={gatoradePriceDisplay}
+            onChange={(event) => {
+              const value = parseInteger(event.target.value);
+              setGatoradePriceDisplay(formatInteger(value));
+              form.setValue('gatoradePrice', value);
+              setPreview(null);
+            }}
+          />
         </label>
       </form>
       <section className="card">
@@ -239,10 +281,18 @@ export default function SettlementPage() {
             Validación: {money(preview.distributedTotal)} de {money(preview.expectedTotal)}
           </p>
           <button className="btn-primary w-full" onClick={confirm}>
-            Confirmar liquidación
+            Continuar para finalizar jornada
           </button>
         </section>
       )}
     </div>
   );
+}
+
+function parseInteger(value: string) {
+  return Number(value.replace(/\D/g, '')) || 0;
+}
+
+function formatInteger(value: number) {
+  return new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(value);
 }
