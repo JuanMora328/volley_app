@@ -2,6 +2,7 @@
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { api } from '../../lib/api';
+import { sessionStatusLabel } from '../../lib/sessions';
 export default function SessionsPage() {
   const query = useQuery({
     queryKey: ['sessions'],
@@ -30,7 +31,7 @@ export default function SessionsPage() {
                 <b>{s.venueNameSnapshot}</b>
                 <small className="block text-slate-500">{s.date}</small>
               </span>
-              <b className="text-[#0051d5]">{s.status}</b>
+              <b className="text-[#0051d5]">{sessionStatusLabel(s.status)}</b>
             </Link>
           ))}
           {!query.data?.items.length && (

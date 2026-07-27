@@ -10,6 +10,10 @@ export enum GameSessionStatus {
   FINISHED = 'FINISHED',
   CANCELLED = 'CANCELLED',
 }
+export enum MatchStatus {
+  IN_PROGRESS = 'IN_PROGRESS',
+  FINISHED = 'FINISHED',
+}
 export enum PaymentMethod {
   CASH = 'CASH',
   TRANSFER = 'TRANSFER',
@@ -53,8 +57,9 @@ export interface MatchDto {
   teamAScore: number;
   teamBScore: number;
   targetScore: number;
-  winnerTeamId: string;
-  loserTeamId: string;
+  winnerTeamId: string | null;
+  loserTeamId: string | null;
+  status?: MatchStatus;
 }
 export interface BalanceMetrics {
   maxAverageDiff: number;
@@ -236,8 +241,10 @@ export function calculateRotation(teams: TeamDto[], matches: MatchDto[]) {
   let court = [order[0], order[1]];
   let queue = order.slice(2);
   for (const match of [...matches].sort((a, b) => a.sequence - b.sequence)) {
-    const winner = court.find((t) => t.id === match.winnerTeamId)!;
-    const loser = court.find((t) => t.id === match.loserTeamId)!;
+    if (!match.winnerTeamId || !match.loserTeamId) continue;
+    const winner = court.find((t) => t.id === match.winnerTeamId);
+    const loser = court.find((t) => t.id === match.loserTeamId);
+    if (!winner || !loser) throw new Error('El historial no coincide con la rotación');
     if (queue.length === 0) {
       court = [winner, loser];
     } else {
@@ -253,6 +260,55 @@ export function calculateRotation(teams: TeamDto[], matches: MatchDto[]) {
     nextTeam: queue[0] ?? court[1],
     nextSequence: matches.length + 1,
   };
+}
+
+export interface Standing {
+  position: number;
+  team: TeamDto;
+  played: number;
+  won: number;
+  lost: number;
+  points: number;
+  pointsFor: number;
+  pointsAgainst: number;
+  difference: number;
+}
+export function calculateStandings(teams: TeamDto[], matches: MatchDto[]): Standing[] {
+  const rows = new Map(
+    teams.map((team) => [
+      team.id,
+      { team, played: 0, won: 0, lost: 0, points: 0, pointsFor: 0, pointsAgainst: 0 },
+    ]),
+  );
+  matches
+    .filter((match) => match.winnerTeamId && match.loserTeamId)
+    .forEach((match) => {
+      const a = rows.get(match.teamAId);
+      const b = rows.get(match.teamBId);
+      if (!a || !b) throw new Error('El partido contiene equipos externos');
+      a.played++;
+      b.played++;
+      a.pointsFor += match.teamAScore;
+      a.pointsAgainst += match.teamBScore;
+      b.pointsFor += match.teamBScore;
+      b.pointsAgainst += match.teamAScore;
+      const winner = rows.get(match.winnerTeamId!);
+      const loser = rows.get(match.loserTeamId!);
+      if (!winner || !loser) throw new Error('Ganador o perdedor inválido');
+      winner.won++;
+      winner.points++;
+      loser.lost++;
+    });
+  return [...rows.values()]
+    .map((row) => ({ ...row, difference: row.pointsFor - row.pointsAgainst, position: 0 }))
+    .sort(
+      (a, b) =>
+        b.points - a.points ||
+        b.difference - a.difference ||
+        b.pointsFor - a.pointsFor ||
+        a.team.name.localeCompare(b.team.name),
+    )
+    .map((row, index) => ({ ...row, position: index + 1 }));
 }
 export function derivePaymentStatus(amountDue: number, amountPaid: number): PaymentStatus {
   if (amountPaid <= 0) return 'PENDING';

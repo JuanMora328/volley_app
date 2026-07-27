@@ -17,3 +17,7 @@ Todas las rutas salvo `/api/health` y `/api/auth/login` requieren `Authorization
 - `POST /api/sessions/:id/cancel`: cancela un borrador.
 
 Los errores de estado o composición retornan `400`, los duplicados `409` y recursos inexistentes `404`.
+
+## Fase 4 — competición
+
+Todas las rutas requieren JWT. `POST /sessions/:id/rotation/draw` (y `redraw`) persiste un orden aleatorio; `GET /rotation` reconstruye enfrentamiento y cola. `POST /matches/start` crea el único partido activo y toma un snapshot del objetivo. `POST /matches/:matchId/result` confirma el marcador. `GET /matches` admite `status`, `order`, `page` y `limit`; `GET /standings` deriva la tabla. `DELETE /matches/latest` revierte exclusivamente el último resultado. `PATCH /target-score` cambia solo el próximo objetivo. `POST /cancel` conserva el agregado en solo lectura. `DELETE /sessions/:id`, con JSON `{ "confirmation": "ELIMINAR" }`, lo elimina físicamente.

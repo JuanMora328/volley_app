@@ -276,11 +276,23 @@ export class SessionsService {
     });
   }
   async cancel(id: string) {
-    const session = await this.session(id);
-    if (session.status !== GameSessionStatus.DRAFT)
-      throw new BadRequestException('Solo se puede cancelar una jornada borrador');
-    session.status = GameSessionStatus.CANCELLED;
-    return this.sessions.save(session);
+    return this.dataSource.transaction(async (manager) => {
+      const session = await this.sessionWith(manager, id);
+      if (session.status === GameSessionStatus.CANCELLED) return session;
+      session.status = GameSessionStatus.CANCELLED;
+      return manager.save(session);
+    });
+  }
+  async delete(id: string, confirmation: string) {
+    if (confirmation !== 'ELIMINAR')
+      throw new BadRequestException('Escriba ELIMINAR para confirmar');
+    return this.dataSource.transaction(async (manager) => {
+      const session = await this.sessionWith(manager, id);
+      await manager.remove(session);
+      if (await manager.exists(GameSessionEntity, { where: { id } }))
+        throw new ConflictException('No fue posible eliminar la jornada');
+      return { deleted: true, id };
+    });
   }
   private validateComposition(
     dto: SaveTeamsDto,

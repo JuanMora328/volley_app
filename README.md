@@ -231,3 +231,7 @@ pnpm --filter @volleyflow/api migration:run
 pnpm --filter @volleyflow/api seed
 pnpm dev
 ```
+
+### Competición (Fase 4)
+
+Después de confirmar equipos, abra `/sessions/:id/matches`: sortee el orden, inicie cada partido y confirme el marcador. El objetivo puede cambiarse entre partidos. Historial, posiciones, deshacer, cancelación conservadora y eliminación permanente están disponibles mediante la UI y API documentada en `docs/API.md`. Ejecute `pnpm test`, `pnpm typecheck`, `pnpm lint` y `pnpm build` para validación local; aplique migraciones con `pnpm --filter @volleyflow/api migration:run` sobre PostgreSQL.

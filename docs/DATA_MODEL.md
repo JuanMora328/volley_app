@@ -12,3 +12,7 @@ VolleyFlow usa exclusivamente PostgreSQL + TypeORM con `synchronize: false`.
 Las referencias a jugadores usan `RESTRICT`; eliminar una cancha deja la referencia nula pero conserva el snapshot. Los equipos de un borrador se eliminan transaccionalmente al cambiar participantes.
 
 Migración reversible: `1770000000000-CreateSessionsAndTeams.ts`.
+
+## Match (Fase 4)
+
+`matches` conserva secuencia, equipos, marcador, snapshot del objetivo, estado (`IN_PROGRESS`/`FINISHED`), ganador, perdedor y tiempos. Una restricción parcial permite un solo partido activo por jornada; checks protegen equipos distintos, resultados completos, marcadores no negativos y objetivo positivo. Las FK de la jornada y equipos usan cascada para la eliminación física. La cola y las posiciones no se duplican: se reconstruyen del orden inicial de `teams` y partidos finalizados.

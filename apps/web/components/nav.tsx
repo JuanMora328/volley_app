@@ -15,7 +15,7 @@ export function Nav() {
     <>
       <aside className="fixed left-0 top-0 hidden h-full w-64 bg-[#091426] p-5 text-white lg:block">
         <div className="mb-10 flex items-center gap-3 text-2xl font-bold">
-          <Volleyball className="text-[#acf847]" /> VolleyFlow
+          <Volleyball className="text-[#acf847]" /> Gestión de vóley
         </div>
         <nav className="space-y-2">
           {items.map(([href, label, Icon]) => {
