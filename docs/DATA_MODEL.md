@@ -1,11 +1,14 @@
-# Modelo de datos — Fase 2
+# Modelo de datos
 
-## `players`
+VolleyFlow usa exclusivamente PostgreSQL + TypeORM con `synchronize: false`.
 
-`id uuid` (PK), `name varchar`, `default_level integer` (CHECK 1–5), `notes text null`, `active boolean`, `created_at timestamptz` y `updated_at timestamptz`.
+## Preparación de jornadas
 
-## `venues`
+- `GameSessionEntity`: fecha/hora, cancha opcional, `venueNameSnapshot`, precios COP enteros, cantidad de equipos, puntajes, estado y timestamps. Checks impiden precios negativos, menos de dos equipos y puntajes no positivos.
+- `SessionPlayerEntity`: referencia histórica protegida al jugador, snapshots de nombre/nivel, banderas de reparto y campos monetarios preparados para Fase 5. La pareja jornada/jugador es única; nivel 1–5.
+- `TeamEntity`: pertenece a una jornada, nombre único dentro de ella, color, origen automático y `confirmedAt`.
+- `TeamPlayerEntity`: asignación única de un participante. Un trigger PostgreSQL comprueba que equipo y participante pertenecen a la misma jornada.
 
-`id uuid` (PK), `name varchar`, `address text null`, `default_court_price integer` y `default_gatorade_price integer` (ambos CHECK ≥ 0), `active boolean`, `created_at timestamptz` y `updated_at timestamptz`.
+Las referencias a jugadores usan `RESTRICT`; eliminar una cancha deja la referencia nula pero conserva el snapshot. Los equipos de un borrador se eliminan transaccionalmente al cambiar participantes.
 
-La migración `1764200000000-CreatePlayersAndVenues.ts` crea tablas, restricciones e índices por estado/nombre. TypeORM opera con `synchronize: false`.
+Migración reversible: `1770000000000-CreateSessionsAndTeams.ts`.

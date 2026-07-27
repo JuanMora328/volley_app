@@ -45,8 +45,8 @@ export default function Dashboard() {
           <p className="text-[#45474c]">Gestiona tus partidos y jugadores hoy.</p>
         </div>
         <button
-          disabled
-          className="flex h-12 items-center justify-center gap-2 rounded-xl bg-[#0051d5] px-6 font-bold text-white opacity-60"
+          onClick={() => router.push('/sessions/new')}
+          className="flex h-12 items-center justify-center gap-2 rounded-xl bg-[#0051d5] px-6 font-bold text-white "
         >
           <PlusCircle /> Nueva jornada
         </button>
@@ -60,7 +60,7 @@ export default function Dashboard() {
               <Volleyball className="mb-3 text-[#acf847]" size={48} />
               <h2 className="text-2xl font-bold">Aún no tienes jornadas activas</h2>
               <p className="mt-2 max-w-sm text-white/70">
-                La creación de jornadas se habilitará en una fase posterior.
+                Crea una jornada y prepara participantes y equipos equilibrados.
               </p>
             </div>
           )}
@@ -86,7 +86,19 @@ export default function Dashboard() {
           <h2 className="mb-4 text-xl font-semibold text-[#091426]">Jornadas recientes</h2>
           <div className="rounded-2xl border border-[#c5c6cd] bg-white p-6 text-center text-[#45474c]">
             {data?.recentSessions.length
-              ? 'Hay jornadas recientes.'
+              ? data.recentSessions.map((session) => (
+                  <button
+                    key={session.id}
+                    onClick={() => router.push(`/sessions/${session.id}`)}
+                    className="flex w-full justify-between border-b p-3 text-left last:border-0"
+                  >
+                    <span>
+                      {session.title}
+                      <small className="block text-slate-500">{session.date}</small>
+                    </span>
+                    <b>{session.status}</b>
+                  </button>
+                ))
               : 'Todavía no hay jornadas registradas.'}
           </div>
         </div>

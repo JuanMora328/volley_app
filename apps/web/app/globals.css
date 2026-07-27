@@ -10,7 +10,10 @@ body {
   @apply rounded-xl border border-slate-200 bg-white p-4 shadow-sm;
 }
 .btn {
-  @apply inline-flex min-h-12 items-center justify-center rounded-xl bg-secondary px-4 font-semibold text-white active:scale-95;
+  @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-secondary px-4 font-semibold text-white transition active:scale-95 disabled:cursor-not-allowed disabled:opacity-60;
+}
+.btn-secondary {
+  @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 font-semibold text-slate-800 transition hover:bg-slate-50 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60;
 }
 .input {
   @apply w-full rounded-xl border border-slate-300 bg-white px-4 py-3;
