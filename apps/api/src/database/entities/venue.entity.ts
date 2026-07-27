@@ -1,4 +1,5 @@
 import {
+  Check,
   Column,
   CreateDateColumn,
   Entity,
@@ -6,6 +7,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 @Entity('venues')
+@Check('CHK_venues_default_court_price', 'default_court_price >= 0')
+@Check('CHK_venues_default_gatorade_price', 'default_gatorade_price >= 0')
 export class VenueEntity {
   @PrimaryGeneratedColumn('uuid') id!: string;
   @Column({ type: 'varchar' }) name!: string;

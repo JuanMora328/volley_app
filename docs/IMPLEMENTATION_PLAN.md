@@ -1,23 +1,24 @@
 # VolleyFlow — Plan de implementación
 
-## Verificación inicial
+La aplicación usa exclusivamente PostgreSQL y TypeORM (`synchronize: false`). Cada fase se limita a su dominio y conserva compatibilidad con las anteriores.
 
-- La especificación exige TypeORM de forma exclusiva y prohíbe Prisma.
-- No se encontraron referencias operativas a Prisma en el repositorio base.
-- Los diseños de `design/stitch` son exportaciones HTML estáticas de Tailwind CDN, Material Symbols e Inter; se usan como referencia visual, no como arquitectura.
+| Fase                               | Estado    | Objetivo y vistas                                                            | Backend / entidades                                                                      | Pruebas y aceptación                                                                |
+| ---------------------------------- | --------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| 0. Inicialización                  | ✅        | Monorepo pnpm, Next.js y NestJS                                              | DataSource TypeORM, PostgreSQL, health                                                   | Instalación, lint, tipos y build reproducibles                                      |
+| 1. Acceso y visión general         | ✅        | Login, layout protegido y dashboard                                          | `User`, auth JWT, seed admin, dashboard                                                  | Login, token, protección y dashboard vacío                                          |
+| 2. Jugadores y canchas             | ✅        | Listados mobile-first `/players` y `/venues`, formularios, filtros y estados | `Player`, `Venue`; CRUD sin DELETE; paginación; migración y seed demo                    | Validación, búsqueda, edición, baja lógica, conteo de activos, UI vacía/error/carga |
+| 3. Preparación de jornada          | Pendiente | Crear jornada en tres pasos, participantes, detalle y equipos                | `GameSession`, `SessionPlayer`, `Team`, `TeamPlayer`; endpoints de borrador y generación | Persistencia del wizard, cupos, niveles y balance reproducible                      |
+| 4. Partidos y competición          | Pendiente | Sorteo, partido activo, historial y posiciones                               | `Match`; rotación, resultados y standings                                                | Reglas de turno, integridad de marcadores y reconstrucción                          |
+| 5. Pagos y cierre                  | Pendiente | Pagos, liquidación y cierre                                                  | Pagos y snapshots de liquidación                                                         | Dinero entero, distribución exacta e inmutabilidad al cerrar                        |
+| 6. Perfil, historial y ajustes     | Pendiente | Perfil, historial y reglas generales                                         | Consultas históricas y configuración                                                     | Permisos, filtros y trazabilidad                                                    |
+| 7. Auditoría, pruebas y despliegue | Pendiente | Accesibilidad, observabilidad y operación                                    | Auditoría, seguridad y pipeline                                                          | E2E PostgreSQL, rendimiento, respaldo y despliegue                                  |
 
-## Etapas
+## Endpoints terminados en Fase 2
 
-1. **Monorepo y contratos**: pnpm workspaces, scripts raíz, paquete `@volleyflow/shared` con enums, contratos, dinero y algoritmos de dominio.
-2. **API NestJS**: configuración, TypeORM, entidades, migración inicial, auth JWT, CRUD de jugadores/canchas y endpoints de jornadas.
-3. **Dominio**: generación balanceada de equipos, rotación reconstruible, resultados, standings, pagos y liquidación.
-4. **Web Next.js**: App Router, layout mobile-first, autenticación, vistas requeridas y cliente API con TanStack Query.
-5. **Documentación y validación**: API, diseño, Docker Compose, variables de entorno, lint, typecheck, tests y build.
+- Jugadores: `GET/POST /api/players`, `GET/PATCH /api/players/:id`, `PATCH /api/players/:id/status`.
+- Canchas: `GET/POST /api/venues`, `GET/PATCH /api/venues/:id`, `PATCH /api/venues/:id/status`.
+- Dashboard: `GET /api/dashboard` cuenta únicamente jugadores activos; métricas de módulos futuros permanecen en cero.
 
-## Criterios de finalización
+## Criterio para iniciar Fase 3
 
-- Scripts raíz disponibles y ejecutables.
-- Persistencia configurada únicamente con TypeORM.
-- Endpoints mínimos documentados bajo `/api`.
-- Vistas mínimas navegables en español.
-- Pruebas unitarias para dinero, equipos y rotación.
+Ejecutar migraciones y seed sobre PostgreSQL, validar los flujos autenticados de Fase 2 y diseñar el contrato transaccional del wizard antes de implementar jornadas. No mezclar partidos, pagos ni cierre en esa tarea.
