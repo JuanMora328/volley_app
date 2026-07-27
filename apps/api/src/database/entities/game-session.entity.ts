@@ -37,4 +37,5 @@ export class GameSessionEntity {
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' }) createdAt!: Date;
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' }) updatedAt!: Date;
   @Column({ name: 'finished_at', type: 'timestamptz', nullable: true }) finishedAt!: Date | null;
+  @Column({ name: 'settled_at', type: 'timestamptz', nullable: true }) settledAt!: Date | null;
 }

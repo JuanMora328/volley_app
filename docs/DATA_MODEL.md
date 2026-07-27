@@ -16,3 +16,7 @@ Migración reversible: `1770000000000-CreateSessionsAndTeams.ts`.
 ## Match (Fase 4)
 
 `matches` conserva secuencia, equipos, marcador, snapshot del objetivo, estado (`IN_PROGRESS`/`FINISHED`), ganador, perdedor y tiempos. Una restricción parcial permite un solo partido activo por jornada; checks protegen equipos distintos, resultados completos, marcadores no negativos y objetivo positivo. Las FK de la jornada y equipos usan cascada para la eliminación física. La cola y las posiciones no se duplican: se reconstruyen del orden inicial de `teams` y partidos finalizados.
+
+# Snapshot financiero de Fase 5
+
+`game_sessions.settled_at` registra la confirmación de la liquidación y `finished_at` el cierre definitivo. `session_players` conserva inclusiones, componentes de cancha/Gatorades, valor debido, valor pagado, método y fecha. El estado, pendiente y crédito son derivados y no se duplican en la base de datos.

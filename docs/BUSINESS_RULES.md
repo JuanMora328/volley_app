@@ -18,3 +18,11 @@ Las métricas incluyen tamaño, suma y promedio por equipo; globalmente diferenc
 ## Competición
 
 El sorteo es reemplazable hasta iniciar el primer partido. El ganador permanece, el perdedor va al final de la cola y entra el primero; con dos equipos ambos vuelven a jugar. Un resultado no admite empate y uno de los marcadores debe alcanzar el objetivo capturado al iniciar. Solo se revierte el último resultado y cualquier partido activo posterior. Cancelar conserva toda la información y bloquea el juego; eliminar exige `ELIMINAR` y ejecuta un DELETE físico irreversible del agregado, sin borrar jugadores, canchas ni usuarios permanentes.
+
+# Liquidación
+
+- El líder se sugiere por puntos, diferencia y puntos a favor; un empate deportivo exige selección manual.
+- Cancha se reparte entre participantes incluidos. Gatorades se reparte solo entre perdedores incluidos.
+- El residuo se asigna determinísticamente por identificador ordenado, por lo que la suma conserva cada peso.
+- La confirmación conserva pagos previos; un pago superior al nuevo valor produce crédito, nunca deuda negativa.
+- Una jornada puede cerrarse con deuda mediante confirmación explícita. Después del cierre no se recalcula, pero los pagos siguen editables.

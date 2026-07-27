@@ -106,8 +106,22 @@ export default function SessionDetailPage() {
           <Trophy size={20} />
           <span className="text-xs font-semibold sm:text-sm">Partidos</span>
         </Link>
-        <PendingSection icon={<CreditCard aria-hidden="true" size={20} />} label="Pagos" />
+        <Link
+          className="col-span-3 flex min-h-16 flex-col items-center justify-center gap-1 rounded-xl px-2 py-2 text-secondary hover:bg-blue-50 sm:col-span-1"
+          href={`/sessions/${id}/payments`}
+        >
+          <CreditCard size={20} />
+          <span className="text-xs font-semibold sm:text-sm">Pagos</span>
+        </Link>
       </nav>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <Link className="btn-secondary text-center" href={`/sessions/${id}/settlement`}>
+          Liquidación
+        </Link>
+        <Link className="btn-secondary text-center" href={`/sessions/${id}/summary`}>
+          Resumen final
+        </Link>
+      </div>
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Metric label="Cancha" value={money(s.courtPrice)} />
         <Metric label="Gatorades" value={money(s.gatoradePrice)} />
@@ -303,20 +317,5 @@ function Metric({ label, value }: { label: string; value: string }) {
       <p className="text-sm text-slate-500">{label}</p>
       <strong className="text-xl">{value}</strong>
     </article>
-  );
-}
-function PendingSection({ icon, label }: { icon: React.ReactNode; label: string }) {
-  return (
-    <span
-      aria-disabled="true"
-      className="relative col-span-3 flex min-h-16 cursor-not-allowed sm:col-span-1 flex-col items-center justify-center gap-1 rounded-xl bg-slate-50 px-2 py-2 text-center text-slate-400"
-    >
-      <span className="absolute right-2 top-2">
-        <span aria-hidden="true">•</span>
-      </span>
-      {icon}
-      <span className="text-xs font-semibold sm:text-sm">{label}</span>
-      <span className="sr-only">Pendiente</span>
-    </span>
   );
 }

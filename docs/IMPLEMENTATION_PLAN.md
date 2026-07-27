@@ -9,7 +9,7 @@ La aplicación usa exclusivamente PostgreSQL y TypeORM (`synchronize: false`). C
 | 2. Jugadores y canchas             | ✅        | Listados mobile-first `/players` y `/venues`, formularios, filtros y estados | `Player`, `Venue`; CRUD sin DELETE; paginación; migración y seed demo                    | Validación, búsqueda, edición, baja lógica, conteo de activos, UI vacía/error/carga |
 | 3. Preparación de jornada          | ✅        | Crear jornada en tres pasos, participantes, detalle y equipos                | `GameSession`, `SessionPlayer`, `Team`, `TeamPlayer`; endpoints de borrador y generación | Persistencia del wizard, cupos, niveles y balance reproducible                      |
 | 4. Partidos y competición          | ✅        | Sorteo, partido activo, historial y posiciones                               | `Match`; rotación, resultados y standings                                                | Reglas de turno, integridad de marcadores y reconstrucción                          |
-| 5. Pagos y cierre                  | Pendiente | Pagos, liquidación y cierre                                                  | Pagos y snapshots de liquidación                                                         | Dinero entero, distribución exacta e inmutabilidad al cerrar                        |
+| 5. Pagos y cierre                  | ✅        | Pagos, liquidación y cierre                                                  | Pagos y snapshots de liquidación                                                         | Dinero entero, distribución exacta e inmutabilidad al cerrar                        |
 | 6. Perfil, historial y ajustes     | Pendiente | Perfil, historial y reglas generales                                         | Consultas históricas y configuración                                                     | Permisos, filtros y trazabilidad                                                    |
 | 7. Auditoría, pruebas y despliegue | Pendiente | Accesibilidad, observabilidad y operación                                    | Auditoría, seguridad y pipeline                                                          | E2E PostgreSQL, rendimiento, respaldo y despliegue                                  |
 
@@ -30,3 +30,7 @@ Se implementaron el wizard de tres pasos, detalle, lista, generación/edición/c
 ## Fase 4 terminada
 
 Se implementaron sorteo transaccional, reconstrucción ganador-se-queda, partido activo, snapshots de objetivo, resultados, historial, posiciones, deshacer, cancelación y eliminación física. La migración agrega restricciones e índice parcial. Pagos, campeón y liquidación permanecen fuera de alcance.
+
+## Fase 5 terminada
+
+Se implementaron la sugerencia deportiva de campeón sin desempate alfabético, vista previa y confirmación transaccional, reparto entero exacto, exclusiones, pagos parciales y sobrepagos, cierre con deudores y pagos posteriores. Las rutas web `/settlement`, `/payments` y `/summary` consumen la API real y mantienen confirmaciones explícitas.

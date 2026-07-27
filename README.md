@@ -1,5 +1,7 @@
 # VolleyFlow
 
+La Fase 5 incorpora liquidación exacta en pesos colombianos, gestión de pagos y cierre financiero. Ejecute `pnpm migration:run` en `apps/api` después de configurar PostgreSQL para agregar la marca auditable `settled_at`.
+
 VolleyFlow es una aplicación web para gestionar jornadas de vóley: jugadores, canchas, armado de equipos, partidos, pagos y resumen de cada sesión. El repositorio está organizado como un monorepo con `pnpm`, separando el backend, el frontend y los tipos/utilidades compartidas.
 
 ## Estructura del proyecto
