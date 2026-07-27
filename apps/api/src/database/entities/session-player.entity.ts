@@ -23,10 +23,12 @@ export class SessionPlayerEntity {
   @ManyToOne(() => PlayerEntity, { nullable: false, onDelete: 'RESTRICT' })
   @JoinColumn({ name: 'player_id' })
   player!: PlayerEntity;
-  @Column({ name: 'player_name_snapshot' }) playerNameSnapshot!: string;
+  @Column({ name: 'player_name_snapshot', type: 'varchar' }) playerNameSnapshot!: string;
   @Column({ name: 'level_snapshot', type: 'int' }) levelSnapshot!: number;
-  @Column({ name: 'included_in_court_split', default: true }) includedInCourtSplit!: boolean;
-  @Column({ name: 'included_in_gatorade_split', default: true }) includedInGatoradeSplit!: boolean;
+  @Column({ name: 'included_in_court_split', type: 'boolean', default: true })
+  includedInCourtSplit!: boolean;
+  @Column({ name: 'included_in_gatorade_split', type: 'boolean', default: true })
+  includedInGatoradeSplit!: boolean;
   @Column({ name: 'court_amount', type: 'int', default: 0 }) courtAmount!: number;
   @Column({ name: 'gatorade_amount', type: 'int', default: 0 }) gatoradeAmount!: number;
   @Column({ name: 'amount_due', type: 'int', default: 0 }) amountDue!: number;
@@ -34,6 +36,6 @@ export class SessionPlayerEntity {
   @Column({ name: 'payment_method', type: 'enum', enum: PaymentMethod, nullable: true })
   paymentMethod!: PaymentMethod | null;
   @Column({ name: 'paid_at', type: 'timestamptz', nullable: true }) paidAt!: Date | null;
-  @CreateDateColumn({ name: 'created_at' }) createdAt!: Date;
-  @UpdateDateColumn({ name: 'updated_at' }) updatedAt!: Date;
+  @CreateDateColumn({ name: 'created_at', type: 'timestamptz' }) createdAt!: Date;
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' }) updatedAt!: Date;
 }

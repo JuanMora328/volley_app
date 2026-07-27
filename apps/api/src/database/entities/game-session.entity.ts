@@ -18,7 +18,7 @@ export class GameSessionEntity {
   @ManyToOne(() => VenueEntity, { nullable: true, onDelete: 'SET NULL' })
   @JoinColumn({ name: 'venue_id' })
   venue!: VenueEntity | null;
-  @Column({ name: 'venue_name_snapshot' }) venueNameSnapshot!: string;
+  @Column({ name: 'venue_name_snapshot', type: 'varchar' }) venueNameSnapshot!: string;
   @Column({ name: 'court_price', type: 'int', default: 0 }) courtPrice!: number;
   @Column({ name: 'gatorade_price', type: 'int', default: 0 }) gatoradePrice!: number;
   @Column({ name: 'team_count', type: 'int', default: 2 }) teamCount!: number;
@@ -29,7 +29,7 @@ export class GameSessionEntity {
   @ManyToOne(() => TeamEntity, { nullable: true, onDelete: 'SET NULL' })
   @JoinColumn({ name: 'champion_team_id' })
   championTeam!: TeamEntity | null;
-  @CreateDateColumn({ name: 'created_at' }) createdAt!: Date;
-  @UpdateDateColumn({ name: 'updated_at' }) updatedAt!: Date;
+  @CreateDateColumn({ name: 'created_at', type: 'timestamptz' }) createdAt!: Date;
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' }) updatedAt!: Date;
   @Column({ name: 'finished_at', type: 'timestamptz', nullable: true }) finishedAt!: Date | null;
 }

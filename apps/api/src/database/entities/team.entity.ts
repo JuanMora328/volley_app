@@ -16,12 +16,13 @@ export class TeamEntity {
   @ManyToOne(() => GameSessionEntity, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'session_id' })
   session!: GameSessionEntity;
-  @Column() name!: string;
+  @Column({ type: 'varchar' }) name!: string;
   @Column({ type: 'text', nullable: true }) color!: string | null;
   @Column({ name: 'initial_rotation_position', type: 'int', nullable: true })
   initialRotationPosition!: number | null;
-  @Column({ name: 'generated_automatically', default: true }) generatedAutomatically!: boolean;
+  @Column({ name: 'generated_automatically', type: 'boolean', default: true })
+  generatedAutomatically!: boolean;
   @Column({ name: 'confirmed_at', type: 'timestamptz', nullable: true }) confirmedAt!: Date | null;
-  @CreateDateColumn({ name: 'created_at' }) createdAt!: Date;
-  @UpdateDateColumn({ name: 'updated_at' }) updatedAt!: Date;
+  @CreateDateColumn({ name: 'created_at', type: 'timestamptz' }) createdAt!: Date;
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' }) updatedAt!: Date;
 }
