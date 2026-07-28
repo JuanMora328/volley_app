@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { api } from '../../lib/api';
+import { formatCopInput, parseCopInput } from '../../lib/community';
 export default function Settings() {
   const qc = useQueryClient();
   const q = useQuery({ queryKey: ['settings'], queryFn: () => api<any>('/settings') });
@@ -15,7 +16,13 @@ export default function Settings() {
   });
   const form = useForm<any>();
   useEffect(() => {
-    if (q.data) form.reset({ ...q.data, defaultVenueId: q.data.defaultVenue?.id || '' });
+    if (q.data)
+      form.reset({
+        ...q.data,
+        defaultVenueId: q.data.defaultVenue?.id || '',
+        defaultCourtPrice: formatCopInput(q.data.defaultCourtPrice),
+        defaultGatoradePrice: formatCopInput(q.data.defaultGatoradePrice),
+      });
   }, [q.data, form]);
   const canEdit = me.data?.role === 'ADMIN';
   const save = useMutation({
@@ -27,8 +34,8 @@ export default function Settings() {
           defaultVenueId: v.defaultVenueId || null,
           defaultTeamCount: +v.defaultTeamCount,
           defaultTargetScore: +v.defaultTargetScore,
-          defaultCourtPrice: +v.defaultCourtPrice,
-          defaultGatoradePrice: +v.defaultGatoradePrice,
+          defaultCourtPrice: parseCopInput(v.defaultCourtPrice),
+          defaultGatoradePrice: parseCopInput(v.defaultGatoradePrice),
         }),
       }),
     onSuccess: () => {
@@ -97,22 +104,18 @@ export default function Settings() {
             ))}
           </select>
         </Field>
-        <Field label="Valor de cancha">
-          <input
-            className="input"
-            type="number"
-            min="0"
+        <Field label="Valor de cancha" hint="Pesos colombianos">
+          <CurrencyInput
             disabled={!canEdit}
-            {...form.register('defaultCourtPrice')}
+            value={form.watch('defaultCourtPrice')}
+            onChange={(value) => form.setValue('defaultCourtPrice', value, { shouldDirty: true })}
           />
         </Field>
-        <Field label="Valor de Gatorades">
-          <input
-            className="input"
-            type="number"
-            min="0"
+        <Field label="Valor de Gatorades" hint="Precio unitario en pesos colombianos">
+          <CurrencyInput
             disabled={!canEdit}
-            {...form.register('defaultGatoradePrice')}
+            value={form.watch('defaultGatoradePrice')}
+            onChange={(value) => form.setValue('defaultGatoradePrice', value, { shouldDirty: true })}
           />
         </Field>
         {canEdit && (
@@ -128,11 +131,50 @@ export default function Settings() {
     </div>
   );
 }
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function CurrencyInput({
+  value,
+  disabled,
+  onChange,
+}: {
+  value?: string | number;
+  disabled: boolean;
+  onChange(value: string): void;
+}) {
+  return (
+    <div className="relative">
+      <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 font-bold text-slate-500">
+        $
+      </span>
+      <input
+        className="input pl-8 pr-14 text-right font-semibold tabular-nums"
+        inputMode="numeric"
+        autoComplete="off"
+        placeholder="0"
+        disabled={disabled}
+        value={formatCopInput(value)}
+        onChange={(event) => onChange(formatCopInput(event.target.value))}
+        aria-label="Valor en pesos colombianos"
+      />
+      <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">
+        COP
+      </span>
+    </div>
+  );
+}
+function Field({
+  label,
+  hint,
+  children,
+}: {
+  label: string;
+  hint?: string;
+  children: React.ReactNode;
+}) {
   return (
     <label className="space-y-1">
       <b>{label}</b>
       {children}
+      {hint && <small className="block text-slate-500">{hint}</small>}
     </label>
   );
 }
