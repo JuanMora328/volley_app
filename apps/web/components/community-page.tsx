@@ -78,29 +78,30 @@ export function CommunityPage({ kind }: { kind: Kind }) {
   });
   return (
     <div className="mx-auto max-w-6xl space-y-6 pb-4">
-      <header className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          {isPlayers && (
-            <p className="mb-1 text-xs font-extrabold uppercase tracking-[0.18em] text-secondary">
-              Comunidad deportiva
+      <header className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#091426] via-[#102446] to-[#0051d5] p-6 text-white shadow-xl shadow-blue-950/15 md:p-8">
+        <div className="absolute -right-14 -top-16 size-52 rounded-full bg-lime-300/10 blur-2xl" />
+        <div className="absolute -bottom-24 left-1/3 size-48 rounded-full bg-blue-300/15 blur-3xl" />
+        <div className="relative flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <span className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-extrabold uppercase tracking-wide text-white ring-1 ring-white/20">
+              {isPlayers ? <UserRound size={15} /> : <MapPin size={15} />}
+              {isPlayers ? 'Comunidad deportiva' : 'Sedes de juego'}
+            </span>
+            <h1 className="text-3xl font-extrabold tracking-tight md:text-4xl">{title}</h1>
+            <p className="mt-2 max-w-xl text-sm leading-6 text-blue-100 sm:text-base">
+              {isPlayers
+                ? 'Gestiona los perfiles, niveles y disponibilidad de tus jugadores.'
+                : 'Administra las canchas, ubicaciones y valores habituales de cada sede.'}
             </p>
-          )}
-          <h1 className="text-3xl font-extrabold tracking-tight text-primary md:text-4xl">
-            {title}
-          </h1>
-          <p className="mt-1 max-w-xl text-sm leading-6 text-slate-600 sm:text-base">
-            {isPlayers
-              ? 'Gestiona los perfiles, niveles y disponibilidad de tus jugadores.'
-              : 'Gestiona tus sedes habituales.'}
-          </p>
+          </div>
+          <button
+            className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-lime-300 px-5 font-extrabold text-[#102000] shadow-lg shadow-lime-950/10 transition hover:-translate-y-0.5 hover:bg-lime-200 focus-visible:ring-lime-200 sm:w-auto"
+            onClick={() => setEditing(null)}
+          >
+            {isPlayers ? <UserPlus size={20} /> : <Plus size={20} />}
+            {isPlayers ? 'Nuevo jugador' : 'Nueva cancha'}
+          </button>
         </div>
-        <button
-          className="btn w-full gap-2 shadow-lg shadow-blue-500/15 sm:w-auto"
-          onClick={() => setEditing(null)}
-        >
-          {isPlayers ? <UserPlus size={20} /> : <Plus size={20} />}
-          {isPlayers ? 'Nuevo jugador' : 'Nueva cancha'}
-        </button>
       </header>
       <section className="rounded-2xl border border-slate-200 bg-slate-100/70 p-3 shadow-sm sm:p-4">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
