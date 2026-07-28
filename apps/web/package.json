@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "pnpm --filter @volleyflow/shared build && next dev",
+    "start": "next start",
     "build": "pnpm --filter @volleyflow/shared build && next build",
     "lint": "eslint .",
     "typecheck": "pnpm --filter @volleyflow/shared build && tsc -p tsconfig.json --noEmit",
