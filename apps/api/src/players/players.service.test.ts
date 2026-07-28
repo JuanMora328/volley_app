@@ -37,6 +37,9 @@ function repository() {
           sortOrder = order;
           return this;
         },
+        addOrderBy() {
+          return this;
+        },
         skip(value: number) {
           skip = value;
           return this;

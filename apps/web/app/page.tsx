@@ -244,10 +244,7 @@ function ActiveSession({ session }: { session: NonNullable<DashboardResponse['ac
       <div className="mt-6 grid grid-cols-2 gap-3">
         <div className="rounded-2xl bg-white/10 p-3">
           <small className="text-slate-300">Participantes</small>
-          <b className="block text-xl">
-            {session.participantCount}{' '}
-            {session.participantCount === 1 ? 'registrado' : 'registrados'}
-          </b>
+          <b className="block text-xl">{session.participantCount}</b>
         </div>
         <div className="rounded-2xl bg-white/10 p-3">
           <small className="text-slate-300">Estado</small>

@@ -1,6 +1,6 @@
 'use client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { CheckCircle, Loader2, RefreshCw, Save, Shuffle, X } from 'lucide-react';
+import { CheckCircle, ChevronDown, Loader2, RefreshCw, Save, Shuffle, X } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -129,7 +129,8 @@ export default function TeamsPage() {
                   <header className="flex justify-between bg-[#1e293b] p-4 text-white">
                     {editing ? (
                       <input
-                        className="rounded bg-white px-2 text-slate-900"
+                        aria-label={`Nombre de ${team.name}`}
+                        className="min-h-11 min-w-0 flex-1 rounded-xl border border-white/30 bg-white px-3 font-bold text-slate-900 outline-none ring-blue-300 focus:ring-4"
                         value={team.name}
                         onChange={(e) =>
                           setDraft((current) =>
@@ -159,18 +160,24 @@ export default function TeamsPage() {
                           {player.playerNameSnapshot} · <b>N{player.levelSnapshot}</b>
                         </span>
                         {editing && (
-                          <select
-                            aria-label={`Mover ${player.playerNameSnapshot}`}
-                            className="rounded border p-2"
-                            value={teamIndex}
-                            onChange={(e) => move(player.id, teamIndex, Number(e.target.value))}
-                          >
-                            {draft.map((target, index) => (
-                              <option key={target.id} value={index}>
-                                {target.name}
-                              </option>
-                            ))}
-                          </select>
+                          <div className="relative shrink-0">
+                            <select
+                              aria-label={`Mover ${player.playerNameSnapshot}`}
+                              className="min-h-11 max-w-36 appearance-none rounded-xl border border-slate-300 bg-white py-2 pl-3 pr-9 font-semibold text-slate-700 outline-none focus:border-secondary focus:ring-4 focus:ring-blue-100"
+                              value={teamIndex}
+                              onChange={(e) => move(player.id, teamIndex, Number(e.target.value))}
+                            >
+                              {draft.map((target, index) => (
+                                <option key={target.id} value={index}>
+                                  {target.name}
+                                </option>
+                              ))}
+                            </select>
+                            <ChevronDown
+                              className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-secondary"
+                              size={17}
+                            />
+                          </div>
                         )}
                       </div>
                     ))}

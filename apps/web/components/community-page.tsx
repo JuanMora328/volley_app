@@ -1,6 +1,16 @@
 'use client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Edit3, Loader2, MapPin, Plus, Search, UserRound, X } from 'lucide-react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  Edit3,
+  Loader2,
+  MapPin,
+  Plus,
+  Search,
+  UserRound,
+  X,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -136,23 +146,32 @@ export function CommunityPage({ kind }: { kind: Kind }) {
             </div>
           )}
           {(query.data?.meta.totalPages ?? 0) > 1 && (
-            <nav className="flex items-center justify-center gap-4">
+            <nav
+              aria-label="Paginación"
+              className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-2 shadow-sm sm:justify-center sm:gap-4"
+            >
               <button
-                className="rounded-lg border px-4 py-2 disabled:opacity-40"
+                aria-label="Página anterior"
+                className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-slate-200 px-3 font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-secondary disabled:cursor-not-allowed disabled:opacity-40"
                 disabled={page === 1}
                 onClick={() => setPage((p) => p - 1)}
               >
-                Anterior
+                <ChevronLeft size={18} /> <span className="hidden sm:inline">Anterior</span>
               </button>
-              <span>
-                Página {page} de {query.data?.meta.totalPages}
+              <span
+                className="rounded-xl bg-slate-100 px-4 py-2 text-sm font-bold text-slate-700"
+                aria-current="page"
+              >
+                {page} <span className="font-normal text-slate-400">de</span>{' '}
+                {query.data?.meta.totalPages}
               </span>
               <button
-                className="rounded-lg border px-4 py-2 disabled:opacity-40"
+                aria-label="Página siguiente"
+                className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-slate-200 px-3 font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-secondary disabled:cursor-not-allowed disabled:opacity-40"
                 disabled={page === query.data?.meta.totalPages}
                 onClick={() => setPage((p) => p + 1)}
               >
-                Siguiente
+                <span className="hidden sm:inline">Siguiente</span> <ChevronRight size={18} />
               </button>
             </nav>
           )}

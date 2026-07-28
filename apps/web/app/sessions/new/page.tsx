@@ -186,18 +186,24 @@ export default function NewSession() {
           />
           <div className="mt-5 space-y-4">
             <Field label="Cancha" icon={<MapPin size={17} />}>
-              <select
-                className="input"
-                {...form.register('venueId')}
-                onChange={(event) => chooseVenue(event.target.value)}
-              >
-                <option value="">Ubicación manual</option>
-                {venues.data?.items.map((v) => (
-                  <option key={v.id} value={v.id}>
-                    {v.name}
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  className="input appearance-none !pr-11 font-medium text-slate-700"
+                  {...form.register('venueId')}
+                  onChange={(event) => chooseVenue(event.target.value)}
+                >
+                  <option value="">Ubicación manual</option>
+                  {venues.data?.items.map((v) => (
+                    <option key={v.id} value={v.id}>
+                      {v.name}
+                    </option>
+                  ))}
+                </select>
+                <ArrowRight
+                  className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 rotate-90 text-secondary"
+                  size={18}
+                />
+              </div>
             </Field>
             {!form.watch('venueId') && (
               <Field label="Nombre de cancha" error={form.formState.errors.venueName?.message}>
@@ -278,7 +284,7 @@ export default function NewSession() {
               <Search aria-hidden="true" size={20} />
             </span>
             <input
-              className="input pl-12"
+              className="input !pl-12"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Buscar jugador"
@@ -412,7 +418,7 @@ export default function NewSession() {
                 Corregir
               </button>
               <button className="btn flex-1" onClick={() => router.push(`/sessions/${session.id}`)}>
-                Confirmar creación
+                Confirmar
               </button>
             </div>
           </div>
