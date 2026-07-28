@@ -95,6 +95,9 @@ DATABASE_SSL_REJECT_UNAUTHORIZED=true
 ### Variables principales del frontend
 
 - `NEXT_PUBLIC_API_URL`: URL pública del backend con el prefijo `/api`.
+- `NEXT_PUBLIC_ENABLE_PWA`: permite registrar el service worker fuera de producción para pruebas explícitas; déjalo en `false` durante el desarrollo normal.
+
+La arquitectura, políticas de caché, instalación y validación de la aplicación instalable se documentan en [`docs/PWA.md`](docs/PWA.md).
 
 ## Instalación
 

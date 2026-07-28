@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { api, getToken, LoginResponse, setToken } from '../../lib/api';
+import { clearPrivatePwaData } from '../../lib/pwa';
 import { loginSchema, LoginForm } from '../../lib/auth-validation';
 
 export default function Login() {
@@ -33,6 +34,7 @@ export default function Login() {
         method: 'POST',
         body: JSON.stringify(parsed.data),
       });
+      await clearPrivatePwaData();
       setToken(response.accessToken);
       toast.success(`Bienvenido, ${response.user.name}`);
       const returnPath = sessionStorage.getItem('vf_return_path') || '/';

@@ -12,7 +12,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Nav />
-      <main className="mx-auto min-h-screen max-w-6xl p-4 pb-24 lg:ml-64 lg:pb-8">{children}</main>
+      <main className="mx-auto min-h-dvh max-w-6xl p-4 pb-[calc(6rem+env(safe-area-inset-bottom))] lg:ml-64 lg:pb-8">
+        {children}
+      </main>
     </>
   );
 }

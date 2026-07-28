@@ -33,6 +33,15 @@ export function setToken(token: string) {
 }
 
 export async function api<T>(path: string, init?: RequestInit): Promise<T> {
+  const method = (init?.method ?? 'GET').toUpperCase();
+  if (
+    method !== 'GET' &&
+    method !== 'HEAD' &&
+    typeof navigator !== 'undefined' &&
+    !navigator.onLine
+  ) {
+    throw new Error('Esta acción requiere conexión a internet. No se guardó ningún cambio.');
+  }
   const token = getToken();
   const res = await fetch(`${API_URL}${path}`, {
     ...init,
@@ -51,7 +60,7 @@ export async function api<T>(path: string, init?: RequestInit): Promise<T> {
       'vf_return_path',
       `${window.location.pathname}${window.location.search}`,
     );
-    sessionStorage.removeItem(TOKEN_KEY);
+    window.dispatchEvent(new Event('volleyflow:clear-session'));
     window.location.href = '/login';
   }
   if (!res.ok) {
