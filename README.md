@@ -161,7 +161,7 @@ Por defecto, la API queda disponible en:
 - Health check: `http://localhost:3001/api/health`
 - Swagger: `http://localhost:3001/api/docs` cuando `NODE_ENV=development` o `SWAGGER_ENABLED=true`.
 
-### Seed de administrador y datos de demostración
+### Seed de administrador
 
 Para crear el usuario administrador definido en tus variables `SEED_ADMIN_*`:
 
@@ -169,7 +169,35 @@ Para crear el usuario administrador definido en tus variables `SEED_ADMIN_*`:
 pnpm --filter @volleyflow/api seed
 ```
 
-El seed es idempotente y también incorpora 12 jugadores y 2 canchas cuando no existen. Ejecútalo después de `migration:run`.
+El seed es idempotente y crea únicamente el administrador y la configuración inicial. Las tres
+variables `SEED_ADMIN_*` son obligatorias y la contraseña debe tener al menos 12 caracteres.
+Ejecútalo después de `migration:run`.
+
+## Operación con Docker
+
+PostgreSQL conserva sus datos en el volumen `postgres_data` y expone un healthcheck:
+
+```bash
+docker compose up -d postgres       # iniciar
+docker compose ps                   # comprobar salud
+docker compose stop                 # detener conservando datos
+docker compose down                 # eliminar contenedor conservando datos
+docker compose down --volumes       # eliminar también los datos (destructivo)
+```
+
+La imagen de producción de la API se construye desde la raíz. Su entrypoint ejecuta las
+migraciones antes de iniciar y aborta si alguna falla:
+
+```bash
+docker build -f apps/api/Dockerfile -t volleyflow-api .
+docker run --rm -p 3001:3001 --env-file apps/api/.env volleyflow-api
+```
+
+En producción configura `NODE_ENV=production`, un `JWT_SECRET` aleatorio de 32 caracteres o
+más, `DATABASE_URL`, `CORS_ORIGIN` explícito y `NEXT_PUBLIC_API_URL` durante el build web.
+Swagger nunca se publica en producción. Antes de desplegar, realiza un backup administrado de
+PostgreSQL y verifica una restauración en un entorno aislado; las migraciones no reemplazan los
+backups.
 
 ## Gestión de comunidad y sedes
 

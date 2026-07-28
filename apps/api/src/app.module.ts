@@ -12,6 +12,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { MatchesModule } from './matches/matches.module';
 import { SettlementsModule } from './settlements/settlements.module';
 import { SettingsModule } from './settings/settings.module';
+import { validateEnvironment } from './config/environment';
 
 function resolveSslOption(databaseUrl: string, sslEnv?: string, rejectUnauthorizedEnv?: string) {
   if (sslEnv === 'true') {
@@ -27,7 +28,7 @@ function resolveSslOption(databaseUrl: string, sslEnv?: string, rejectUnauthoriz
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({ isGlobal: true, validate: validateEnvironment }),
     ThrottlerModule.forRoot([{ ttl: 60000, limit: 20 }]),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],

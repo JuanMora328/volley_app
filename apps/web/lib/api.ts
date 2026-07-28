@@ -59,5 +59,6 @@ export async function api<T>(path: string, init?: RequestInit): Promise<T> {
     const message = Array.isArray(payload?.message) ? payload.message.join('. ') : payload?.message;
     throw new Error(message || 'No pudimos completar la solicitud. Intenta nuevamente.');
   }
-  return res.json();
+  if (res.status === 204) return undefined as T;
+  return res.json() as Promise<T>;
 }
