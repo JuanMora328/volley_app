@@ -34,3 +34,5 @@ El sorteo es reemplazable hasta iniciar el primer partido. El ganador permanece,
 ## Historial y ajustes
 
 Los estados `NOT_REQUIRED`, `PENDING`, `PARTIAL`, `PAID` y `CREDIT` se derivan de montos persistidos. Estadísticas y campeonatos conservan snapshots. Los ajustes solo afectan jornadas nuevas y solo ADMIN los modifica.
+
+El rendimiento histórico de un jugador cuenta únicamente partidos con estado `FINISHED` pertenecientes a jornadas en `SETTLEMENT` o `FINISHED`. Los partidos residuales de borradores y jornadas canceladas no afectan partidos jugados, victorias, derrotas ni puntos.

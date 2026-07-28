@@ -10,6 +10,10 @@ import {
   UpdatePlayerDto,
 } from './players.dto';
 
+// Los resultados deportivos solo son históricos cuando la competencia ya terminó.
+// Esto evita contar partidos residuales de borradores o jornadas canceladas.
+const COMPETITIVE_SESSION_STATUSES = `('SETTLEMENT','FINISHED')`;
+
 @Injectable()
 export class PlayersService {
   constructor(
@@ -24,7 +28,7 @@ export class PlayersService {
       [id],
     );
     const [competition] = await this.dataSource.query(
-      `SELECT count(m.id)::int AS "matchesPlayed", count(m.id) FILTER(WHERE m.winner_team_id=t.id)::int AS "matchesWon", count(m.id) FILTER(WHERE m.loser_team_id=t.id)::int AS "matchesLost", coalesce(sum(CASE WHEN m.team_a_id=t.id THEN m.team_a_score ELSE m.team_b_score END),0)::int AS "pointsFor", coalesce(sum(CASE WHEN m.team_a_id=t.id THEN m.team_b_score ELSE m.team_a_score END),0)::int AS "pointsAgainst" FROM session_players sp LEFT JOIN team_players tp ON tp.session_player_id=sp.id LEFT JOIN teams t ON t.id=tp.team_id LEFT JOIN matches m ON m.status='FINISHED' AND (m.team_a_id=t.id OR m.team_b_id=t.id) WHERE sp.player_id=$1`,
+      `SELECT count(m.id)::int AS "matchesPlayed", count(m.id) FILTER(WHERE m.winner_team_id=t.id)::int AS "matchesWon", count(m.id) FILTER(WHERE m.loser_team_id=t.id)::int AS "matchesLost", coalesce(sum(CASE WHEN m.team_a_id=t.id THEN m.team_a_score ELSE m.team_b_score END),0)::int AS "pointsFor", coalesce(sum(CASE WHEN m.team_a_id=t.id THEN m.team_b_score ELSE m.team_a_score END),0)::int AS "pointsAgainst" FROM session_players sp JOIN game_sessions gs ON gs.id=sp.session_id LEFT JOIN team_players tp ON tp.session_player_id=sp.id LEFT JOIN teams t ON t.id=tp.team_id LEFT JOIN matches m ON m.status='FINISHED' AND gs.status IN ${COMPETITIVE_SESSION_STATUSES} AND (m.team_a_id=t.id OR m.team_b_id=t.id) WHERE sp.player_id=$1`,
       [id],
     );
     const [champ] = await this.dataSource.query(
@@ -73,7 +77,7 @@ export class PlayersService {
     );
     params.push(query.limit, (query.page - 1) * query.limit);
     const items = await this.dataSource.query(
-      `SELECT gs.id,gs.date,gs.venue_name_snapshot AS "venueNameSnapshot",gs.status,sp.player_name_snapshot AS "playerNameSnapshot",sp.level_snapshot AS "levelSnapshot",t.id AS "teamId",t.name AS "teamName",sp.court_amount AS "courtAmount",sp.gatorade_amount AS "gatoradeAmount",sp.amount_due AS "amountDue",sp.amount_paid AS "amountPaid",greatest(sp.amount_due-sp.amount_paid,0)::int pending,greatest(sp.amount_paid-sp.amount_due,0)::int credit,sp.payment_method AS "paymentMethod",${payment} AS "paymentStatus",(gs.champion_team_id=t.id) champion,count(m.id)::int AS "matchesPlayed",count(m.id) FILTER(WHERE m.winner_team_id=t.id)::int wins,count(m.id) FILTER(WHERE m.loser_team_id=t.id)::int losses FROM session_players sp JOIN game_sessions gs ON gs.id=sp.session_id LEFT JOIN team_players tp ON tp.session_player_id=sp.id LEFT JOIN teams t ON t.id=tp.team_id LEFT JOIN matches m ON m.status='FINISHED' AND (m.team_a_id=t.id OR m.team_b_id=t.id) WHERE ${where.join(' AND ')} GROUP BY gs.id,sp.id,t.id ORDER BY gs.date ${query.sortOrder} LIMIT $${params.length - 1} OFFSET $${params.length}`,
+      `SELECT gs.id,gs.date,gs.venue_name_snapshot AS "venueNameSnapshot",gs.status,sp.player_name_snapshot AS "playerNameSnapshot",sp.level_snapshot AS "levelSnapshot",t.id AS "teamId",t.name AS "teamName",sp.court_amount AS "courtAmount",sp.gatorade_amount AS "gatoradeAmount",sp.amount_due AS "amountDue",sp.amount_paid AS "amountPaid",greatest(sp.amount_due-sp.amount_paid,0)::int pending,greatest(sp.amount_paid-sp.amount_due,0)::int credit,sp.payment_method AS "paymentMethod",${payment} AS "paymentStatus",(gs.champion_team_id=t.id) champion,count(m.id)::int AS "matchesPlayed",count(m.id) FILTER(WHERE m.winner_team_id=t.id)::int wins,count(m.id) FILTER(WHERE m.loser_team_id=t.id)::int losses FROM session_players sp JOIN game_sessions gs ON gs.id=sp.session_id LEFT JOIN team_players tp ON tp.session_player_id=sp.id LEFT JOIN teams t ON t.id=tp.team_id LEFT JOIN matches m ON m.status='FINISHED' AND gs.status IN ${COMPETITIVE_SESSION_STATUSES} AND (m.team_a_id=t.id OR m.team_b_id=t.id) WHERE ${where.join(' AND ')} GROUP BY gs.id,sp.id,t.id ORDER BY gs.date ${query.sortOrder} LIMIT $${params.length - 1} OFFSET $${params.length}`,
       params,
     );
     return {
