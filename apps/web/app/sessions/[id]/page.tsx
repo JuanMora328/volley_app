@@ -5,7 +5,6 @@ import {
   Calendar,
   CreditCard,
   LayoutDashboard,
-  Loader2,
   MapPin,
   Shield,
   Trophy,
@@ -19,6 +18,8 @@ import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { api } from '../../../lib/api';
 import { money, SessionDetail, sessionStatusLabel } from '../../../lib/sessions';
+import { ConfirmDialog } from '../../../components/ui/confirm-dialog';
+import { FullScreenLoader } from '../../../components/ui/full-screen-loader';
 export default function SessionDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
@@ -26,6 +27,7 @@ export default function SessionDetailPage() {
   const [actionDialog, setActionDialog] = useState<'cancel' | 'delete' | null>(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState('');
   const [actionError, setActionError] = useState('');
+  const [generateDialog, setGenerateDialog] = useState(false);
   const destructive = useMutation({
     mutationFn: ({ path, method, body }: { path: string; method: string; body?: object }) =>
       api(path, { method, body: body ? JSON.stringify(body) : undefined }),
@@ -43,11 +45,21 @@ export default function SessionDetailPage() {
     queryKey: ['session', id],
     queryFn: () => api<SessionDetail>(`/sessions/${id}`),
   });
+  const generateTeams = useMutation({
+    mutationFn: () => api(`/sessions/${id}/teams/generate`, { method: 'POST', body: '{}' }),
+    onSuccess: async () => {
+      setGenerateDialog(false);
+      await queryClient.invalidateQueries({ queryKey: ['session', id] });
+      router.push(`/sessions/${id}/teams`);
+    },
+    onError: (error: Error) => setActionError(error.message),
+  });
   if (query.isLoading)
     return (
-      <div className="card animate-pulse">
-        <Loader2 className="animate-spin" /> Cargando jornada...
-      </div>
+      <FullScreenLoader
+        title="Cargando jornada"
+        description="Preparando participantes, equipos y costos…"
+      />
     );
   if (query.isError || !query.data)
     return <div className="card text-red-700">No pudimos cargar la jornada.</div>;
@@ -115,10 +127,22 @@ export default function SessionDetailPage() {
         </Link>
       </nav>
       <div className="grid gap-3 sm:grid-cols-2">
-        <Link className="btn-secondary text-center" href={`/sessions/${id}/settlement`}>
-          Finalizar jornada
-        </Link>
-        <Link className="btn-secondary text-center" href={`/sessions/${id}/summary`}>
+        {s.status === 'FINISHED' ? (
+          <span className="inline-flex min-h-12 items-center justify-center rounded-xl border border-green-300 bg-green-50 px-4 font-bold text-green-900">
+            Jornada finalizada
+          </span>
+        ) : (
+          <Link
+            className="inline-flex min-h-12 items-center justify-center rounded-xl border border-amber-300 bg-amber-50 px-4 font-bold text-amber-900 transition hover:bg-amber-100"
+            href={`/sessions/${id}/settlement`}
+          >
+            Finalizar jornada
+          </Link>
+        )}
+        <Link
+          className="inline-flex min-h-12 items-center justify-center rounded-xl border border-blue-300 bg-blue-50 px-4 font-bold text-blue-900 transition hover:bg-blue-100"
+          href={`/sessions/${id}/summary`}
+        >
           Resumen final
         </Link>
       </div>
@@ -146,11 +170,22 @@ export default function SessionDetailPage() {
             ? `${s.teams.length} equipos preparados.`
             : 'Los participantes están listos para generar equipos.'}
         </p>
-        {s.allowedActions.manageTeams && (
-          <Link className="btn inline-flex" href={`/sessions/${id}/teams`}>
-            <Users /> {s.teams.length ? 'Revisar equipos' : 'Generar equipos'}
-          </Link>
-        )}
+        {s.allowedActions.manageTeams &&
+          (s.teams.length ? (
+            <Link className="btn inline-flex" href={`/sessions/${id}/teams`}>
+              <Users /> Revisar equipos
+            </Link>
+          ) : (
+            <button
+              className="btn"
+              onClick={() => {
+                setActionError('');
+                setGenerateDialog(true);
+              }}
+            >
+              <Users /> Generar equipos
+            </button>
+          ))}
       </section>
       <section className="card border-red-200">
         <h2 className="text-xl font-bold">Acciones de la jornada</h2>
@@ -196,6 +231,16 @@ export default function SessionDetailPage() {
           onConfirm={() => destructive.mutate({ path: `/sessions/${id}/cancel`, method: 'POST' })}
         />
       )}
+      <ConfirmDialog
+        confirmLabel="Generar y continuar"
+        description="Crearemos la distribución equilibrada con los participantes actuales y te llevaremos directamente a revisarla."
+        error={actionError}
+        onConfirm={() => generateTeams.mutate()}
+        onOpenChange={setGenerateDialog}
+        open={generateDialog}
+        pending={generateTeams.isPending}
+        title="¿Generar equipos equilibrados?"
+      />
       {actionDialog === 'delete' && (
         <SessionActionDialog
           icon={<Trash2 size={32} />}

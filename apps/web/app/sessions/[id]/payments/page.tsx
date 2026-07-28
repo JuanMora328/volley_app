@@ -1,10 +1,11 @@
 'use client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft, ChevronDown, Search, Trophy } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, ChevronDown, Search, Trophy } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
 import { api } from '../../../../lib/api';
+import { FullScreenLoader } from '../../../../components/ui/full-screen-loader';
 import { money } from '../../../../lib/sessions';
 import { FinancialPlayer, PaymentSummary, statusLabel } from '../../../../lib/settlements';
 export default function PaymentsPage() {
@@ -28,22 +29,27 @@ export default function PaymentsPage() {
       }),
     onSuccess: async () => {
       setEditing(null);
-      await qc.invalidateQueries({ queryKey: ['payments', id] });
+      await Promise.all([
+        qc.invalidateQueries({ queryKey: ['payments', id] }),
+        qc.invalidateQueries({ queryKey: ['session', id] }),
+        qc.invalidateQueries({ queryKey: ['dashboard'] }),
+        qc.invalidateQueries({ queryKey: ['sessions'] }),
+      ]);
     },
     onError: (e: Error) => setError(e.message),
   });
-  if (!query.data)
+  if (query.isLoading)
     return (
-      <div className="card">
-        {query.isLoading ? 'Cargando pagos…' : 'No se pudieron cargar los pagos.'}
-      </div>
+      <FullScreenLoader title="Cargando pagos" description="Calculando saldos y estados de pago…" />
     );
+  if (!query.data) return <div className="card">No se pudieron cargar los pagos.</div>;
   const data = query.data;
   const players = data.participants.filter(
     (p) =>
       (filter === 'ALL' || p.paymentStatus === filter) &&
       p.name.toLowerCase().includes(search.toLowerCase()),
   );
+  const paymentsClosed = data.session.status === 'FINISHED';
   return (
     <div className="mx-auto max-w-5xl space-y-5 pb-20">
       <header className="flex items-center gap-3">
@@ -60,6 +66,15 @@ export default function PaymentsPage() {
         <Metric label="Recaudado" value={money(data.paidTotal)} />
         <Metric label="Pendiente" value={money(data.pendingTotal)} danger />
       </section>
+      {paymentsClosed && (
+        <div
+          className="flex items-center gap-3 rounded-2xl border border-green-200 bg-green-50 p-4 font-semibold text-green-900"
+          role="status"
+        >
+          <CheckCircle2 className="shrink-0" /> Todos los pagos fueron completados y la jornada está
+          finalizada.
+        </div>
+      )}
       <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
         <label className="relative block">
           <Search
@@ -133,6 +148,7 @@ export default function PaymentsPage() {
             )}
             <button
               className="inline-flex min-h-12 w-full items-center justify-center rounded-xl border border-blue-200 bg-blue-100 px-4 font-bold text-secondary transition hover:border-blue-300 hover:bg-blue-200 active:scale-95"
+              disabled={paymentsClosed}
               onClick={() => {
                 setEditing(p);
                 setAmount(p.amountPaid);
@@ -140,7 +156,7 @@ export default function PaymentsPage() {
                 setError('');
               }}
             >
-              {p.amountPaid ? 'Editar pago' : 'Registrar pago'}
+              {paymentsClosed ? 'Pago cerrado' : p.amountPaid ? 'Editar pago' : 'Registrar pago'}
             </button>
           </article>
         ))}
@@ -164,9 +180,6 @@ export default function PaymentsPage() {
                 value={formatInteger(amount)}
                 onChange={(e) => setAmount(parseInteger(e.target.value))}
               />
-              <small className="mt-1 block font-normal text-slate-500">
-                Valor entero en COP con separadores de miles.
-              </small>
             </label>
             <div className="my-3 grid grid-cols-2 gap-2">
               <button
@@ -175,14 +188,21 @@ export default function PaymentsPage() {
               >
                 Pago total
               </button>
-              <select
-                className="input"
-                value={method}
-                onChange={(e) => setMethod(e.target.value as 'CASH' | 'TRANSFER')}
-              >
-                <option value="CASH">Efectivo</option>
-                <option value="TRANSFER">Transferencia</option>
-              </select>
+              <div className="relative">
+                <select
+                  aria-label="Método de pago"
+                  className="input appearance-none !pr-10 font-semibold text-slate-700"
+                  value={method}
+                  onChange={(e) => setMethod(e.target.value as 'CASH' | 'TRANSFER')}
+                >
+                  <option value="CASH">Efectivo</option>
+                  <option value="TRANSFER">Transferencia</option>
+                </select>
+                <ChevronDown
+                  className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-secondary"
+                  size={18}
+                />
+              </div>
             </div>
             {amount > editing.amountDue && (
               <p className="rounded-xl bg-blue-50 p-3 text-blue-800">
@@ -228,13 +248,14 @@ const paymentBadgeClass: Record<FinancialPlayer['paymentStatus'], string> = {
 };
 
 function parseInteger(value: string) {
-  return Number(value.replace(/\D/g, '')) || 0;
+  const normalized = value.replace(/\./g, '').replace(',', '.');
+  return Math.round(Number(normalized.replace(/[^\d.]/g, ''))) || 0;
 }
 
 function formatInteger(value: number) {
-  return new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(
-    Number.isFinite(value) ? value : 0,
-  );
+  return new Intl.NumberFormat('es-CO', {
+    maximumFractionDigits: 0,
+  }).format(Number.isFinite(value) ? value : 0);
 }
 function Metric({ label, value, danger }: { label: string; value: string; danger?: boolean }) {
   return (

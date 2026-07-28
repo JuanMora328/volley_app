@@ -119,7 +119,9 @@ export class SettlementsService {
   async payment(id: string, playerId: string, dto: PaymentDto) {
     return this.db.transaction(async (manager) => {
       const data = await this.load(manager, id, true);
-      if (![GameSessionStatus.SETTLEMENT, GameSessionStatus.FINISHED].includes(data.session.status))
+      if (data.session.status === GameSessionStatus.FINISHED)
+        throw new ConflictException('La jornada ya finalizó y sus pagos están cerrados');
+      if (data.session.status !== GameSessionStatus.SETTLEMENT)
         throw new ConflictException('No se pueden registrar pagos antes de liquidar');
       const player = data.players.find((item) => item.id === playerId);
       if (!player) throw new NotFoundException('Participante no encontrado en la jornada');
@@ -129,6 +131,11 @@ export class SettlementsService {
       player.paymentMethod = dto.amountPaid === 0 ? null : dto.paymentMethod!;
       player.paidAt = dto.amountPaid === 0 ? null : new Date();
       await manager.save(player);
+      if (data.players.every((item) => item.amountPaid >= item.amountDue)) {
+        data.session.status = GameSessionStatus.FINISHED;
+        data.session.finishedAt = new Date();
+        await manager.save(data.session);
+      }
       return this.playerFinancial(player, data.links, data.session.championTeam?.id);
     });
   }
@@ -278,7 +285,9 @@ export class SettlementsService {
       const key =
         player.paymentStatus === 'NOT_REQUIRED'
           ? 'notRequired'
-          : (player.paymentStatus.toLowerCase() as 'pending' | 'partial' | 'paid');
+          : player.paymentStatus === 'CREDIT'
+            ? 'paid'
+            : (player.paymentStatus.toLowerCase() as 'pending' | 'partial' | 'paid');
       counts[key]++;
     });
     const gatoradeWinnerCount = this.championPlayerIds(data).size;

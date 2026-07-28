@@ -3,9 +3,12 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { CheckCircle2, Trophy } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
+import { useState } from 'react';
 import { api } from '../../../../lib/api';
 import { money } from '../../../../lib/sessions';
 import { PaymentSummary } from '../../../../lib/settlements';
+import { ConfirmDialog } from '../../../../components/ui/confirm-dialog';
+import { FullScreenLoader } from '../../../../components/ui/full-screen-loader';
 type Summary = PaymentSummary & {
   championMembers: string[];
   standings: Array<{
@@ -28,6 +31,8 @@ type Summary = PaymentSummary & {
 export default function SummaryPage() {
   const { id } = useParams<{ id: string }>();
   const qc = useQueryClient();
+  const [finishOpen, setFinishOpen] = useState(false);
+  const [finishError, setFinishError] = useState('');
   const query = useQuery({
     queryKey: ['summary', id],
     queryFn: () => api<Summary>(`/sessions/${id}/summary`),
@@ -40,14 +45,18 @@ export default function SummaryPage() {
       }),
     onSuccess: async () => {
       await qc.invalidateQueries({ queryKey: ['summary', id] });
+      setFinishOpen(false);
     },
+    onError: (error: Error) => setFinishError(error.message || 'No pudimos finalizar la jornada.'),
   });
-  if (!query.data)
+  if (query.isLoading)
     return (
-      <div className="card">
-        {query.isLoading ? 'Cargando resumen…' : 'La jornada todavía no está liquidada.'}
-      </div>
+      <FullScreenLoader
+        title="Cargando resumen"
+        description="Preparando resultados y liquidación final…"
+      />
     );
+  if (!query.data) return <div className="card">La jornada todavía no está liquidada.</div>;
   const s = query.data;
   const debtors = s.participants.filter((p) => p.pendingAmount > 0);
   return (
@@ -143,13 +152,25 @@ export default function SummaryPage() {
           <button
             className="btn-primary w-full"
             onClick={() => {
-              if (window.confirm('¿Finalizar definitivamente la jornada?')) finish.mutate();
+              setFinishError('');
+              setFinishOpen(true);
             }}
           >
             Finalizar jornada
           </button>
         </section>
       )}
+      <ConfirmDialog
+        confirmLabel="Sí, finalizar jornada"
+        description={`${debtors.length ? `Hay ${debtors.length} pagos con saldo pendiente. ` : ''}El campeón y los costos quedarán bloqueados; los pagos podrán corregirse después.`}
+        destructive
+        error={finishError}
+        onConfirm={() => finish.mutate()}
+        onOpenChange={setFinishOpen}
+        open={finishOpen}
+        pending={finish.isPending}
+        title="¿Finalizar definitivamente?"
+      />
     </div>
   );
 }

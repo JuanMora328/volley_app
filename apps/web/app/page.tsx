@@ -20,6 +20,7 @@ import { useEffect } from 'react';
 import { api, DashboardResponse, getToken } from '../lib/api';
 import { formatDateEs } from '../lib/presentation';
 import { sessionStatusLabel } from '../lib/sessions';
+import { FullScreenLoader } from '../components/ui/full-screen-loader';
 const statusTone: Record<string, string> = {
   FINISHED: 'bg-lime-200 text-lime-950',
   CANCELLED: 'bg-red-100 text-red-800',
@@ -50,7 +51,13 @@ export default function Dashboard() {
     retry: false,
   });
   const data = dashboard.data;
-  if (me.isLoading || dashboard.isLoading) return <DashboardSkeleton />;
+  if (me.isLoading || dashboard.isLoading)
+    return (
+      <FullScreenLoader
+        title="Cargando inicio"
+        description="Preparando el resumen de VolleyFlow…"
+      />
+    );
   if (me.isError || dashboard.isError)
     return (
       <div className="rounded-3xl border border-red-200 bg-red-50 p-8 text-center text-red-800">
@@ -244,9 +251,7 @@ function ActiveSession({ session }: { session: NonNullable<DashboardResponse['ac
       <div className="mt-6 grid grid-cols-2 gap-3">
         <div className="rounded-2xl bg-white/10 p-3">
           <small className="text-slate-300">Participantes</small>
-          <b className="block text-xl">
-            {session.playersConfirmed}/{session.playersCapacity}
-          </b>
+          <b className="block text-xl">{session.participantCount}</b>
         </div>
         <div className="rounded-2xl bg-white/10 p-3">
           <small className="text-slate-300">Estado</small>
@@ -298,18 +303,5 @@ function RecentSession({
         </div>
       </div>
     </Link>
-  );
-}
-function DashboardSkeleton() {
-  return (
-    <div className="space-y-5" aria-label="Cargando inicio">
-      <div className="h-52 animate-pulse rounded-3xl bg-slate-200" />
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        {Array.from({ length: 4 }, (_, i) => (
-          <div className="h-32 animate-pulse rounded-2xl bg-slate-200" key={i} />
-        ))}
-      </div>
-      <div className="h-64 animate-pulse rounded-3xl bg-slate-200" />
-    </div>
   );
 }

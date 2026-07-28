@@ -1,20 +1,12 @@
 'use client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-  ArrowLeft,
-  Flag,
-  History,
-  Loader2,
-  Minus,
-  Plus,
-  RotateCcw,
-  Shuffle,
-  Trophy,
-} from 'lucide-react';
+import { ArrowLeft, Flag, History, Minus, Plus, RotateCcw, Shuffle, Trophy } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { api } from '../../../../lib/api';
+import { ConfirmDialog } from '../../../../components/ui/confirm-dialog';
+import { FullScreenLoader } from '../../../../components/ui/full-screen-loader';
 type Team = { id: string; name: string; players?: Array<{ playerNameSnapshot: string }> };
 type Match = {
   id: string;
@@ -57,6 +49,8 @@ export default function MatchControlPage() {
   const [scores, setScores] = useState([0, 0]);
   const [notice, setNotice] = useState('');
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [undoOpen, setUndoOpen] = useState(false);
+  const [undoError, setUndoError] = useState('');
   const [automaticPromptKey, setAutomaticPromptKey] = useState<string | null>(null);
   const rotation = useQuery({
     queryKey: ['rotation', id],
@@ -90,9 +84,13 @@ export default function MatchControlPage() {
     onSuccess: () => {
       setScores([0, 0]);
       setNotice('Acción completada');
+      setUndoOpen(false);
       void refresh();
     },
-    onError: (e: Error) => setNotice(e.message),
+    onError: (e: Error) => {
+      setNotice(e.message);
+      if (undoOpen) setUndoError(e.message);
+    },
   });
   const r = rotation.data,
     active = r?.activeMatch;
@@ -120,10 +118,10 @@ export default function MatchControlPage() {
   };
   if (rotation.isLoading)
     return (
-      <div className="card flex gap-2">
-        <Loader2 className="animate-spin" />
-        Cargando competición…
-      </div>
+      <FullScreenLoader
+        title="Cargando competición"
+        description="Preparando rotación, marcador y posiciones…"
+      />
     );
   return (
     <div className="mx-auto max-w-4xl space-y-5 pb-24">
@@ -264,10 +262,10 @@ export default function MatchControlPage() {
           {r?.canUndoLastResult && (
             <button
               className="text-sm font-bold text-red-600"
-              onClick={() =>
-                confirm('¿Deshacer el último resultado?') &&
-                action.mutate({ path: `/sessions/${id}/matches/latest`, method: 'DELETE' })
-              }
+              onClick={() => {
+                setUndoError('');
+                setUndoOpen(true);
+              }}
             >
               Deshacer último
             </button>
@@ -344,6 +342,19 @@ export default function MatchControlPage() {
           onConfirm={submitResult}
         />
       )}
+      <ConfirmDialog
+        confirmLabel="Deshacer resultado"
+        description="Se eliminará el último marcador registrado y se restaurará la rotación anterior de los equipos."
+        destructive
+        error={undoError}
+        onConfirm={() =>
+          action.mutate({ path: `/sessions/${id}/matches/latest`, method: 'DELETE' })
+        }
+        onOpenChange={setUndoOpen}
+        open={undoOpen}
+        pending={action.isPending}
+        title="¿Deshacer el último resultado?"
+      />
     </div>
   );
 }

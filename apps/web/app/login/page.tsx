@@ -35,7 +35,9 @@ export default function Login() {
       });
       setToken(response.accessToken);
       toast.success(`Bienvenido, ${response.user.name}`);
-      router.replace('/');
+      const returnPath = sessionStorage.getItem('vf_return_path') || '/';
+      sessionStorage.removeItem('vf_return_path');
+      router.replace(returnPath);
     } catch {
       setError('password', { message: 'Correo o contraseña inválidos.' });
     }

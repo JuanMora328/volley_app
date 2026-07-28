@@ -12,8 +12,7 @@ export type DashboardResponse = {
     title: string;
     date: string;
     venueName: string;
-    playersConfirmed: number;
-    playersCapacity: number;
+    participantCount: number;
     statusLabel: string;
   };
   stats: {
@@ -48,9 +47,17 @@ export async function api<T>(path: string, init?: RequestInit): Promise<T> {
     typeof window !== 'undefined' &&
     window.location.pathname !== '/login'
   ) {
+    sessionStorage.setItem(
+      'vf_return_path',
+      `${window.location.pathname}${window.location.search}`,
+    );
     sessionStorage.removeItem(TOKEN_KEY);
     window.location.href = '/login';
   }
-  if (!res.ok) throw new Error('No pudimos completar la solicitud. Intenta nuevamente.');
+  if (!res.ok) {
+    const payload = await res.json().catch(() => null);
+    const message = Array.isArray(payload?.message) ? payload.message.join('. ') : payload?.message;
+    throw new Error(message || 'No pudimos completar la solicitud. Intenta nuevamente.');
+  }
   return res.json();
 }

@@ -1,6 +1,22 @@
 'use client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Edit3, Loader2, MapPin, Plus, Search, UserRound, X } from 'lucide-react';
+import {
+  AlertCircle,
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+  ChevronDown,
+  Edit3,
+  Loader2,
+  MapPin,
+  Plus,
+  Search,
+  SlidersHorizontal,
+  Star,
+  UserPlus,
+  UserRound,
+  X,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -17,6 +33,7 @@ import {
 } from '../lib/community';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { FullScreenLoader } from './ui/full-screen-loader';
 
 type Kind = 'players' | 'venues';
 type Item = Player | Venue;
@@ -27,6 +44,7 @@ export function CommunityPage({ kind }: { kind: Kind }) {
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState('active');
   const [page, setPage] = useState(1);
+  const [sort, setSort] = useState(isPlayers ? 'level' : 'name');
   const [editing, setEditing] = useState<Item | null | undefined>(undefined);
   const [confirmingStatus, setConfirmingStatus] = useState<Item | null>(null);
   const router = useRouter();
@@ -34,12 +52,12 @@ export function CommunityPage({ kind }: { kind: Kind }) {
   useEffect(() => {
     if (!getToken()) router.replace('/login');
   }, [router]);
-  useEffect(() => setPage(1), [search, status]);
+  useEffect(() => setPage(1), [search, status, sort]);
   const query = useQuery({
-    queryKey: [kind, search, status, page],
+    queryKey: [kind, search, status, page, sort],
     queryFn: () =>
       api<Paginated<Item>>(
-        `/${kind}?search=${encodeURIComponent(search)}&status=${status}&page=${page}&limit=12&sortBy=${isPlayers ? 'defaultLevel' : 'name'}&sortOrder=${isPlayers ? 'DESC' : 'ASC'}`,
+        `/${kind}?search=${encodeURIComponent(search)}&status=${status}&page=${page}&limit=12&sortBy=${isPlayers && sort === 'level' ? 'defaultLevel' : 'name'}&sortOrder=${isPlayers && sort === 'level' ? 'DESC' : 'ASC'}`,
       ),
     retry: false,
   });
@@ -59,68 +77,130 @@ export function CommunityPage({ kind }: { kind: Kind }) {
     onError: () => toast.error('No pudimos actualizar el estado'),
   });
   return (
-    <div className="space-y-6">
-      <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-primary">{title}</h1>
-          <p className="text-slate-600">
-            {isPlayers ? 'Gestiona tu comunidad deportiva.' : 'Gestiona tus sedes habituales.'}
-          </p>
+    <div className="mx-auto max-w-6xl space-y-6 pb-4">
+      <header className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#091426] via-[#102446] to-[#0051d5] p-6 text-white shadow-xl shadow-blue-950/15 md:p-8">
+        <div className="absolute -right-14 -top-16 size-52 rounded-full bg-lime-300/10 blur-2xl" />
+        <div className="absolute -bottom-24 left-1/3 size-48 rounded-full bg-blue-300/15 blur-3xl" />
+        <div className="relative flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <span className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-extrabold uppercase tracking-wide text-white ring-1 ring-white/20">
+              {isPlayers ? <UserRound size={15} /> : <MapPin size={15} />}
+              {isPlayers ? 'Comunidad deportiva' : 'Sedes de juego'}
+            </span>
+            <h1 className="text-3xl font-extrabold tracking-tight md:text-4xl">{title}</h1>
+            <p className="mt-2 max-w-xl text-sm leading-6 text-blue-100 sm:text-base">
+              {isPlayers
+                ? 'Gestiona los perfiles, niveles y disponibilidad de tus jugadores.'
+                : 'Administra las canchas, ubicaciones y valores habituales de cada sede.'}
+            </p>
+          </div>
+          <button
+            className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-lime-300 px-5 font-extrabold text-[#102000] shadow-lg shadow-lime-950/10 transition hover:-translate-y-0.5 hover:bg-lime-200 focus-visible:ring-lime-200 sm:w-auto"
+            onClick={() => setEditing(null)}
+          >
+            {isPlayers ? <UserPlus size={20} /> : <Plus size={20} />}
+            {isPlayers ? 'Nuevo jugador' : 'Nueva cancha'}
+          </button>
         </div>
-        <button className="btn gap-2" onClick={() => setEditing(null)}>
-          <Plus size={20} />
-          {isPlayers ? 'Nuevo jugador' : 'Nueva cancha'}
-        </button>
       </header>
-      <section className="card flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <label className="flex min-h-12 flex-1 items-center gap-3 rounded-xl border border-slate-300 bg-white px-4 focus-within:border-secondary focus-within:ring-2 focus-within:ring-blue-100">
-          <Search className="shrink-0 text-slate-500" size={20} aria-hidden="true" />
-          <span className="sr-only">Buscar</span>
-          <input
-            className="min-w-0 flex-1 border-0 bg-transparent py-3 outline-none placeholder:text-slate-400"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder={isPlayers ? 'Buscar jugadores...' : 'Buscar por nombre o dirección...'}
-          />
-        </label>
-        <div className="flex rounded-xl bg-slate-100 p-1">
-          {[
-            ['all', 'Todos'],
-            ['active', 'Activos'],
-            ['inactive', 'Inactivos'],
-          ].map(([value, label]) => (
-            <button
-              key={value}
-              className={`flex-1 rounded-lg px-3 py-2 text-sm font-semibold ${status === value ? 'bg-secondary text-white' : 'text-slate-600'}`}
-              onClick={() => setStatus(value)}
-            >
-              {label}
-            </button>
-          ))}
+      <section className="rounded-2xl border border-slate-200 bg-slate-100/70 p-3 shadow-sm sm:p-4">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+          <label className="flex min-h-12 flex-1 items-center gap-3 rounded-xl border border-slate-300 bg-white px-4 shadow-sm focus-within:border-secondary focus-within:ring-4 focus-within:ring-blue-100">
+            <Search className="shrink-0 text-slate-500" size={20} aria-hidden="true" />
+            <span className="sr-only">Buscar</span>
+            <input
+              className="min-w-0 flex-1 border-0 bg-transparent py-3 outline-none placeholder:text-slate-400"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder={isPlayers ? 'Buscar jugadores...' : 'Buscar por nombre o dirección...'}
+            />
+            {search && (
+              <button
+                type="button"
+                aria-label="Limpiar búsqueda"
+                className="grid size-9 shrink-0 place-items-center rounded-lg text-slate-500 hover:bg-slate-100"
+                onClick={() => setSearch('')}
+              >
+                <X size={17} />
+              </button>
+            )}
+          </label>
+          <div className="grid grid-cols-3 rounded-xl bg-white p-1 shadow-sm ring-1 ring-slate-200">
+            {[
+              ['all', 'Todos'],
+              ['active', 'Activos'],
+              ['inactive', 'Inactivos'],
+            ].map(([value, label]) => (
+              <button
+                key={value}
+                aria-pressed={status === value}
+                className={`min-h-10 rounded-lg px-3 text-sm font-semibold transition ${status === value ? 'bg-secondary text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100'}`}
+                onClick={() => setStatus(value)}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+          {isPlayers && (
+            <label className="relative min-w-52">
+              <span className="sr-only">Ordenar jugadores</span>
+              <SlidersHorizontal
+                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
+                size={17}
+              />
+              <select
+                className="input appearance-none !py-2 !pl-10 !pr-10 text-sm font-semibold"
+                value={sort}
+                onChange={(event) => setSort(event.target.value)}
+              >
+                <option value="level">Nivel: mayor a menor</option>
+                <option value="name">Nombre: A a Z</option>
+              </select>
+              <ChevronDown
+                className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-secondary"
+                size={17}
+              />
+            </label>
+          )}
         </div>
       </section>
       {query.isLoading ? (
-        <div aria-label="Cargando" className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {[1, 2, 3, 4].map((x) => (
-            <div key={x} className="h-48 animate-pulse rounded-2xl bg-slate-200" />
-          ))}
-        </div>
+        <FullScreenLoader
+          title={`Cargando ${title.toLowerCase()}`}
+          description="Consultando los registros disponibles…"
+        />
       ) : query.isError ? (
-        <div role="alert" className="rounded-2xl border border-red-200 bg-red-50 p-6 text-red-800">
-          No pudimos cargar {title.toLowerCase()}.{' '}
+        <div
+          role="alert"
+          className="rounded-2xl border border-red-200 bg-red-50 p-6 text-center text-red-800"
+        >
+          <AlertCircle className="mx-auto mb-3" size={34} />
+          <b className="block">No pudimos cargar {title.toLowerCase()}.</b>
           <button className="font-bold underline" onClick={() => query.refetch()}>
             Reintentar
           </button>
         </div>
       ) : (
         <>
-          <p className="text-sm font-semibold text-slate-600">
-            {query.data?.meta.total ?? 0} resultados
-          </p>
+          <div className="flex items-center justify-between">
+            <p className="text-sm font-semibold text-slate-600">
+              {query.data?.meta.total ?? 0} resultados
+            </p>
+            {isPlayers && (
+              <span className="hidden text-xs font-medium text-slate-500 sm:block">
+                Orden principal: {sort === 'level' ? 'nivel descendente' : 'nombre ascendente'}
+              </span>
+            )}
+          </div>
           {!query.data?.items.length ? (
-            <div className="card py-16 text-center">
-              <p className="text-lg font-semibold">No encontramos {title.toLowerCase()}</p>
-              <p className="text-slate-500">Cambia los filtros o crea un nuevo registro.</p>
+            <div className="rounded-3xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center">
+              <span className="mx-auto mb-4 grid size-14 place-items-center rounded-2xl bg-blue-50 text-secondary">
+                {isPlayers ? <UserRound size={28} /> : <MapPin size={28} />}
+              </span>
+              <p className="text-lg font-bold text-primary">No encontramos {title.toLowerCase()}</p>
+              <p className="mt-1 text-sm text-slate-500">
+                Cambia los filtros o crea un nuevo registro.
+              </p>
             </div>
           ) : (
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -136,23 +216,32 @@ export function CommunityPage({ kind }: { kind: Kind }) {
             </div>
           )}
           {(query.data?.meta.totalPages ?? 0) > 1 && (
-            <nav className="flex items-center justify-center gap-4">
+            <nav
+              aria-label="Paginación"
+              className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-2 shadow-sm sm:justify-center sm:gap-4"
+            >
               <button
-                className="rounded-lg border px-4 py-2 disabled:opacity-40"
+                aria-label="Página anterior"
+                className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-slate-200 px-3 font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-secondary disabled:cursor-not-allowed disabled:opacity-40"
                 disabled={page === 1}
                 onClick={() => setPage((p) => p - 1)}
               >
-                Anterior
+                <ChevronLeft size={18} /> <span className="hidden sm:inline">Anterior</span>
               </button>
-              <span>
-                Página {page} de {query.data?.meta.totalPages}
+              <span
+                className="rounded-xl bg-slate-100 px-4 py-2 text-sm font-bold text-slate-700"
+                aria-current="page"
+              >
+                {page} <span className="font-normal text-slate-400">de</span>{' '}
+                {query.data?.meta.totalPages}
               </span>
               <button
-                className="rounded-lg border px-4 py-2 disabled:opacity-40"
+                aria-label="Página siguiente"
+                className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-slate-200 px-3 font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-secondary disabled:cursor-not-allowed disabled:opacity-40"
                 disabled={page === query.data?.meta.totalPages}
                 onClick={() => setPage((p) => p + 1)}
               >
-                Siguiente
+                <span className="hidden sm:inline">Siguiente</span> <ChevronRight size={18} />
               </button>
             </nav>
           )}
@@ -188,29 +277,67 @@ function RecordCard({
 }) {
   const venue = item as Venue;
   const player = item as Player;
+  const initials = item.name
+    .split(' ')
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join('')
+    .toUpperCase();
   return (
-    <article className={`card overflow-hidden ${item.active ? '' : 'opacity-70'}`}>
-      <div className="flex justify-between gap-3">
-        <div className="flex gap-3">
-          <div className="rounded-xl bg-blue-50 p-3 text-secondary">
-            {isPlayer ? <UserRound /> : <MapPin />}
+    <article
+      className={`group flex min-h-56 flex-col overflow-hidden rounded-2xl border bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-lg ${item.active ? 'border-slate-200' : 'border-slate-200 bg-slate-50/80'}`}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex min-w-0 gap-3">
+          <div
+            className={`grid size-14 shrink-0 place-items-center rounded-full font-extrabold ${item.active ? 'bg-gradient-to-br from-blue-100 to-blue-50 text-secondary ring-4 ring-blue-50' : 'bg-slate-200 text-slate-500 ring-4 ring-slate-100'}`}
+          >
+            {isPlayer ? initials : <MapPin />}
           </div>
-          <div>
-            <h2 className="text-lg font-bold text-primary">{item.name}</h2>
-            <p className="text-sm text-slate-500">
-              {isPlayer ? `Nivel ${player.defaultLevel} de 5` : venue.address || 'Sin dirección'}
-            </p>
+          <div className="min-w-0">
+            <h2 className="truncate text-lg font-extrabold text-primary">{item.name}</h2>
+            {isPlayer ? (
+              <div
+                className="mt-1 flex items-center gap-2"
+                aria-label={`Nivel ${player.defaultLevel} de 5`}
+              >
+                <span className="flex">
+                  {[1, 2, 3, 4, 5].map((level) => (
+                    <Star
+                      aria-hidden="true"
+                      className={
+                        level <= player.defaultLevel
+                          ? 'fill-amber-400 text-amber-400'
+                          : 'fill-slate-100 text-slate-300'
+                      }
+                      key={level}
+                      size={14}
+                    />
+                  ))}
+                </span>
+                <span className="text-xs font-semibold text-slate-500">
+                  Nivel {player.defaultLevel}
+                </span>
+              </div>
+            ) : (
+              <p className="truncate text-sm text-slate-500">{venue.address || 'Sin dirección'}</p>
+            )}
           </div>
         </div>
         <span
-          className={`h-fit rounded-full px-2 py-1 text-xs font-bold ${item.active ? 'bg-lime-100 text-lime-800' : 'bg-slate-200 text-slate-600'}`}
+          className={`inline-flex h-fit shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-extrabold ring-1 ring-inset ${item.active ? 'bg-lime-100 text-lime-900 ring-lime-300' : 'bg-slate-200 text-slate-700 ring-slate-300'}`}
         >
+          <span
+            className={`size-1.5 rounded-full ${item.active ? 'bg-lime-600' : 'bg-slate-500'}`}
+          />
           {item.active ? 'Activo' : 'Inactivo'}
         </span>
       </div>
       {isPlayer ? (
         player.notes && (
-          <p className="mt-4 rounded-lg bg-slate-50 p-3 text-sm text-slate-600">{player.notes}</p>
+          <p className="mt-5 line-clamp-2 rounded-xl bg-slate-50 p-3 text-sm leading-5 text-slate-600">
+            {player.notes}
+          </p>
         )
       ) : (
         <div className="mt-4 grid grid-cols-2 gap-2">
@@ -218,22 +345,25 @@ function RecordCard({
           <Price label="Gatorades" value={venue.defaultGatoradePrice} />
         </div>
       )}
-      <div className="mt-4 flex border-t pt-3">
+      <div className="mt-auto grid grid-cols-3 gap-1 border-t border-slate-100 pt-3">
         {isPlayer && (
           <Link
-            className="flex flex-1 items-center justify-center font-semibold text-secondary"
+            className="col-span-1 inline-flex min-h-11 items-center justify-center gap-1 rounded-xl text-sm font-bold text-secondary transition hover:bg-blue-50"
             href={`/players/${item.id}`}
           >
-            Ver perfil
+            Perfil <ArrowRight size={15} />
           </Link>
         )}
         <button
-          className="flex flex-1 items-center justify-center gap-2 font-semibold text-secondary"
+          className={`${isPlayer ? 'col-span-1' : 'col-span-2'} inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl text-sm font-bold text-secondary transition hover:bg-blue-50`}
           onClick={onEdit}
         >
           <Edit3 size={17} /> Editar
         </button>
-        <button className="flex-1 font-semibold text-slate-600" onClick={onStatus}>
+        <button
+          className={`col-span-1 min-h-11 rounded-xl text-sm font-bold transition ${item.active ? 'text-red-700 hover:bg-red-50' : 'text-green-700 hover:bg-green-50'}`}
+          onClick={onStatus}
+        >
           {item.active ? 'Desactivar' : 'Reactivar'}
         </button>
       </div>
@@ -363,7 +493,7 @@ function CommunityForm({ kind, item, close }: { kind: Kind; item: Item | null; c
       toast.success(item ? 'Cambios guardados' : `${isPlayers ? 'Jugador' : 'Cancha'} creado`);
       close();
     },
-    onError: () => toast.error('No pudimos guardar los cambios'),
+    onError: (error: Error) => toast.error(error.message || 'No pudimos guardar los cambios'),
   });
   const submit = (raw: FormData) => {
     const parsed = (isPlayers ? playerSchema : venueSchema).safeParse(raw);
@@ -379,70 +509,121 @@ function CommunityForm({ kind, item, close }: { kind: Kind; item: Item | null; c
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-[60] flex items-end bg-black/40 sm:items-center sm:justify-center"
+      className="fixed inset-0 z-[60] flex items-end bg-slate-950/55 backdrop-blur-sm sm:items-center sm:justify-center sm:p-4"
     >
       <form
         onSubmit={handleSubmit(submit)}
-        className="max-h-[92vh] w-full overflow-y-auto rounded-t-3xl bg-white p-6 sm:max-w-lg sm:rounded-3xl"
+        className="max-h-[92dvh] w-full overflow-y-auto rounded-t-3xl bg-white shadow-2xl sm:max-w-lg sm:rounded-3xl"
       >
-        <div className="mb-6 flex justify-between">
-          <h2 className="text-2xl font-bold">
-            {item ? 'Editar' : 'Crear'} {isPlayers ? 'jugador' : 'cancha'}
-          </h2>
-          <button type="button" aria-label="Cerrar" onClick={close}>
+        <div className="sticky top-0 z-10 mb-5 flex justify-between gap-4 border-b border-slate-100 bg-white px-5 py-5 sm:px-6">
+          <div>
+            <span className="mb-2 block h-1 w-10 rounded-full bg-secondary" />
+            <h2 className="text-2xl font-extrabold tracking-tight text-primary">
+              {item ? 'Editar' : 'Crear'} {isPlayers ? 'jugador' : 'cancha'}
+            </h2>
+            {isPlayers && (
+              <p className="mt-1 text-sm text-slate-500">
+                Define la información deportiva del perfil.
+              </p>
+            )}
+          </div>
+          <button
+            type="button"
+            aria-label="Cerrar"
+            disabled={mutation.isPending}
+            className="grid size-11 shrink-0 place-items-center rounded-full text-slate-500 hover:bg-slate-100 disabled:opacity-50"
+            onClick={close}
+          >
             <X />
           </button>
         </div>
-        <Field label="Nombre" error={errors.name?.message as string}>
-          <input className="input" {...register('name')} />
-        </Field>
-        {isPlayers ? (
-          <>
-            <Field label="Nivel (1 a 5)" error={errors.defaultLevel?.message as string}>
-              <input
-                type="number"
-                min="1"
-                max="5"
-                className="input"
-                {...register('defaultLevel')}
-              />
-            </Field>
-            <Field label="Notas (opcional)" error={errors.notes?.message as string}>
-              <textarea className="input" rows={3} {...register('notes')} />
-            </Field>
-          </>
-        ) : (
-          <>
-            <Field label="Dirección (opcional)" error={errors.address?.message as string}>
-              <input className="input" {...register('address')} />
-            </Field>
-            <Field
-              label="Valor habitual de cancha (COP)"
-              error={errors.defaultCourtPrice?.message as string}
-            >
-              <MoneyInput
-                name="defaultCourtPrice"
-                value={watch('defaultCourtPrice')}
-                register={register}
-                setValue={setValue}
-              />
-            </Field>
-            <Field
-              label="Valor habitual de Gatorades (COP)"
-              error={errors.defaultGatoradePrice?.message as string}
-            >
-              <MoneyInput
-                name="defaultGatoradePrice"
-                value={watch('defaultGatoradePrice')}
-                register={register}
-                setValue={setValue}
-              />
-            </Field>
-          </>
-        )}
-        <button disabled={mutation.isPending} className="btn mt-4 w-full gap-2">
-          {mutation.isPending && <Loader2 className="animate-spin" />}Guardar
-        </button>
+        <div className="px-5 sm:px-6">
+          <Field label="Nombre" error={errors.name?.message as string}>
+            <input
+              className="input"
+              autoComplete="name"
+              placeholder="Nombre completo"
+              {...register('name')}
+            />
+          </Field>
+          {isPlayers ? (
+            <>
+              <Field label="Nivel (1 a 5)" error={errors.defaultLevel?.message as string}>
+                <div className="relative">
+                  <select
+                    className="input appearance-none !pr-11 font-semibold"
+                    {...register('defaultLevel')}
+                  >
+                    {[1, 2, 3, 4, 5].map((level) => (
+                      <option key={level} value={level}>
+                        Nivel {level} de 5
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown
+                    className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-secondary"
+                    size={18}
+                  />
+                </div>
+              </Field>
+              <Field label="Notas (opcional)" error={errors.notes?.message as string}>
+                <textarea
+                  className="input resize-none"
+                  placeholder="Información útil para organizar los equipos"
+                  rows={4}
+                  {...register('notes')}
+                />
+              </Field>
+            </>
+          ) : (
+            <>
+              <Field label="Dirección (opcional)" error={errors.address?.message as string}>
+                <input className="input" {...register('address')} />
+              </Field>
+              <Field
+                label="Valor habitual de cancha (COP)"
+                error={errors.defaultCourtPrice?.message as string}
+              >
+                <MoneyInput
+                  name="defaultCourtPrice"
+                  value={watch('defaultCourtPrice')}
+                  register={register}
+                  setValue={setValue}
+                />
+              </Field>
+              <Field
+                label="Valor habitual de Gatorades (COP)"
+                error={errors.defaultGatoradePrice?.message as string}
+              >
+                <MoneyInput
+                  name="defaultGatoradePrice"
+                  value={watch('defaultGatoradePrice')}
+                  register={register}
+                  setValue={setValue}
+                />
+              </Field>
+            </>
+          )}
+          {mutation.isError && (
+            <p className="form-error" role="alert">
+              {mutation.error.message}
+            </p>
+          )}
+        </div>
+        <div className="sticky bottom-0 mt-5 flex flex-col-reverse gap-3 border-t border-slate-100 bg-white px-5 py-4 sm:flex-row sm:justify-end sm:px-6">
+          <button
+            type="button"
+            className="btn-secondary sm:min-w-28"
+            disabled={mutation.isPending}
+            onClick={close}
+          >
+            Cancelar
+          </button>
+          <button disabled={mutation.isPending} className="btn sm:min-w-40">
+            {mutation.isPending && <Loader2 className="animate-spin" />}
+            {mutation.isPending ? 'Guardando…' : 'Guardar'}
+          </button>
+        </div>
       </form>
     </div>
   );
@@ -490,11 +671,11 @@ function Field({
   children: React.ReactNode;
 }) {
   return (
-    <label className="mb-4 block">
-      <span className="mb-1 block font-semibold">{label}</span>
+    <label className="mb-5 block">
+      <span className="mb-2 block text-sm font-bold text-slate-800">{label}</span>
       {children}
       {error && (
-        <span role="alert" className="text-sm text-red-600">
+        <span role="alert" className="form-error mt-2 block">
           {error}
         </span>
       )}

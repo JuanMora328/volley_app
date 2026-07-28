@@ -2,7 +2,7 @@ import { Controller, Get, Module, UseGuards } from '@nestjs/common';
 import { AuthModule } from '../auth/auth.module';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { TypeOrmModule, InjectRepository } from '@nestjs/typeorm';
-import { GameSessionEntity, PlayerEntity } from '../database/entities';
+import { GameSessionEntity, PlayerEntity, SessionPlayerEntity } from '../database/entities';
 import { In, Repository } from 'typeorm';
 import { GameSessionStatus } from '@volleyflow/shared';
 
@@ -12,6 +12,8 @@ export class DashboardController {
   constructor(
     @InjectRepository(PlayerEntity) private readonly players: Repository<PlayerEntity>,
     @InjectRepository(GameSessionEntity) private readonly sessions: Repository<GameSessionEntity>,
+    @InjectRepository(SessionPlayerEntity)
+    private readonly sessionPlayers: Repository<SessionPlayerEntity>,
   ) {}
   @Get()
   async getDashboard() {
@@ -23,6 +25,9 @@ export class DashboardController {
       this.sessions.find({ order: { date: 'DESC' }, take: 5 }),
       this.sessions.countBy({ status: GameSessionStatus.FINISHED }),
     ]);
+    const activeParticipantCount = activeSession
+      ? await this.sessionPlayers.count({ where: { session: { id: activeSession.id } } })
+      : 0;
     return {
       activeSession: activeSession
         ? {
@@ -30,6 +35,7 @@ export class DashboardController {
             title: activeSession.venueNameSnapshot,
             date: activeSession.date,
             venueName: activeSession.venueNameSnapshot,
+            participantCount: activeParticipantCount,
             statusLabel: activeSession.status,
           }
         : null,
@@ -50,7 +56,10 @@ export class DashboardController {
 }
 
 @Module({
-  imports: [AuthModule, TypeOrmModule.forFeature([PlayerEntity, GameSessionEntity])],
+  imports: [
+    AuthModule,
+    TypeOrmModule.forFeature([PlayerEntity, GameSessionEntity, SessionPlayerEntity]),
+  ],
   controllers: [DashboardController],
 })
 export class DashboardModule {}

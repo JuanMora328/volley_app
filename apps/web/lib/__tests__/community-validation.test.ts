@@ -26,7 +26,7 @@ describe('formularios de comunidad', () => {
         .success,
     ).toBe(false);
   });
-  it('formatea valores COP con puntos de miles sin enviar decimales', () => {
+  it('formatea valores COP enteros con puntos de miles', () => {
     expect(formatCopInput(120000)).toBe('120.000');
     expect(parseCopInput('1.250.000')).toBe(1250000);
   });

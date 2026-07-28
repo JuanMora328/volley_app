@@ -93,9 +93,9 @@ export class PlayersService {
     if (query.search) qb.andWhere('player.name ILIKE :search', { search: `%${query.search}%` });
     if (query.status !== RecordStatus.ALL)
       qb.andWhere('player.active = :active', { active: query.status === RecordStatus.ACTIVE });
-    qb.orderBy(`player.${query.sortBy}`, query.sortOrder)
-      .skip((query.page - 1) * query.limit)
-      .take(query.limit);
+    qb.orderBy(`player.${query.sortBy}`, query.sortOrder);
+    if (query.sortBy === 'defaultLevel') qb.addOrderBy('player.name', 'ASC');
+    qb.skip((query.page - 1) * query.limit).take(query.limit);
     const [items, total] = await qb.getManyAndCount();
     return {
       items,
