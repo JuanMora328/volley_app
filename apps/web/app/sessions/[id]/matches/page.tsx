@@ -1,6 +1,16 @@
 'use client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { History, Loader2, Minus, Plus, RotateCcw, Shuffle, Trophy } from 'lucide-react';
+import {
+  ArrowLeft,
+  Flag,
+  History,
+  Loader2,
+  Minus,
+  Plus,
+  RotateCcw,
+  Shuffle,
+  Trophy,
+} from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -289,12 +299,41 @@ export default function MatchControlPage() {
             </div>
           ))}
         </div>
-        <Link
-          href={`/sessions/${id}`}
-          className="mt-4 inline-block text-sm font-bold text-secondary"
-        >
-          Volver a la jornada
-        </Link>
+      </section>
+      <section className="card space-y-3">
+        <h2 className="text-xl font-black">Acciones de la jornada</h2>
+        <p className="text-sm text-slate-600">
+          {active
+            ? 'Registra el resultado del partido activo antes de iniciar la finalización.'
+            : 'Puedes volver al detalle o preparar el campeón, los costos y los pagos.'}
+        </p>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <Link
+            href={`/sessions/${id}`}
+            className="btn-secondary inline-flex w-full items-center justify-center gap-2 text-center shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+          >
+            <ArrowLeft size={19} />
+            Volver a la jornada
+          </Link>
+          {active ? (
+            <span
+              aria-disabled="true"
+              className="btn inline-flex w-full cursor-not-allowed items-center justify-center gap-2 bg-slate-300 text-slate-600 shadow-none"
+              title="Primero registra el resultado del partido activo"
+            >
+              <Flag size={19} />
+              Finalizar jornada
+            </span>
+          ) : (
+            <Link
+              href={`/sessions/${id}/settlement`}
+              className="btn inline-flex w-full items-center justify-center gap-2 text-center shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl"
+            >
+              <Flag size={19} />
+              Finalizar jornada
+            </Link>
+          )}
+        </div>
       </section>
       {confirmOpen && active && (
         <ResultConfirmationModal
