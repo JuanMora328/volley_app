@@ -141,12 +141,12 @@ function CurrencyInput({
   onChange(value: string): void;
 }) {
   return (
-    <div className="relative">
-      <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 font-bold text-slate-500">
+    <div className="flex min-h-12 w-full items-stretch overflow-hidden rounded-xl border border-slate-300 bg-white transition focus-within:border-[#0051d5] focus-within:ring-2 focus-within:ring-blue-100 has-[:disabled]:bg-slate-100 has-[:disabled]:text-slate-500">
+      <span className="flex w-10 shrink-0 items-center justify-center border-r border-slate-200 bg-slate-50 font-bold text-slate-500">
         $
       </span>
       <input
-        className="input pl-8 pr-14 text-right font-semibold tabular-nums"
+        className="min-w-0 flex-1 border-0 bg-transparent px-3 py-3 text-right font-semibold tabular-nums outline-none disabled:cursor-not-allowed"
         inputMode="numeric"
         autoComplete="off"
         placeholder="0"
@@ -155,7 +155,7 @@ function CurrencyInput({
         onChange={(event) => onChange(formatCopInput(event.target.value))}
         aria-label="Valor en pesos colombianos"
       />
-      <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">
+      <span className="flex w-14 shrink-0 items-center justify-center border-l border-slate-200 bg-slate-50 text-xs font-bold text-slate-500">
         COP
       </span>
     </div>
