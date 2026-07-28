@@ -7,6 +7,7 @@ import {
 import {
   calculateStandings,
   calculateCourtTotal,
+  calculateGatoradeTotal,
   derivePaymentStatus,
   distributeIntegerAmount,
   GameSessionStatus,
@@ -144,7 +145,9 @@ export class SettlementsService {
         throw new ConflictException('La jornada debe tener una liquidación confirmada');
       if (data.matches.some((match) => match.status === MatchStatus.IN_PROGRESS))
         throw new ConflictException('Finaliza el partido activo antes de cerrar');
-      const expected = data.session.courtPrice + data.session.gatoradePrice;
+      const winnerCount = this.championPlayerIds(data).size;
+      const expected =
+        data.session.courtPrice + this.gatoradeTotal(data.session.gatoradePrice, winnerCount);
       if (data.players.reduce((sum, player) => sum + player.amountDue, 0) !== expected)
         throw new ConflictException('La distribución financiera no coincide con los costos');
       const pending = data.players.reduce(
@@ -218,11 +221,13 @@ export class SettlementsService {
       throw new BadRequestException('La selección contiene participantes externos');
     if (gatoradeIds.some((participantId) => championIds.has(participantId)))
       throw new BadRequestException('El campeón no paga Gatorades');
+    const gatoradeWinnerCount = championIds.size;
+    const gatoradeTotal = this.gatoradeTotal(dto.gatoradePrice, gatoradeWinnerCount);
     let court: Record<string, number>;
     let gatorade: Record<string, number>;
     try {
       court = distributeIntegerAmount(courtPrice, courtIds);
-      gatorade = distributeIntegerAmount(dto.gatoradePrice, gatoradeIds);
+      gatorade = distributeIntegerAmount(gatoradeTotal, gatoradeIds);
     } catch (error) {
       throw new BadRequestException((error as Error).message);
     }
@@ -250,9 +255,11 @@ export class SettlementsService {
       courtDurationMinutes: dto.courtDurationMinutes,
       courtPrice,
       gatoradePrice: dto.gatoradePrice,
-      expectedTotal: courtPrice + dto.gatoradePrice,
+      gatoradeWinnerCount,
+      gatoradeTotal,
+      expectedTotal: courtPrice + gatoradeTotal,
       distributedTotal: distributed,
-      validationMatches: distributed === courtPrice + dto.gatoradePrice,
+      validationMatches: distributed === courtPrice + gatoradeTotal,
       courtPayerCount: courtIds.length,
       gatoradePayerCount: gatoradeIds.length,
       participants,
@@ -274,20 +281,23 @@ export class SettlementsService {
           : (player.paymentStatus.toLowerCase() as 'pending' | 'partial' | 'paid');
       counts[key]++;
     });
+    const gatoradeWinnerCount = this.championPlayerIds(data).size;
+    const gatoradeTotal = data.session.championTeam
+      ? this.gatoradeTotal(data.session.gatoradePrice, gatoradeWinnerCount)
+      : 0;
     return {
       session: this.sessionInfo(data.session),
       champion: data.session.championTeam
         ? { id: data.session.championTeam.id, name: data.session.championTeam.name }
         : null,
       courtPrice: data.session.courtPrice,
-      courtHourlyPrice: data.session.courtHourlyPrice,
-      courtDurationMinutes: data.session.courtDurationMinutes,
+      courtHourlyPrice: data.session.courtHourlyPrice || data.session.courtPrice,
+      courtDurationMinutes: data.session.courtDurationMinutes || 60,
       gatoradePrice: data.session.gatoradePrice,
+      gatoradeWinnerCount,
+      gatoradeTotal,
       expectedTotal: participants.reduce((sum, player) => sum + player.amountDue, 0),
-      paidTotal: participants.reduce(
-        (sum, player) => sum + Math.min(player.amountPaid, player.amountDue),
-        0,
-      ),
+      paidTotal: participants.reduce((sum, player) => sum + player.amountPaid, 0),
       pendingTotal: participants.reduce((sum, player) => sum + player.pendingAmount, 0),
       creditTotal: participants.reduce((sum, player) => sum + player.creditAmount, 0),
       counts,
@@ -373,13 +383,42 @@ export class SettlementsService {
       throw new BadRequestException((error as Error).message);
     }
   }
+  private gatoradeTotal(unitPrice: number, winnerCount: number) {
+    try {
+      return calculateGatoradeTotal(unitPrice, winnerCount);
+    } catch (error) {
+      throw new BadRequestException((error as Error).message);
+    }
+  }
+  private championPlayerIds(data: Awaited<ReturnType<SettlementsService['load']>>) {
+    return new Set(
+      data.links
+        .filter((link) => link.team.id === data.session.championTeam?.id)
+        .map((link) => link.sessionPlayer.id),
+    );
+  }
   private async load(manager: EntityManager, id: string, lock = false) {
-    const session = await manager.findOne(GameSessionEntity, {
-      where: { id },
-      relations: { championTeam: true },
-      ...(lock ? { lock: { mode: 'pessimistic_write' as const } } : {}),
-    });
+    // PostgreSQL no permite FOR UPDATE sobre el lado nullable del LEFT JOIN que
+    // TypeORM genera al cargar championTeam. Bloqueamos exclusivamente la fila
+    // de la jornada y cargamos la relación en una consulta independiente.
+    const session = lock
+      ? await manager
+          .createQueryBuilder(GameSessionEntity, 'session')
+          .where('session.id = :id', { id })
+          .setLock('pessimistic_write')
+          .getOne()
+      : await manager.findOne(GameSessionEntity, {
+          where: { id },
+          relations: { championTeam: true },
+        });
     if (!session) throw new NotFoundException('Jornada no encontrada');
+    if (lock) {
+      session.championTeam = (await manager
+        .createQueryBuilder()
+        .relation(GameSessionEntity, 'championTeam')
+        .of(session)
+        .loadOne<TeamEntity>()) as TeamEntity | null;
+    }
     const teams = await manager.find(TeamEntity, {
       where: { session: { id } },
       order: { name: 'ASC' },

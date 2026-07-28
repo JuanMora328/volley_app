@@ -97,6 +97,16 @@ export function calculateCourtTotal(hourlyPrice: number, durationMinutes: number
     throw new Error('La tarifa no permite un total exacto para esa duración');
   return product / 60;
 }
+
+export function calculateGatoradeTotal(unitPrice: number, winnerCount: number): number {
+  if (!Number.isSafeInteger(unitPrice) || unitPrice < 0)
+    throw new Error('El precio unitario debe ser un entero no negativo');
+  if (!Number.isSafeInteger(winnerCount) || winnerCount <= 0)
+    throw new Error('La cantidad de ganadores debe ser un entero positivo');
+  const total = unitPrice * winnerCount;
+  if (!Number.isSafeInteger(total)) throw new Error('El total de Gatorades no es un entero seguro');
+  return total;
+}
 export interface TeamCandidatePlayer {
   id: string;
   level: number;

@@ -33,3 +33,10 @@ Todas las rutas requieren JWT. `POST /sessions/:id/rotation/draw` (y `redraw`) p
 - `GET /api/sessions/:id/summary`: resumen deportivo y financiero final.
 
 Todos requieren JWT. Los montos son enteros en COP.
+
+La vista previa y la confirmación reciben `courtHourlyPrice`, `courtDurationMinutes`,
+`gatoradePrice` (unitario), `championTeamId` y las inclusiones. El servidor recalcula
+`courtPrice = courtHourlyPrice × courtDurationMinutes / 60` y devuelve
+`gatoradeWinnerCount` y `gatoradeTotal = gatoradePrice × gatoradeWinnerCount`; nunca confía
+en totales del cliente. La vista previa no persiste. La confirmación es transaccional y conserva
+los pagos existentes. `PATCH payments` continúa disponible después de `FINISHED`.

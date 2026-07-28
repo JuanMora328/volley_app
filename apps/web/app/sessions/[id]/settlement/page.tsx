@@ -35,6 +35,12 @@ type Preview = {
   validationMatches: boolean;
   courtPayerCount: number;
   gatoradePayerCount: number;
+  courtHourlyPrice: number;
+  courtDurationMinutes: number;
+  courtPrice: number;
+  gatoradePrice: number;
+  gatoradeWinnerCount: number;
+  gatoradeTotal: number;
   warnings: string[];
   participants: Array<{
     id: string;
@@ -51,6 +57,7 @@ export default function SettlementPage() {
   const [courtIds, setCourtIds] = useState<string[]>([]);
   const [gatoradeIds, setGatoradeIds] = useState<string[]>([]);
   const [preview, setPreview] = useState<Preview | null>(null);
+  const [confirmationOpen, setConfirmationOpen] = useState(false);
   const [error, setError] = useState('');
   const [courtPriceDisplay, setCourtPriceDisplay] = useState('0');
   const [gatoradePriceDisplay, setGatoradePriceDisplay] = useState('0');
@@ -113,27 +120,24 @@ export default function SettlementPage() {
     setError('');
     setPreview(await request.mutateAsync({ values, confirm: false }));
   });
-  const confirm = validated(async (values) => {
-    if (
-      !preview ||
-      !window.confirm(
-        setup.data?.session.status === 'SETTLEMENT'
-          ? '¿Reemplazar la liquidación actual conservando sus pagos?'
-          : '¿Confirmar esta liquidación?',
-      )
-    )
-      return;
-    await request.mutateAsync({ values, confirm: true });
-    router.push(`/sessions/${id}/payments`);
+  const confirmSettlement = validated(async (values) => {
+    if (!preview) return;
+    try {
+      await request.mutateAsync({ values, confirm: true });
+      setConfirmationOpen(false);
+      router.push(`/sessions/${id}/payments`);
+    } catch {
+      // onError muestra el mensaje de la API y el modal permanece abierto.
+    }
   });
   if (setup.isLoading)
     return (
       <div className="card">
-        <Loader2 className="animate-spin" /> Cargando liquidación…
+        <Loader2 className="animate-spin" /> Preparando la finalización…
       </div>
     );
   if (!setup.data)
-    return <div className="card text-red-700">No se pudo preparar la liquidación.</div>;
+    return <div className="card text-red-700">No se pudo preparar la finalización.</div>;
   const championPlayers = new Set(
     setup.data.teams.find((team) => team.id === champion)?.players.map((p) => p.id) ?? [],
   );
@@ -221,11 +225,17 @@ export default function SettlementPage() {
             ))}
           </select>
           <small className="mt-2 block font-normal text-slate-500">
-            Total cancha: {money((courtHourlyPrice * courtDurationMinutes) / 60)}
+            Total cancha:{' '}
+            {money(
+              Number.isSafeInteger(courtHourlyPrice * courtDurationMinutes) &&
+                (courtHourlyPrice * courtDurationMinutes) % 60 === 0
+                ? (courtHourlyPrice * courtDurationMinutes) / 60
+                : 0,
+            )}
           </small>
         </label>
         <label className="card font-bold">
-          Valor Gatorades (COP)
+          Valor por Gatorade (COP)
           <input
             className="input mt-2"
             inputMode="numeric"
@@ -237,6 +247,10 @@ export default function SettlementPage() {
               setPreview(null);
             }}
           />
+          <small className="mt-2 block font-normal text-slate-500">
+            Ganadores: {championPlayers.size} · Total:{' '}
+            {money(form.watch('gatoradePrice') * championPlayers.size)}
+          </small>
         </label>
       </form>
       <section className="card">
@@ -258,11 +272,12 @@ export default function SettlementPage() {
                   type="checkbox"
                   checked={courtIds.includes(player.id)}
                   onChange={() =>
-                    setCourtIds((ids) =>
-                      ids.includes(player.id)
+                    setCourtIds((ids) => {
+                      setPreview(null);
+                      return ids.includes(player.id)
                         ? ids.filter((x) => x !== player.id)
-                        : [...ids, player.id],
-                    )
+                        : [...ids, player.id];
+                    })
                   }
                 />
               </label>
@@ -273,11 +288,12 @@ export default function SettlementPage() {
                   disabled={championPlayers.has(player.id)}
                   checked={gatoradeIds.includes(player.id)}
                   onChange={() =>
-                    setGatoradeIds((ids) =>
-                      ids.includes(player.id)
+                    setGatoradeIds((ids) => {
+                      setPreview(null);
+                      return ids.includes(player.id)
                         ? ids.filter((x) => x !== player.id)
-                        : [...ids, player.id],
-                    )
+                        : [...ids, player.id];
+                    })
                   }
                 />
               </label>
@@ -314,14 +330,103 @@ export default function SettlementPage() {
           <p className={preview.validationMatches ? 'text-green-700' : 'text-red-700'}>
             Validación: {money(preview.distributedTotal)} de {money(preview.expectedTotal)}
           </p>
+          <p className="rounded-xl bg-blue-50 p-3 text-sm text-blue-900">
+            Gatorades: {money(preview.gatoradePrice)} por unidad × {preview.gatoradeWinnerCount}{' '}
+            ganadores = {money(preview.gatoradeTotal)}.
+          </p>
           <button
             className="btn w-full bg-secondary text-white shadow-lg hover:bg-blue-700"
-            onClick={confirm}
+            disabled={request.isPending}
+            onClick={() => setConfirmationOpen(true)}
           >
             Continuar para finalizar jornada
           </button>
         </section>
       )}
+      {confirmationOpen && preview && (
+        <SettlementConfirmationModal
+          preview={preview}
+          replacing={setup.data.session.status === 'SETTLEMENT'}
+          pending={request.isPending}
+          error={error}
+          onCancel={() => !request.isPending && setConfirmationOpen(false)}
+          onConfirm={() => void confirmSettlement()}
+        />
+      )}
+    </div>
+  );
+}
+
+function SettlementConfirmationModal({
+  preview,
+  replacing,
+  pending,
+  error,
+  onCancel,
+  onConfirm,
+}: {
+  preview: Preview;
+  replacing: boolean;
+  pending: boolean;
+  error: string;
+  onCancel: () => void;
+  onConfirm: () => void;
+}) {
+  return (
+    <div
+      className="fixed inset-0 z-50 grid place-items-end bg-slate-950/60 p-4 backdrop-blur-sm sm:place-items-center"
+      role="presentation"
+      onMouseDown={(event) => event.target === event.currentTarget && onCancel()}
+    >
+      <section
+        aria-describedby="settlement-confirmation-description"
+        aria-labelledby="settlement-confirmation-title"
+        aria-modal="true"
+        className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl"
+        role="dialog"
+      >
+        <div className="mx-auto grid size-16 place-items-center rounded-full bg-blue-100 text-secondary">
+          <CheckCircle2 size={34} />
+        </div>
+        <p className="mt-4 text-center text-xs font-black uppercase tracking-widest text-secondary">
+          Confirmación financiera
+        </p>
+        <h2 className="mt-1 text-center text-2xl font-black" id="settlement-confirmation-title">
+          {replacing ? 'Reemplazar distribución' : 'Finalizar la preparación'}
+        </h2>
+        <p className="mt-3 text-center text-slate-600" id="settlement-confirmation-description">
+          {replacing
+            ? 'Se recalcularán los valores y se conservarán todos los pagos registrados.'
+            : 'Se guardarán el campeón, los costos y la distribución exacta antes de continuar a pagos.'}
+        </p>
+        <div className="my-5 space-y-2 rounded-2xl bg-slate-100 p-4 text-sm">
+          <div className="flex justify-between gap-3">
+            <span>Campeón</span>
+            <b>{preview.champion.name}</b>
+          </div>
+          <div className="flex justify-between gap-3">
+            <span>Cancha</span>
+            <b>{money(preview.courtPrice)}</b>
+          </div>
+          <div className="flex justify-between gap-3">
+            <span>Gatorades</span>
+            <b>{money(preview.gatoradeTotal)}</b>
+          </div>
+          <div className="flex justify-between gap-3 border-t border-slate-300 pt-2 text-base">
+            <span>Total distribuido</span>
+            <b>{money(preview.distributedTotal)}</b>
+          </div>
+        </div>
+        {error && <p className="mb-4 rounded-xl bg-red-50 p-3 text-sm text-red-700">{error}</p>}
+        <div className="grid grid-cols-2 gap-3">
+          <button className="btn-secondary" disabled={pending} onClick={onCancel}>
+            Volver
+          </button>
+          <button className="btn" disabled={pending} onClick={onConfirm}>
+            {pending ? 'Confirmando…' : 'Aceptar y continuar'}
+          </button>
+        </div>
+      </section>
     </div>
   );
 }

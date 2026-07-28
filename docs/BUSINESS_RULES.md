@@ -26,3 +26,7 @@ El sorteo es reemplazable hasta iniciar el primer partido. El ganador permanece,
 - El residuo se asigna determinísticamente por identificador ordenado, por lo que la suma conserva cada peso.
 - La confirmación conserva pagos previos; un pago superior al nuevo valor produce crédito, nunca deuda negativa.
 - Una jornada puede cerrarse con deuda mediante confirmación explícita. Después del cierre no se recalcula, pero los pagos siguen editables.
+- `courtHourlyPrice` es una tarifa por una hora, `courtDurationMinutes` usa intervalos de 30 minutos y `courtPrice` es el total entero recalculado (`tarifa × minutos / 60`).
+- `gatoradePrice` es el precio unitario. `gatoradeWinnerCount` es la cantidad de jugadores campeones y `gatoradeTotal` es su producto entero. Los campeones reciben una unidad, pero nunca pagan Gatorade.
+- La validación financiera compara la suma distribuida con `courtPrice + gatoradeTotal`, no con el precio unitario.
+- Los estados de pago, pendientes y créditos se derivan. Pagos parciales, sobrepagos, correcciones y reinicios a cero se admiten aun después de finalizar.

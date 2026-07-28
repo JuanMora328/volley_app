@@ -124,7 +124,7 @@ export default function SessionDetailPage() {
       </div>
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Metric label="Cancha" value={money(s.courtPrice)} />
-        <Metric label="Gatorades" value={money(s.gatoradePrice)} />
+        <Metric label="Gatorade por unidad" value={money(s.gatoradePrice)} />
         <Metric label="Participantes" value={String(s.participants.length)} />
         <Metric label="Equipos / puntaje" value={`${s.teamCount} / ${s.defaultTargetScore}`} />
       </section>

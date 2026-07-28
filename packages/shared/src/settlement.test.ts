@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { calculateCourtTotal, derivePaymentStatus, distributeIntegerAmount } from './index.js';
+import {
+  calculateCourtTotal,
+  calculateGatoradeTotal,
+  derivePaymentStatus,
+  distributeIntegerAmount,
+} from './index.js';
 
 describe('distributeIntegerAmount', () => {
   it.each([
@@ -52,5 +57,25 @@ describe('calculateCourtTotal', () => {
   });
   it('rechaza duraciones fuera de intervalos de media hora', () => {
     expect(() => calculateCourtTotal(70000, 75)).toThrow();
+  });
+});
+
+describe('calculateGatoradeTotal', () => {
+  it('multiplica el precio unitario por los jugadores campeones', () => {
+    expect(calculateGatoradeTotal(5000, 4)).toBe(20000);
+  });
+  it('rechaza precio negativo y cantidades inválidas', () => {
+    expect(() => calculateGatoradeTotal(-1, 4)).toThrow();
+    expect(() => calculateGatoradeTotal(5000, 0)).toThrow();
+    expect(() => calculateGatoradeTotal(5000, 1.5)).toThrow();
+  });
+  it('permite validar el total distribuido de cancha más bebidas', () => {
+    const court = calculateCourtTotal(70000, 90);
+    const drinks = calculateGatoradeTotal(5000, 4);
+    const distributed = [
+      distributeIntegerAmount(court, ['a', 'b', 'c', 'd']),
+      distributeIntegerAmount(drinks, ['c', 'd']),
+    ].flatMap(Object.values);
+    expect(distributed.reduce((sum, amount) => sum + amount, 0)).toBe(court + drinks);
   });
 });

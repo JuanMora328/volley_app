@@ -22,3 +22,13 @@ Migración reversible: `1770000000000-CreateSessionsAndTeams.ts`.
 `game_sessions.settled_at` registra la confirmación de la liquidación y `finished_at` el cierre definitivo. `session_players` conserva inclusiones, componentes de cancha/Gatorades, valor debido, valor pagado, método y fecha. El estado, pendiente y crédito son derivados y no se duplican en la base de datos.
 
 `game_sessions.court_hourly_price` conserva la tarifa por hora y `court_duration_minutes` el tiempo jugado en intervalos de 30 minutos. `court_price` conserva el costo total confirmado (`tarifa × minutos / 60`).
+
+`game_sessions.gatorade_price` persiste exclusivamente el precio de una unidad. No se persisten
+`gatoradeWinnerCount` ni `gatoradeTotal`: se derivan del número de integrantes del
+`champion_team_id` y de su precio unitario. El total se reparte entre perdedores incluidos; los
+campeones quedan excluidos. La migración reversible inicializa jornadas antiguas con
+`court_hourly_price = court_price` y 60 minutos para evitar valores indefinidos.
+
+`settled_at` identifica el snapshot financiero confirmado y `finished_at` el cierre definitivo,
+que puede realizarse con deuda tras confirmación explícita. El cierre bloquea redistribuciones,
+no correcciones posteriores de `amount_paid`, `payment_method` y `paid_at`.
