@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import {
   CalendarCheck,
   CalendarClock,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
   CircleDollarSign,
@@ -335,10 +336,12 @@ function SearchInput({
   onChange: (v: string) => void;
 }) {
   return (
-    <label className="relative">
-      <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={17} />
+    <label className="flex min-h-12 w-full items-center overflow-hidden rounded-xl border border-slate-300 bg-white transition focus-within:border-[#0051d5] focus-within:ring-2 focus-within:ring-blue-100">
+      <span className="grid h-full w-11 shrink-0 place-items-center text-slate-400">
+        <Search size={18} aria-hidden="true" />
+      </span>
       <input
-        className="input pl-10"
+        className="min-w-0 flex-1 border-0 bg-transparent py-3 pr-3 text-sm outline-none placeholder:text-slate-400"
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -356,13 +359,22 @@ function Select({
   options: string[][];
 }) {
   return (
-    <select className="input" value={value} onChange={(e) => onChange(e.target.value)}>
-      {options.map(([v, l]) => (
-        <option value={v} key={v}>
-          {l}
-        </option>
-      ))}
-    </select>
+    <label className="relative block">
+      <select
+        className="min-h-12 w-full cursor-pointer appearance-none rounded-xl border border-slate-300 bg-gradient-to-b from-white to-slate-50 py-3 pl-4 pr-11 text-sm font-semibold text-slate-700 outline-none transition hover:border-slate-400 focus:border-[#0051d5] focus:ring-2 focus:ring-blue-100"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+      >
+        {options.map(([v, l]) => (
+          <option value={v} key={v}>
+            {l}
+          </option>
+        ))}
+      </select>
+      <span className="pointer-events-none absolute right-3 top-1/2 grid h-7 w-7 -translate-y-1/2 place-items-center rounded-lg bg-blue-50 text-blue-700">
+        <ChevronDown size={16} aria-hidden="true" />
+      </span>
+    </label>
   );
 }
 function HistorySkeleton() {
