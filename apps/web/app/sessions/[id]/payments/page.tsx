@@ -165,7 +165,7 @@ export default function PaymentsPage() {
                 onChange={(e) => setAmount(parseInteger(e.target.value))}
               />
               <small className="mt-1 block font-normal text-slate-500">
-                Valor entero en COP con separadores de miles.
+                Valor en COP con dos unidades decimales.
               </small>
             </label>
             <div className="my-3 grid grid-cols-2 gap-2">
@@ -228,13 +228,15 @@ const paymentBadgeClass: Record<FinancialPlayer['paymentStatus'], string> = {
 };
 
 function parseInteger(value: string) {
-  return Number(value.replace(/\D/g, '')) || 0;
+  const normalized = value.replace(/\./g, '').replace(',', '.');
+  return Math.round(Number(normalized.replace(/[^\d.]/g, ''))) || 0;
 }
 
 function formatInteger(value: number) {
-  return new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(
-    Number.isFinite(value) ? value : 0,
-  );
+  return new Intl.NumberFormat('es-CO', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(Number.isFinite(value) ? value : 0);
 }
 function Metric({ label, value, danger }: { label: string; value: string; danger?: boolean }) {
   return (

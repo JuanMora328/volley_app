@@ -1,12 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect } from 'react';
+import { Settings2, ShieldCheck } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { api } from '../../lib/api';
 import { formatCopInput, parseCopInput } from '../../lib/community';
+import { ConfirmDialog } from '../../components/ui/confirm-dialog';
 export default function Settings() {
+  const [pendingValues, setPendingValues] = useState<any>(null);
+  const [saveError, setSaveError] = useState('');
   const qc = useQueryClient();
   const q = useQuery({ queryKey: ['settings'], queryFn: () => api<any>('/settings') });
   const me = useQuery({ queryKey: ['me'], queryFn: () => api<any>('/auth/me') });
@@ -41,26 +45,45 @@ export default function Settings() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['settings'] });
       toast.success('Ajustes guardados');
+      setPendingValues(null);
     },
-    onError: () => toast.error('No pudimos guardar los ajustes'),
+    onError: () => {
+      setSaveError('No pudimos guardar los ajustes. Revisa tu conexión e inténtalo otra vez.');
+      toast.error('No pudimos guardar los ajustes');
+    },
   });
   if (q.isLoading) return <div className="card animate-pulse">Cargando ajustes...</div>;
   return (
-    <div className="mx-auto max-w-3xl space-y-5">
-      <header>
-        <h1 className="text-3xl font-bold">Ajustes y reglas</h1>
-        <p className="text-slate-500">Los cambios solo se aplican a jornadas nuevas.</p>
+    <div className="mx-auto max-w-4xl space-y-6 pb-6">
+      <header className="relative overflow-hidden rounded-3xl bg-[#091426] p-6 text-white shadow-xl md:p-8">
+        <Settings2 className="absolute -bottom-5 -right-3 size-32 text-white/5" />
+        <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-lime-300">
+          Administración
+        </p>
+        <h1 className="mt-2 text-3xl font-extrabold tracking-tight md:text-4xl">
+          Ajustes y reglas
+        </h1>
+        <p className="mt-2 max-w-xl text-blue-100">
+          Define los valores iniciales con los que se prepararán las próximas jornadas.
+        </p>
       </header>
       {!canEdit && (
-        <div className="card bg-amber-50">
-          Tu rol puede consultar esta configuración, pero solo un administrador puede editarla.
+        <div
+          className="flex gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-amber-950"
+          role="status"
+        >
+          <ShieldCheck className="shrink-0" />
+          <p>
+            Tu rol puede consultar esta configuración, pero solo un administrador puede editarla.
+          </p>
         </div>
       )}
       <form
         className="card grid gap-4 sm:grid-cols-2"
-        onSubmit={form.handleSubmit(
-          (v) => confirm('¿Guardar estos valores para jornadas nuevas?') && save.mutate(v),
-        )}
+        onSubmit={form.handleSubmit((v) => {
+          setSaveError('');
+          setPendingValues(v);
+        })}
       >
         <Field label="Organización">
           <input
@@ -115,11 +138,16 @@ export default function Settings() {
           <CurrencyInput
             disabled={!canEdit}
             value={form.watch('defaultGatoradePrice')}
-            onChange={(value) => form.setValue('defaultGatoradePrice', value, { shouldDirty: true })}
+            onChange={(value) =>
+              form.setValue('defaultGatoradePrice', value, { shouldDirty: true })
+            }
           />
         </Field>
         {canEdit && (
-          <button className="btn sm:col-span-2" disabled={save.isPending}>
+          <button
+            className="btn mt-2 sm:col-span-2"
+            disabled={save.isPending || !form.formState.isDirty}
+          >
             Guardar ajustes
           </button>
         )}
@@ -128,6 +156,16 @@ export default function Settings() {
         <Rules title="Reglas de juego" rules={q.data.fixedRules.game} />
         <Rules title="Reglas de pagos" rules={q.data.fixedRules.payments} />
       </div>
+      <ConfirmDialog
+        confirmLabel="Guardar configuración"
+        description="Estos valores serán los predeterminados para las jornadas que se creen en adelante. Las jornadas existentes no cambiarán."
+        error={saveError}
+        onConfirm={() => pendingValues && save.mutate(pendingValues)}
+        onOpenChange={(open) => !open && !save.isPending && setPendingValues(null)}
+        open={Boolean(pendingValues)}
+        pending={save.isPending}
+        title="¿Guardar nuevos ajustes?"
+      />
     </div>
   );
 }

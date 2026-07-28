@@ -44,15 +44,20 @@ export const venueSchema = z.object({
 export const cop = new Intl.NumberFormat('es-CO', {
   style: 'currency',
   currency: 'COP',
-  maximumFractionDigits: 0,
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
 });
 
 export function parseCopInput(value: string): number {
-  const digits = value.replace(/\D/g, '');
-  return digits ? Number(digits) : 0;
+  const normalized = value.replace(/\s|\$/g, '').replace(/\./g, '').replace(',', '.');
+  const amount = Number(normalized.replace(/[^\d.]/g, ''));
+  return Number.isFinite(amount) ? Math.round(amount) : 0;
 }
 
 export function formatCopInput(value: string | number | undefined): string {
   const amount = typeof value === 'number' ? value : parseCopInput(value ?? '');
-  return new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(amount);
+  return new Intl.NumberFormat('es-CO', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(amount);
 }

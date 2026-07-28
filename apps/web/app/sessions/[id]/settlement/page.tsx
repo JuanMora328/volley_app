@@ -432,11 +432,15 @@ function SettlementConfirmationModal({
 }
 
 function parseInteger(value: string) {
-  return Number(value.replace(/\D/g, '')) || 0;
+  const normalized = value.replace(/\./g, '').replace(',', '.');
+  return Math.round(Number(normalized.replace(/[^\d.]/g, ''))) || 0;
 }
 
 function formatInteger(value: number) {
-  return new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(value);
+  return new Intl.NumberFormat('es-CO', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(value);
 }
 
 function durationLabel(minutes: number) {

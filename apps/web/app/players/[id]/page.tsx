@@ -28,7 +28,8 @@ const money = (v: number) =>
   new Intl.NumberFormat('es-CO', {
     style: 'currency',
     currency: 'COP',
-    maximumFractionDigits: 0,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   }).format(v || 0);
 const sessionLabel: Record<string, string> = {
   FINISHED: 'Finalizada',
@@ -224,7 +225,7 @@ function Participation({ item: x }: { item: any }) {
               {sessionLabel[x.status] || x.status}
             </span>
           </div>
-          <div className="mt-3 grid grid-cols-2 gap-2 text-sm sm:grid-cols-4">
+          <div className="mt-3 grid grid-cols-1 gap-2 text-sm min-[380px]:grid-cols-2 lg:grid-cols-4">
             <Info label="Equipo" value={x.teamName || 'Sin equipo'} />
             <Info label="Nivel histórico" value={`Nivel ${x.levelSnapshot}`} />
             <Info label="Resultado" value={`${x.wins} V · ${x.losses} D`} />
@@ -296,9 +297,9 @@ function Metric({
 }
 function Info({ label, value }: { label: string; value: string }) {
   return (
-    <div>
+    <div className="min-w-0 rounded-xl bg-slate-50 px-3 py-2">
       <small className="block text-slate-400">{label}</small>
-      <b className="block truncate text-slate-700">{value}</b>
+      <b className="block break-words leading-5 text-slate-700">{value}</b>
     </div>
   );
 }
