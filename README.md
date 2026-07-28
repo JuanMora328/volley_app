@@ -204,14 +204,16 @@ backups.
 
 ## Despliegue del frontend en Vercel
 
-El repositorio incluye `vercel.json` para que Vercel detecte Next.js desde la raíz del monorepo,
+El repositorio incluye `vercel.json` para que Vercel detecte Next.js dentro del monorepo,
 construya `@volleyflow/web` y publique su salida `.next`. De esta forma, las rutas del App Router
 (incluidas las rutas dinámicas) siguen siendo atendidas por Next.js al abrirlas directamente o al
 refrescar el navegador, en lugar de resolverse como archivos estáticos inexistentes.
 
 Al importar el repositorio en Vercel:
 
-1. Mantén **Root Directory** en la raíz del repositorio (`.`).
+1. Configura **Root Directory** como `apps/web`. La ruta de salida `.next` es relativa a ese
+   directorio; no uses `apps/web/.next` porque Vercel intentaría resolver
+   `apps/web/apps/web/.next`.
 2. Configura `NEXT_PUBLIC_API_URL` como variable de entorno del proyecto antes de construir.
 3. No agregues un rewrite global hacia `index.html`; este frontend usa Next.js, no una exportación
    SPA estática.
