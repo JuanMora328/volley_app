@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
 import { api } from '../../../../lib/api';
+import { FullScreenLoader } from '../../../../components/ui/full-screen-loader';
 import { money } from '../../../../lib/sessions';
 import { FinancialPlayer, PaymentSummary, statusLabel } from '../../../../lib/settlements';
 export default function PaymentsPage() {
@@ -37,12 +38,11 @@ export default function PaymentsPage() {
     },
     onError: (e: Error) => setError(e.message),
   });
-  if (!query.data)
+  if (query.isLoading)
     return (
-      <div className="card">
-        {query.isLoading ? 'Cargando pagos…' : 'No se pudieron cargar los pagos.'}
-      </div>
+      <FullScreenLoader title="Cargando pagos" description="Calculando saldos y estados de pago…" />
     );
+  if (!query.data) return <div className="card">No se pudieron cargar los pagos.</div>;
   const data = query.data;
   const players = data.participants.filter(
     (p) =>

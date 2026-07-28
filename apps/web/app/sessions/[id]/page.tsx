@@ -5,7 +5,6 @@ import {
   Calendar,
   CreditCard,
   LayoutDashboard,
-  Loader2,
   MapPin,
   Shield,
   Trophy,
@@ -20,6 +19,7 @@ import { useState } from 'react';
 import { api } from '../../../lib/api';
 import { money, SessionDetail, sessionStatusLabel } from '../../../lib/sessions';
 import { ConfirmDialog } from '../../../components/ui/confirm-dialog';
+import { FullScreenLoader } from '../../../components/ui/full-screen-loader';
 export default function SessionDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
@@ -56,9 +56,10 @@ export default function SessionDetailPage() {
   });
   if (query.isLoading)
     return (
-      <div className="card animate-pulse">
-        <Loader2 className="animate-spin" /> Cargando jornada...
-      </div>
+      <FullScreenLoader
+        title="Cargando jornada"
+        description="Preparando participantes, equipos y costos…"
+      />
     );
   if (query.isError || !query.data)
     return <div className="card text-red-700">No pudimos cargar la jornada.</div>;

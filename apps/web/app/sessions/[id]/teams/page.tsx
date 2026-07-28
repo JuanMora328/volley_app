@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { api } from '../../../../lib/api';
 import { SessionDetail, SessionTeam } from '../../../../lib/sessions';
+import { FullScreenLoader } from '../../../../components/ui/full-screen-loader';
 export default function TeamsPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
@@ -63,11 +64,10 @@ export default function TeamsPage() {
   });
   if (query.isLoading)
     return (
-      <div className="space-y-4">
-        {[1, 2, 3].map((n) => (
-          <div className="card h-32 animate-pulse" key={n} />
-        ))}
-      </div>
+      <FullScreenLoader
+        title="Cargando equipos"
+        description="Preparando la distribución de jugadores…"
+      />
     );
   if (!query.data) return <div className="card text-red-700">No pudimos cargar la jornada.</div>;
   const s = query.data;

@@ -20,6 +20,7 @@ import { useState } from 'react';
 import { api } from '../../lib/api';
 import { formatDateEs } from '../../lib/presentation';
 import { sessionStatusLabel } from '../../lib/sessions';
+import { FullScreenLoader } from '../../components/ui/full-screen-loader';
 const money = (v: number) =>
   new Intl.NumberFormat('es-CO', {
     style: 'currency',
@@ -197,7 +198,10 @@ export default function SessionsPage() {
         </div>
       </section>
       {q.isLoading ? (
-        <HistorySkeleton />
+        <FullScreenLoader
+          title="Cargando jornadas"
+          description="Consultando el historial y sus estados…"
+        />
       ) : q.isError ? (
         <div className="rounded-3xl border border-red-200 bg-red-50 p-8 text-center text-red-800">
           <b>No pudimos cargar el historial</b>
@@ -375,14 +379,5 @@ function Select({
         <ChevronDown size={16} aria-hidden="true" />
       </span>
     </label>
-  );
-}
-function HistorySkeleton() {
-  return (
-    <div className="grid gap-4 lg:grid-cols-2" aria-label="Cargando jornadas">
-      {Array.from({ length: 4 }, (_, i) => (
-        <div className="h-64 animate-pulse rounded-3xl bg-slate-200" key={i} />
-      ))}
-    </div>
   );
 }

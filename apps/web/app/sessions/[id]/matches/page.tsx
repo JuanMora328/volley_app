@@ -1,21 +1,12 @@
 'use client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-  ArrowLeft,
-  Flag,
-  History,
-  Loader2,
-  Minus,
-  Plus,
-  RotateCcw,
-  Shuffle,
-  Trophy,
-} from 'lucide-react';
+import { ArrowLeft, Flag, History, Minus, Plus, RotateCcw, Shuffle, Trophy } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { api } from '../../../../lib/api';
 import { ConfirmDialog } from '../../../../components/ui/confirm-dialog';
+import { FullScreenLoader } from '../../../../components/ui/full-screen-loader';
 type Team = { id: string; name: string; players?: Array<{ playerNameSnapshot: string }> };
 type Match = {
   id: string;
@@ -127,10 +118,10 @@ export default function MatchControlPage() {
   };
   if (rotation.isLoading)
     return (
-      <div className="card flex gap-2">
-        <Loader2 className="animate-spin" />
-        Cargando competición…
-      </div>
+      <FullScreenLoader
+        title="Cargando competición"
+        description="Preparando rotación, marcador y posiciones…"
+      />
     );
   return (
     <div className="mx-auto max-w-4xl space-y-5 pb-24">

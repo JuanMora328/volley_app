@@ -19,6 +19,7 @@ import {
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { api } from '../../../lib/api';
+import { FullScreenLoader } from '../../../components/ui/full-screen-loader';
 import {
   formatDateEs,
   paymentPresentation,
@@ -52,7 +53,13 @@ export default function PlayerDetail() {
     queryKey: ['player-profile', id],
     queryFn: () => api<any>(`/players/${id}/profile`),
   });
-  if (q.isLoading) return <ProfileSkeleton />;
+  if (q.isLoading)
+    return (
+      <FullScreenLoader
+        title="Cargando perfil"
+        description="Consultando el historial del jugador…"
+      />
+    );
   if (q.isError)
     return (
       <div className="mx-auto max-w-5xl rounded-3xl border border-red-200 bg-red-50 p-8 text-center text-red-800">
@@ -304,17 +311,4 @@ function Info({ label, value }: { label: string; value: string }) {
 }
 function signed(v: number) {
   return v > 0 ? `+${v}` : String(v);
-}
-function ProfileSkeleton() {
-  return (
-    <div className="mx-auto max-w-5xl space-y-4" aria-label="Cargando perfil">
-      <div className="h-11 w-40 animate-pulse rounded-xl bg-slate-200" />
-      <div className="h-52 animate-pulse rounded-3xl bg-slate-200" />
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-6">
-        {Array.from({ length: 6 }, (_, i) => (
-          <div className="h-28 animate-pulse rounded-2xl bg-slate-200" key={i} />
-        ))}
-      </div>
-    </div>
-  );
 }

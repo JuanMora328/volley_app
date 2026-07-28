@@ -8,6 +8,7 @@ import { api } from '../../../../lib/api';
 import { money } from '../../../../lib/sessions';
 import { PaymentSummary } from '../../../../lib/settlements';
 import { ConfirmDialog } from '../../../../components/ui/confirm-dialog';
+import { FullScreenLoader } from '../../../../components/ui/full-screen-loader';
 type Summary = PaymentSummary & {
   championMembers: string[];
   standings: Array<{
@@ -48,12 +49,14 @@ export default function SummaryPage() {
     },
     onError: (error: Error) => setFinishError(error.message || 'No pudimos finalizar la jornada.'),
   });
-  if (!query.data)
+  if (query.isLoading)
     return (
-      <div className="card">
-        {query.isLoading ? 'Cargando resumen…' : 'La jornada todavía no está liquidada.'}
-      </div>
+      <FullScreenLoader
+        title="Cargando resumen"
+        description="Preparando resultados y liquidación final…"
+      />
     );
+  if (!query.data) return <div className="card">La jornada todavía no está liquidada.</div>;
   const s = query.data;
   const debtors = s.participants.filter((p) => p.pendingAmount > 0);
   return (

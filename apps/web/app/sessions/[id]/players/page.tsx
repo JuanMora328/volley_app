@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { api } from '../../../../lib/api';
 import { SessionDetail } from '../../../../lib/sessions';
+import { FullScreenLoader } from '../../../../components/ui/full-screen-loader';
 
 export default function SessionPlayersPage() {
   const { id } = useParams<{ id: string }>();
@@ -16,14 +17,10 @@ export default function SessionPlayersPage() {
 
   if (query.isLoading) {
     return (
-      <div className="mx-auto max-w-4xl space-y-4" aria-label="Cargando participantes">
-        <div className="h-32 animate-pulse rounded-3xl bg-slate-200" />
-        <div className="grid gap-3 sm:grid-cols-2">
-          {[1, 2, 3, 4].map((item) => (
-            <div className="h-28 animate-pulse rounded-2xl bg-slate-200" key={item} />
-          ))}
-        </div>
-      </div>
+      <FullScreenLoader
+        title="Cargando participantes"
+        description="Consultando los jugadores de la jornada…"
+      />
     );
   }
   if (!query.data) {

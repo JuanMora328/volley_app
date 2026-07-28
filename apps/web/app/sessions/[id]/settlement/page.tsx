@@ -1,6 +1,6 @@
 'use client';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { ArrowLeft, CheckCircle2, Loader2, Trophy } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Trophy } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { api } from '../../../../lib/api';
 import { money } from '../../../../lib/sessions';
+import { FullScreenLoader } from '../../../../components/ui/full-screen-loader';
 import { settlementSchema } from '../../../../lib/settlements';
 type Form = z.infer<typeof settlementSchema>;
 type Setup = {
@@ -132,9 +133,10 @@ export default function SettlementPage() {
   });
   if (setup.isLoading)
     return (
-      <div className="card">
-        <Loader2 className="animate-spin" /> Preparando la finalización…
-      </div>
+      <FullScreenLoader
+        title="Preparando finalización"
+        description="Calculando posiciones, costos y participantes…"
+      />
     );
   if (!setup.data)
     return <div className="card text-red-700">No se pudo preparar la finalización.</div>;

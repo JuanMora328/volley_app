@@ -27,6 +27,7 @@ import {
 } from '../lib/community';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { FullScreenLoader } from './ui/full-screen-loader';
 
 type Kind = 'players' | 'venues';
 type Item = Player | Venue;
@@ -110,11 +111,10 @@ export function CommunityPage({ kind }: { kind: Kind }) {
         </div>
       </section>
       {query.isLoading ? (
-        <div aria-label="Cargando" className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {[1, 2, 3, 4].map((x) => (
-            <div key={x} className="h-48 animate-pulse rounded-2xl bg-slate-200" />
-          ))}
-        </div>
+        <FullScreenLoader
+          title={`Cargando ${title.toLowerCase()}`}
+          description="Consultando los registros disponibles…"
+        />
       ) : query.isError ? (
         <div role="alert" className="rounded-2xl border border-red-200 bg-red-50 p-6 text-red-800">
           No pudimos cargar {title.toLowerCase()}.{' '}

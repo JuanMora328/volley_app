@@ -23,6 +23,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { api } from '../../../lib/api';
 import { SessionDetail, SessionForm, money, sessionSchema } from '../../../lib/sessions';
+import { FullScreenLoader } from '../../../components/ui/full-screen-loader';
 type Venue = { id: string; name: string; defaultCourtPrice: number; defaultGatoradePrice: number };
 type Player = { id: string; name: string; defaultLevel: number; active: boolean };
 export default function NewSession() {
@@ -291,7 +292,10 @@ export default function NewSession() {
             />
           </div>
           {players.isLoading ? (
-            <div className="animate-pulse space-y-3">Cargando jugadores...</div>
+            <FullScreenLoader
+              title="Cargando jugadores"
+              description="Preparando los participantes disponibles…"
+            />
           ) : (
             <div className="mt-4 max-h-[52vh] space-y-2 overflow-auto pr-1">
               {visible.map((player) => (

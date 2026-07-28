@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { api } from '../../lib/api';
 import { formatCopInput, parseCopInput } from '../../lib/community';
 import { ConfirmDialog } from '../../components/ui/confirm-dialog';
+import { FullScreenLoader } from '../../components/ui/full-screen-loader';
 export default function Settings() {
   const [pendingValues, setPendingValues] = useState<any>(null);
   const [saveError, setSaveError] = useState('');
@@ -52,7 +53,13 @@ export default function Settings() {
       toast.error('No pudimos guardar los ajustes');
     },
   });
-  if (q.isLoading) return <div className="card animate-pulse">Cargando ajustes...</div>;
+  if (q.isLoading)
+    return (
+      <FullScreenLoader
+        title="Cargando ajustes"
+        description="Consultando la configuración de VolleyFlow…"
+      />
+    );
   return (
     <div className="mx-auto max-w-4xl space-y-6 pb-6">
       <header className="relative overflow-hidden rounded-3xl bg-[#091426] p-6 text-white shadow-xl md:p-8">
