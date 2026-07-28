@@ -40,3 +40,9 @@ La vista previa y la confirmación reciben `courtHourlyPrice`, `courtDurationMin
 `gatoradeWinnerCount` y `gatoradeTotal = gatoradePrice × gatoradeWinnerCount`; nunca confía
 en totales del cliente. La vista previa no persiste. La confirmación es transaccional y conserva
 los pagos existentes. `PATCH payments` continúa disponible después de `FINISHED`.
+
+## Administración histórica (Fase 6)
+
+- `GET /api/players/:id/profile` y `/sessions`: perfil y participaciones paginadas.
+- `GET /api/sessions` y `/history/summary`: historial filtrable y agregados.
+- `GET/PATCH /api/settings`: configuración singleton; PATCH es exclusivo de ADMIN.

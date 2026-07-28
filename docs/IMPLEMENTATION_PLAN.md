@@ -10,7 +10,7 @@ La aplicación usa exclusivamente PostgreSQL y TypeORM (`synchronize: false`). C
 | 3. Preparación de jornada          | ✅        | Crear jornada en tres pasos, participantes, detalle y equipos                | `GameSession`, `SessionPlayer`, `Team`, `TeamPlayer`; endpoints de borrador y generación | Persistencia del wizard, cupos, niveles y balance reproducible                      |
 | 4. Partidos y competición          | ✅        | Sorteo, partido activo, historial y posiciones                               | `Match`; rotación, resultados y standings                                                | Reglas de turno, integridad de marcadores y reconstrucción                          |
 | 5. Pagos y cierre                  | ✅        | Pagos, liquidación y cierre                                                  | Pagos y snapshots de liquidación                                                         | Dinero entero, distribución exacta e inmutabilidad al cerrar                        |
-| 6. Perfil, historial y ajustes     | Pendiente | Perfil, historial y reglas generales                                         | Consultas históricas y configuración                                                     | Permisos, filtros y trazabilidad                                                    |
+| 6. Perfil, historial y ajustes     | ✅        | Perfil, historial y reglas generales                                         | Consultas históricas y configuración                                                     | Permisos, filtros y trazabilidad                                                    |
 | 7. Auditoría, pruebas y despliegue | Pendiente | Accesibilidad, observabilidad y operación                                    | Auditoría, seguridad y pipeline                                                          | E2E PostgreSQL, rendimiento, respaldo y despliegue                                  |
 
 ## Endpoints terminados en Fase 2
@@ -34,3 +34,7 @@ Se implementaron sorteo transaccional, reconstrucción ganador-se-queda, partido
 ## Fase 5 terminada
 
 Se implementaron la sugerencia deportiva de campeón sin desempate alfabético, vista previa y confirmación transaccional, reparto entero exacto, exclusiones, pagos parciales y sobrepagos, cierre con deudores y pagos posteriores. La cancha deriva su total entero de tarifa por hora y duración; Gatorade deriva su total del precio unitario por cada campeón y se distribuye solo entre perdedores. Las rutas web `/settlement`, `/payments` y `/summary` consumen la API real, conservan pagos al recalcular y mantienen confirmaciones explícitas.
+
+## Fase 6 terminada
+
+El perfil deriva participación, competición, niveles y finanzas desde snapshots. El historial global pagina y combina búsqueda y filtros en PostgreSQL. La configuración singleton aplica sus valores únicamente a jornadas nuevas; las reglas fijas son informativas y solo ADMIN puede guardar ajustes.

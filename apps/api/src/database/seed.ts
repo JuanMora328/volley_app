@@ -1,6 +1,7 @@
 import * as argon2 from 'argon2';
 import ds from './data-source';
-import { PlayerEntity, UserEntity, VenueEntity } from './entities';
+import { AppSettingsEntity, PlayerEntity, UserEntity, VenueEntity } from './entities';
+import { APP_SETTINGS_ID } from './entities/app-settings.entity';
 import { UserRole } from '@volleyflow/shared';
 async function seed() {
   await ds.initialize();
@@ -75,6 +76,19 @@ async function seed() {
     ])
       if (!(await venues.findOneBy({ name: venue.name })))
         await venues.save(venues.create({ ...venue, active: true }));
+    const settings = ds.getRepository(AppSettingsEntity);
+    if (!(await settings.findOneBy({ id: APP_SETTINGS_ID })))
+      await settings.save(
+        settings.create({
+          id: APP_SETTINGS_ID,
+          organizationName: 'VolleyFlow',
+          defaultTeamCount: 2,
+          defaultTargetScore: 10,
+          defaultCourtPrice: 0,
+          defaultGatoradePrice: 0,
+          timezone: 'America/Bogota',
+        }),
+      );
   } finally {
     await ds.destroy();
   }

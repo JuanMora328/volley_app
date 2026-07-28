@@ -21,6 +21,7 @@ import {
   UpdateSessionDto,
   UpdateSessionPlayerDto,
   DeleteSessionDto,
+  HistorySummaryDto,
 } from './sessions.dto';
 import { SessionsService } from './sessions.service';
 @ApiTags('sessions')
@@ -31,6 +32,9 @@ export class SessionsController {
   constructor(private readonly service: SessionsService) {}
   @Get() list(@Query() query: ListSessionsDto) {
     return this.service.list(query);
+  }
+  @Get('history/summary') summary(@Query() query: HistorySummaryDto) {
+    return this.service.historySummary(query);
   }
   @Post() create(@Body() dto: CreateSessionDto) {
     return this.service.create(dto);

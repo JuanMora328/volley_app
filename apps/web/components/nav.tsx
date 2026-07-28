@@ -1,13 +1,13 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { CalendarDays, Home, MapPin, MoreHorizontal, Users, Volleyball } from 'lucide-react';
+import { CalendarDays, Home, MapPin, Settings, Users, Volleyball } from 'lucide-react';
 const items = [
   ['/', 'Inicio', Home],
   ['/sessions', 'Jornadas', CalendarDays],
   ['/players', 'Jugadores', Users],
   ['/venues', 'Canchas', MapPin],
-  ['#', 'Más', MoreHorizontal],
+  ['/settings', 'Ajustes', Settings],
 ] as const;
 export function Nav() {
   const pathname = usePathname();

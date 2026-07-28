@@ -16,6 +16,7 @@ import {
   venueSchema,
 } from '../lib/community';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 type Kind = 'players' | 'venues';
 type Item = Player | Venue;
@@ -218,6 +219,14 @@ function RecordCard({
         </div>
       )}
       <div className="mt-4 flex border-t pt-3">
+        {isPlayer && (
+          <Link
+            className="flex flex-1 items-center justify-center font-semibold text-secondary"
+            href={`/players/${item.id}`}
+          >
+            Ver perfil
+          </Link>
+        )}
         <button
           className="flex flex-1 items-center justify-center gap-2 font-semibold text-secondary"
           onClick={onEdit}

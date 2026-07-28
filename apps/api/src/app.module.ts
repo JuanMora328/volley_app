@@ -11,6 +11,7 @@ import { SessionsModule } from './sessions/sessions.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { MatchesModule } from './matches/matches.module';
 import { SettlementsModule } from './settlements/settlements.module';
+import { SettingsModule } from './settings/settings.module';
 
 function resolveSslOption(databaseUrl: string, sslEnv?: string, rejectUnauthorizedEnv?: string) {
   if (sslEnv === 'true') {
@@ -65,6 +66,7 @@ function resolveSslOption(databaseUrl: string, sslEnv?: string, rejectUnauthoriz
     DashboardModule,
     MatchesModule,
     SettlementsModule,
+    SettingsModule,
   ],
 })
 export class AppModule {}

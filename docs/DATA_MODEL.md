@@ -32,3 +32,7 @@ campeones quedan excluidos. La migración reversible inicializa jornadas antigua
 `settled_at` identifica el snapshot financiero confirmado y `finished_at` el cierre definitivo,
 que puede realizarse con deuda tras confirmación explícita. El cierre bloquea redistribuciones,
 no correcciones posteriores de `amount_paid`, `payment_method` y `paid_at`.
+
+## AppSettings
+
+`app_settings` usa un UUID conocido y una restricción para garantizar una sola fila. La migración añade índices para las consultas históricas.

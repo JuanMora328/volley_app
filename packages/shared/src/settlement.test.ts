@@ -41,7 +41,7 @@ describe('derivePaymentStatus', () => {
     [10, 0, 'PENDING'],
     [10, 5, 'PARTIAL'],
     [10, 10, 'PAID'],
-    [10, 12, 'PAID'],
+    [10, 12, 'CREDIT'],
   ])('deriva el estado', (due, paid, status) =>
     expect(derivePaymentStatus(due as number, paid as number)).toBe(status),
   );

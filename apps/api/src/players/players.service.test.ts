@@ -65,6 +65,36 @@ function repository() {
   return repo;
 }
 describe('PlayersService', () => {
+  it('excluye partidos de borradores y jornadas canceladas del rendimiento', async () => {
+    const repo = repository();
+    const player = await new PlayersService(repo).create({ name: 'Ana', defaultLevel: 3 });
+    const queries: string[] = [];
+    const responses = [
+      [{ totalPending: 0, latestLevel: 3, averageLevel: 3, minimumLevel: 3, maximumLevel: 3 }],
+      [{ matchesPlayed: 1, matchesWon: 1, matchesLost: 0, pointsFor: 10, pointsAgainst: 7 }],
+      [{ count: 0 }],
+      [{ count: 3 }],
+      [],
+    ];
+    const dataSource: any = {
+      query: async (sql: string) => {
+        queries.push(sql);
+        return responses.shift();
+      },
+    };
+
+    const profile = await new PlayersService(repo, dataSource).profile(player.id);
+
+    expect(profile.competition).toMatchObject({
+      matchesPlayed: 1,
+      matchesWon: 1,
+      matchesLost: 0,
+      winRate: 100,
+    });
+    expect(queries[1]).toContain("gs.status IN ('SETTLEMENT','FINISHED')");
+    expect(queries[4]).toContain("gs.status IN ('SETTLEMENT','FINISHED')");
+  });
+
   it('crea, limpia y edita un jugador válido', async () => {
     const repo = repository();
     const service = new PlayersService(repo);
