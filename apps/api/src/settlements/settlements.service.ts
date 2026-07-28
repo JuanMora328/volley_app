@@ -398,12 +398,27 @@ export class SettlementsService {
     );
   }
   private async load(manager: EntityManager, id: string, lock = false) {
-    const session = await manager.findOne(GameSessionEntity, {
-      where: { id },
-      relations: { championTeam: true },
-      ...(lock ? { lock: { mode: 'pessimistic_write' as const } } : {}),
-    });
+    // PostgreSQL no permite FOR UPDATE sobre el lado nullable del LEFT JOIN que
+    // TypeORM genera al cargar championTeam. Bloqueamos exclusivamente la fila
+    // de la jornada y cargamos la relación en una consulta independiente.
+    const session = lock
+      ? await manager
+          .createQueryBuilder(GameSessionEntity, 'session')
+          .where('session.id = :id', { id })
+          .setLock('pessimistic_write')
+          .getOne()
+      : await manager.findOne(GameSessionEntity, {
+          where: { id },
+          relations: { championTeam: true },
+        });
     if (!session) throw new NotFoundException('Jornada no encontrada');
+    if (lock) {
+      session.championTeam = (await manager
+        .createQueryBuilder()
+        .relation(GameSessionEntity, 'championTeam')
+        .of(session)
+        .loadOne<TeamEntity>()) as TeamEntity | null;
+    }
     const teams = await manager.find(TeamEntity, {
       where: { session: { id } },
       order: { name: 'ASC' },
