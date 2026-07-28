@@ -18,7 +18,7 @@ export enum PaymentMethod {
   CASH = 'CASH',
   TRANSFER = 'TRANSFER',
 }
-export type PaymentStatus = 'PENDING' | 'PARTIAL' | 'PAID' | 'NOT_REQUIRED';
+export type PaymentStatus = 'PENDING' | 'PARTIAL' | 'PAID' | 'NOT_REQUIRED' | 'CREDIT';
 export interface PlayerDto {
   id: string;
   name: string;
@@ -338,5 +338,6 @@ export function derivePaymentStatus(amountDue: number, amountPaid: number): Paym
   if (amountDue === 0) return 'NOT_REQUIRED';
   if (amountPaid <= 0) return 'PENDING';
   if (amountPaid < amountDue) return 'PARTIAL';
-  return 'PAID';
+  if (amountPaid === amountDue) return 'PAID';
+  return 'CREDIT';
 }

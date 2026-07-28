@@ -1,5 +1,7 @@
 import { Transform, Type } from 'class-transformer';
 import {
+  IsDateString,
+  IsIn,
   IsBoolean,
   IsEnum,
   IsInt,
@@ -9,6 +11,7 @@ import {
   MaxLength,
   Min,
 } from 'class-validator';
+import { GameSessionStatus } from '@volleyflow/shared';
 
 const trim = ({ value }: { value: unknown }) => (typeof value === 'string' ? value.trim() : value);
 export enum RecordStatus {
@@ -46,4 +49,15 @@ export class ListPlayersDto {
   @IsOptional() @Type(() => Number) @IsInt() @Min(1) @Max(100) limit = 12;
   @IsOptional() @IsEnum(PlayerSort) sortBy: PlayerSort = PlayerSort.NAME;
   @IsOptional() @IsEnum(SortOrder) sortOrder: SortOrder = SortOrder.ASC;
+}
+export class PlayerSessionsDto {
+  @IsOptional() @Type(() => Number) @IsInt() @Min(1) page = 1;
+  @IsOptional() @Type(() => Number) @IsInt() @Min(1) @Max(100) limit = 10;
+  @IsOptional() @IsEnum(GameSessionStatus) status?: GameSessionStatus;
+  @IsOptional() @IsDateString() dateFrom?: string;
+  @IsOptional() @IsDateString() dateTo?: string;
+  @IsOptional() @IsIn(['ASC', 'DESC']) sortOrder: 'ASC' | 'DESC' = 'DESC';
+  @IsOptional()
+  @IsIn(['NOT_REQUIRED', 'PENDING', 'PARTIAL', 'PAID', 'CREDIT'])
+  paymentStatus?: string;
 }

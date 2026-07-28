@@ -11,7 +11,13 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { CreatePlayerDto, ListPlayersDto, UpdatePlayerDto, UpdateStatusDto } from './players.dto';
+import {
+  CreatePlayerDto,
+  ListPlayersDto,
+  PlayerSessionsDto,
+  UpdatePlayerDto,
+  UpdateStatusDto,
+} from './players.dto';
 import { PlayersService } from './players.service';
 @ApiTags('players')
 @ApiBearerAuth()
@@ -29,6 +35,15 @@ export class PlayersController {
   }
   @Get(':id') get(@Param('id', ParseUUIDPipe) id: string) {
     return this.service.get(id);
+  }
+  @Get(':id/profile') profile(@Param('id', ParseUUIDPipe) id: string) {
+    return this.service.profile(id);
+  }
+  @Get(':id/sessions') sessions(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Query() query: PlayerSessionsDto,
+  ) {
+    return this.service.sessionsHistory(id, query);
   }
   @Patch(':id') update(@Param('id', ParseUUIDPipe) id: string, @Body() dto: UpdatePlayerDto) {
     return this.service.update(id, dto);

@@ -10,6 +10,7 @@ import {
   IsOptional,
   IsString,
   IsUUID,
+  IsIn,
   Max,
   Min,
   ValidateNested,
@@ -33,8 +34,21 @@ export class UpdateSessionDto extends PartialType(CreateSessionDto) {}
 export class ListSessionsDto {
   @IsOptional() @IsEnum(GameSessionStatus) status?: GameSessionStatus;
   @IsOptional() @IsDateString() date?: string;
+  @IsOptional() @IsString() search?: string;
+  @IsOptional() @IsString() participantSearch?: string;
+  @IsOptional() @IsDateString() dateFrom?: string;
+  @IsOptional() @IsDateString() dateTo?: string;
+  @IsOptional()
+  @IsIn(['UNSETTLED', 'CLEAR', 'PENDING', 'PARTIAL', 'CREDIT'])
+  financialStatus?: string;
+  @IsOptional() @Type(() => Boolean) @IsBoolean() hasChampion?: boolean;
+  @IsOptional() @IsIn(['ASC', 'DESC']) sortOrder: 'ASC' | 'DESC' = 'DESC';
   @IsOptional() @Type(() => Number) @IsInt() @Min(1) page = 1;
   @IsOptional() @Type(() => Number) @IsInt() @Min(1) @Max(100) limit = 20;
+}
+export class HistorySummaryDto {
+  @IsOptional() @IsDateString() dateFrom?: string;
+  @IsOptional() @IsDateString() dateTo?: string;
 }
 export class AddSessionPlayerItemDto {
   @IsUUID() playerId!: string;

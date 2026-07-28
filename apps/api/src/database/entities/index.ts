@@ -6,6 +6,7 @@ import { SessionPlayerEntity } from './session-player.entity';
 import { TeamEntity } from './team.entity';
 import { TeamPlayerEntity } from './team-player.entity';
 import { MatchEntity } from './match.entity';
+import { AppSettingsEntity } from './app-settings.entity';
 export const entities = [
   UserEntity,
   PlayerEntity,
@@ -15,6 +16,7 @@ export const entities = [
   TeamEntity,
   TeamPlayerEntity,
   MatchEntity,
+  AppSettingsEntity,
 ];
 export {
   UserEntity,
@@ -25,4 +27,5 @@ export {
   TeamEntity,
   TeamPlayerEntity,
   MatchEntity,
+  AppSettingsEntity,
 };

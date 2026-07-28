@@ -2,7 +2,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { ArrowLeft, ArrowRight, Check, Loader2, Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { api } from '../../../lib/api';
@@ -31,6 +31,21 @@ export default function NewSession() {
     queryKey: ['venues-active'],
     queryFn: () => api<{ items: Venue[] }>('/venues?active=true&limit=100'),
   });
+  const defaults = useQuery({
+    queryKey: ['session-defaults'],
+    queryFn: () =>
+      api<{
+        teamCount: number;
+        defaultTargetScore: number;
+        courtPrice: number;
+        gatoradePrice: number;
+        venueId: string | null;
+      }>('/settings/defaults'),
+  });
+  useEffect(() => {
+    if (!defaults.data) return;
+    form.reset({ ...form.getValues(), ...defaults.data, venueId: defaults.data.venueId ?? '' });
+  }, [defaults.data, form]);
   const players = useQuery({
     queryKey: ['players-active'],
     queryFn: () => api<{ items: Player[] }>('/players?active=true&limit=100'),

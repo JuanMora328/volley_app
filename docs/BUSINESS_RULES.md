@@ -30,3 +30,7 @@ El sorteo es reemplazable hasta iniciar el primer partido. El ganador permanece,
 - `gatoradePrice` es el precio unitario. `gatoradeWinnerCount` es la cantidad de jugadores campeones y `gatoradeTotal` es su producto entero. Los campeones reciben una unidad, pero nunca pagan Gatorade.
 - La validación financiera compara la suma distribuida con `courtPrice + gatoradeTotal`, no con el precio unitario.
 - Los estados de pago, pendientes y créditos se derivan. Pagos parciales, sobrepagos, correcciones y reinicios a cero se admiten aun después de finalizar.
+
+## Historial y ajustes
+
+Los estados `NOT_REQUIRED`, `PENDING`, `PARTIAL`, `PAID` y `CREDIT` se derivan de montos persistidos. Estadísticas y campeonatos conservan snapshots. Los ajustes solo afectan jornadas nuevas y solo ADMIN los modifica.

@@ -25,6 +25,7 @@ import {
   ListSessionsDto,
   SaveTeamsDto,
   UpdateSessionPlayerDto,
+  HistorySummaryDto,
 } from './sessions.dto';
 @Injectable()
 export class SessionsService {
@@ -33,21 +34,112 @@ export class SessionsService {
     private readonly dataSource: DataSource,
   ) {}
   async list(query: ListSessionsDto) {
-    const where = {
-      ...(query.status ? { status: query.status } : {}),
-      ...(query.date ? { date: query.date } : {}),
-    };
-    const [items, total] = await this.sessions.findAndCount({
-      where,
-      relations: { venue: true },
-      order: { date: 'DESC', createdAt: 'DESC' },
-      skip: (query.page - 1) * query.limit,
-      take: query.limit,
-    });
+    const qb = this.sessions.createQueryBuilder('gs');
+    if (query.status) qb.andWhere('gs.status=:status', { status: query.status });
+    if (query.date) qb.andWhere('gs.date=:date', { date: query.date });
+    if (query.dateFrom) qb.andWhere('gs.date>=:from', { from: query.dateFrom });
+    if (query.dateTo) qb.andWhere('gs.date<=:to', { to: query.dateTo });
+    if (query.search)
+      qb.andWhere('gs.venue_name_snapshot ILIKE :search', { search: `%${query.search}%` });
+    if (query.participantSearch)
+      qb.andWhere(
+        `EXISTS(SELECT 1 FROM session_players sp WHERE sp.session_id=gs.id AND sp.player_name_snapshot ILIKE :participant)`,
+        { participant: `%${query.participantSearch}%` },
+      );
+    if (query.hasChampion !== undefined)
+      qb.andWhere(
+        query.hasChampion ? 'gs.champion_team_id IS NOT NULL' : 'gs.champion_team_id IS NULL',
+      );
+    if (query.financialStatus) {
+      const expression = {
+        UNSETTLED: `gs.settled_at IS NULL`,
+        CLEAR: `gs.settled_at IS NOT NULL AND NOT EXISTS(SELECT 1 FROM session_players sp WHERE sp.session_id=gs.id AND sp.amount_paid<>sp.amount_due)`,
+        PENDING: `EXISTS(SELECT 1 FROM session_players sp WHERE sp.session_id=gs.id AND sp.amount_due>0 AND sp.amount_paid=0)`,
+        PARTIAL: `EXISTS(SELECT 1 FROM session_players sp WHERE sp.session_id=gs.id AND sp.amount_paid>0 AND sp.amount_paid<sp.amount_due)`,
+        CREDIT: `EXISTS(SELECT 1 FROM session_players sp WHERE sp.session_id=gs.id AND sp.amount_paid>sp.amount_due)`,
+      }[query.financialStatus];
+      qb.andWhere(expression!);
+    }
+    const total = await qb.getCount();
+    const ids = (
+      await qb
+        .clone()
+        .select('gs.id', 'id')
+        .orderBy('gs.date', query.sortOrder)
+        .addOrderBy('gs.created_at', query.sortOrder)
+        .offset((query.page - 1) * query.limit)
+        .limit(query.limit)
+        .getRawMany<{ id: string }>()
+    ).map((x) => x.id);
+    if (!ids.length)
+      return {
+        items: [],
+        page: query.page,
+        limit: query.limit,
+        totalItems: total,
+        totalPages: Math.ceil(total / query.limit),
+      };
+    const items = await this.sessions
+      .createQueryBuilder('gs')
+      .leftJoin('gs.championTeam', 'champion')
+      .select([
+        'gs.id AS id',
+        'gs.date AS date',
+        'gs.venueNameSnapshot AS "venueNameSnapshot"',
+        'gs.status AS status',
+        'champion.name AS "championTeam"',
+      ])
+      .addSelect(
+        '(SELECT count(*) FROM session_players sp WHERE sp.session_id=gs.id)::int',
+        'participantCount',
+      )
+      .addSelect('(SELECT count(*) FROM teams t WHERE t.session_id=gs.id)::int', 'teamCount')
+      .addSelect(
+        `(SELECT count(*) FROM matches m WHERE m.session_id=gs.id AND m.status='FINISHED')::int`,
+        'finishedMatches',
+      )
+      .addSelect(
+        '(SELECT coalesce(sum(sp.amount_due),0) FROM session_players sp WHERE sp.session_id=gs.id)::int',
+        'totalExpected',
+      )
+      .addSelect(
+        '(SELECT coalesce(sum(sp.amount_paid),0) FROM session_players sp WHERE sp.session_id=gs.id)::int',
+        'totalCollected',
+      )
+      .addSelect(
+        '(SELECT coalesce(sum(greatest(sp.amount_due-sp.amount_paid,0)),0) FROM session_players sp WHERE sp.session_id=gs.id)::int',
+        'totalPending',
+      )
+      .where('gs.id IN (:...ids)', { ids })
+      .orderBy('gs.date', query.sortOrder)
+      .getRawMany();
     return {
       items,
-      meta: { page: query.page, limit: query.limit, total, pages: Math.ceil(total / query.limit) },
+      page: query.page,
+      limit: query.limit,
+      totalItems: total,
+      totalPages: Math.ceil(total / query.limit),
+      filters: query,
     };
+  }
+
+  async historySummary(query: HistorySummaryDto) {
+    const params: unknown[] = [];
+    const where: string[] = [];
+    if (query.dateFrom) {
+      params.push(query.dateFrom);
+      where.push(`gs.date >= $${params.length}`);
+    }
+    if (query.dateTo) {
+      params.push(query.dateTo);
+      where.push(`gs.date <= $${params.length}`);
+    }
+    const clause = where.length ? `WHERE ${where.join(' AND ')}` : '';
+    const [row] = await this.dataSource.query(
+      `SELECT count(*)::int AS "totalSessions",count(*) FILTER(WHERE gs.status='FINISHED')::int AS "finishedSessions",count(*) FILTER(WHERE gs.status='CANCELLED')::int AS "cancelledSessions",count(*) FILTER(WHERE gs.status IN ('DRAFT','TEAMS_CREATED','IN_PROGRESS','SETTLEMENT'))::int AS "activeSessions",coalesce(sum((SELECT count(*) FROM session_players sp WHERE sp.session_id=gs.id)),0)::int AS "totalParticipants",coalesce(sum((SELECT count(*) FROM matches m WHERE m.session_id=gs.id AND m.status='FINISHED')),0)::int AS "finishedMatches",coalesce(sum((SELECT sum(sp.amount_due) FROM session_players sp WHERE sp.session_id=gs.id)),0)::int AS "totalExpected",coalesce(sum((SELECT sum(sp.amount_paid) FROM session_players sp WHERE sp.session_id=gs.id)),0)::int AS "totalCollected",coalesce(sum((SELECT sum(greatest(sp.amount_due-sp.amount_paid,0)) FROM session_players sp WHERE sp.session_id=gs.id)),0)::int AS "totalPending" FROM game_sessions gs ${clause}`,
+      params,
+    );
+    return row;
   }
   async create(dto: CreateSessionDto) {
     const venue = dto.venueId
