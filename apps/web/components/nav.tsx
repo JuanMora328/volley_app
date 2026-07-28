@@ -3,8 +3,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
-import { CalendarDays, Home, LogOut, MapPin, Settings, Users, Volleyball } from 'lucide-react';
+import { CalendarDays, Home, LogOut, MapPin, Settings, Users } from 'lucide-react';
 import { clearPrivatePwaData } from '../lib/pwa';
+import { BrandLogo } from './brand-logo';
 const items = [
   ['/', 'Inicio', Home],
   ['/sessions', 'Jornadas', CalendarDays],
@@ -25,7 +26,7 @@ export function Nav() {
     <>
       <aside className="fixed left-0 top-0 hidden h-full w-64 bg-[#091426] p-5 text-white lg:block">
         <div className="mb-10 flex items-center gap-3 text-2xl font-bold">
-          <Volleyball className="text-[#acf847]" /> Gestión de vóley
+          <BrandLogo size={40} /> VolleyJRN
         </div>
         <nav className="space-y-2">
           {items.map(([href, label, Icon]) => {

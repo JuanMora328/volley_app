@@ -4,8 +4,8 @@ import { Providers } from '../components/providers';
 import { AppShell } from '../components/app-shell';
 
 export const metadata: Metadata = {
-  applicationName: 'VolleyFlow',
-  title: { default: 'VolleyFlow', template: '%s | VolleyFlow' },
+  applicationName: 'VolleyJRN',
+  title: { default: 'VolleyJRN', template: '%s | VolleyJRN' },
   description: 'Organiza jornadas, equipos y partidos de voleibol.',
   manifest: '/manifest.webmanifest',
   icons: {
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'VolleyFlow',
+    title: 'VolleyJRN',
   },
   formatDetection: { telephone: false },
 };

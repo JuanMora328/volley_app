@@ -10,7 +10,7 @@ const sw = readFileSync(join(root, 'public/sw.js'), 'utf8');
 describe('PWA manifest', () => {
   it('is standalone and exposes regular and maskable install icons', () => {
     const value = manifest();
-    expect(value.name).toBe('VolleyFlow');
+    expect(value.name).toBe('VolleyJRN');
     expect(value.display).toBe('standalone');
     expect(value.icons).toEqual(
       expect.arrayContaining([

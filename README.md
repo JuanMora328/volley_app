@@ -1,10 +1,10 @@
-# VolleyFlow
+# VolleyJRN
 
 La Fase 5 incorpora **Finalizar jornada**, distribución exacta en pesos colombianos, gestión de pagos y cierre financiero. `courtHourlyPrice` es la tarifa por hora, `courtDurationMinutes` el tiempo jugado y `courtPrice` el total recalculado por el servidor. `gatoradePrice` es siempre el precio de una unidad; la cantidad y el total de bebidas se derivan de los integrantes del equipo campeón. Ejecute `pnpm migration:run` en `apps/api` después de configurar PostgreSQL.
 
 Los Gatorades se distribuyen únicamente entre perdedores incluidos y nunca entre campeones. Los pagos pueden corregirse incluso después del cierre, y una jornada con deuda puede finalizar solo mediante confirmación explícita.
 
-VolleyFlow es una aplicación web para gestionar jornadas de vóley: jugadores, canchas, armado de equipos, partidos, pagos y resumen de cada sesión. El repositorio está organizado como un monorepo con `pnpm`, separando el backend, el frontend y los tipos/utilidades compartidas.
+VolleyJRN es una aplicación web para gestionar jornadas de vóley: jugadores, canchas, armado de equipos, partidos, pagos y resumen de cada sesión. El repositorio está organizado como un monorepo con `pnpm`, separando el backend, el frontend y los tipos/utilidades compartidas.
 
 ## Estructura del proyecto
 
