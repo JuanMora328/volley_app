@@ -107,7 +107,7 @@ export default function PaymentsPage() {
                 </p>
               </div>
               <span
-                className={`rounded-full px-3 py-1 text-xs font-extrabold ${paymentBadgeClass[p.paymentStatus]}`}
+                className={`inline-flex h-7 shrink-0 self-start items-center rounded-full px-2.5 text-[11px] font-extrabold leading-none ${paymentBadgeClass[p.paymentStatus]}`}
               >
                 {statusLabel[p.paymentStatus]}
               </span>
@@ -132,7 +132,7 @@ export default function PaymentsPage() {
               </p>
             )}
             <button
-              className="btn-secondary w-full"
+              className="inline-flex min-h-12 w-full items-center justify-center rounded-xl border border-blue-200 bg-blue-100 px-4 font-bold text-secondary transition hover:border-blue-300 hover:bg-blue-200 active:scale-95"
               onClick={() => {
                 setEditing(p);
                 setAmount(p.amountPaid);
