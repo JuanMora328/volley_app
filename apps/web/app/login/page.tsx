@@ -1,5 +1,5 @@
 'use client';
-import { Eye, EyeOff, Loader2, Volleyball } from 'lucide-react';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { api, getToken, LoginResponse, setToken } from '../../lib/api';
 import { clearPrivatePwaData } from '../../lib/pwa';
 import { loginSchema, LoginForm } from '../../lib/auth-validation';
+import { BrandLogo } from '../../components/brand-logo';
 
 export default function Login() {
   const router = useRouter();
@@ -51,10 +52,10 @@ export default function Login() {
       <div className="absolute -bottom-24 -right-20 h-72 w-72 rounded-full bg-lime-400/20 blur-3xl" />
       <section className="relative w-full max-w-[440px]">
         <div className="mb-8 flex flex-col items-center text-center">
-          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#091426] text-white shadow-xl">
-            <Volleyball size={40} />
+          <div className="mb-4 overflow-hidden rounded-2xl shadow-xl">
+            <BrandLogo size={72} />
           </div>
-          <h1 className="text-3xl font-bold tracking-tight text-[#091426]">Gestión de vóley</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-[#091426]">VolleyJRN</h1>
           <p className="mt-2 text-base text-[#45474c]">Organiza tus partidos sin perder el ritmo</p>
         </div>
         <form
@@ -108,7 +109,7 @@ export default function Login() {
             </button>
           </div>
         </form>
-        <p className="mt-8 text-center text-xs text-[#45474c]/70">© 2026 Gestión deportiva</p>
+        <p className="mt-8 text-center text-xs text-[#45474c]/70">© 2026 VolleyJRN</p>
       </section>
     </main>
   );

@@ -57,7 +57,7 @@ export default function Settings() {
     return (
       <FullScreenLoader
         title="Cargando ajustes"
-        description="Consultando la configuración de VolleyFlow…"
+        description="Consultando la configuración de VolleyJRN…"
       />
     );
   return (

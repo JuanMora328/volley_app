@@ -14,7 +14,7 @@ export async function GET(_: Request, context: { params: Promise<{ icon: string 
   const size = iconSizes[icon as IconName];
   const maskable = icon.startsWith('icon-maskable-');
   const tileSize = maskable ? '60%' : '80%';
-  const ballSize = maskable ? '36%' : '48%';
+  const ballSize = maskable ? '42%' : '58%';
 
   return new ImageResponse(
     <div
@@ -39,41 +39,16 @@ export async function GET(_: Request, context: { params: Promise<{ icon: string 
           width: tileSize,
         }}
       >
-        <div
-          style={{
-            background: '#f7f9fb',
-            border: `${Math.max(2, Math.round(size / 48))}px solid #acf847`,
-            borderRadius: '50%',
-            display: 'flex',
-            height: ballSize,
-            position: 'relative',
-            transform: 'rotate(-18deg)',
-            width: ballSize,
-          }}
-        >
-          <div
-            style={{
-              borderBottom: `${Math.max(2, Math.round(size / 40))}px solid #0051d5`,
-              height: '45%',
-              left: '8%',
-              position: 'absolute',
-              top: '5%',
-              transform: 'rotate(32deg)',
-              width: '84%',
-            }}
-          />
-          <div
-            style={{
-              borderLeft: `${Math.max(2, Math.round(size / 40))}px solid #0051d5`,
-              height: '86%',
-              left: '48%',
-              position: 'absolute',
-              top: '7%',
-              transform: 'rotate(28deg)',
-              width: '10%',
-            }}
-          />
-        </div>
+        <svg height={ballSize} viewBox="0 0 100 100" width={ballSize}>
+          <circle cx="50" cy="50" fill="#f7f9fb" r="43" stroke="#acf847" strokeWidth="6" />
+          <g fill="none" stroke="#0051d5" strokeLinecap="round" strokeWidth="6">
+            <path d="M50 8C51 25 42 36 25 44" />
+            <path d="M13 29C31 30 45 39 55 53" />
+            <path d="M28 84C34 64 46 52 64 45" />
+            <path d="M86 32C68 39 59 52 59 72" />
+            <path d="M75 82C65 64 50 57 32 58" />
+          </g>
+        </svg>
       </div>
     </div>,
     {

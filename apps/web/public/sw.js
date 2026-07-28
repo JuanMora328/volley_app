@@ -1,4 +1,4 @@
-/* VolleyFlow service worker: intentionally explicit; no business/API response is cached. */
+/* VolleyJRN service worker: intentionally explicit; no business/API response is cached. */
 const VERSION = 'v1';
 const OFFLINE_CACHE = `volleyflow-offline-${VERSION}`;
 const STATIC_CACHE = `volleyflow-static-${VERSION}`;

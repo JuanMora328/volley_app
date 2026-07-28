@@ -1,10 +1,10 @@
-# VolleyFlow
+# VolleyJRN
 
 La Fase 5 incorpora **Finalizar jornada**, distribución exacta en pesos colombianos, gestión de pagos y cierre financiero. `courtHourlyPrice` es la tarifa por hora, `courtDurationMinutes` el tiempo jugado y `courtPrice` el total recalculado por el servidor. `gatoradePrice` es siempre el precio de una unidad; la cantidad y el total de bebidas se derivan de los integrantes del equipo campeón. Ejecute `pnpm migration:run` en `apps/api` después de configurar PostgreSQL.
 
 Los Gatorades se distribuyen únicamente entre perdedores incluidos y nunca entre campeones. Los pagos pueden corregirse incluso después del cierre, y una jornada con deuda puede finalizar solo mediante confirmación explícita.
 
-VolleyFlow es una aplicación web para gestionar jornadas de vóley: jugadores, canchas, armado de equipos, partidos, pagos y resumen de cada sesión. El repositorio está organizado como un monorepo con `pnpm`, separando el backend, el frontend y los tipos/utilidades compartidas.
+VolleyJRN es una aplicación web para gestionar jornadas de vóley: jugadores, canchas, armado de equipos, partidos, pagos y resumen de cada sesión. El repositorio está organizado como un monorepo con `pnpm`, separando el backend, el frontend y los tipos/utilidades compartidas.
 
 ## Estructura del proyecto
 
@@ -201,6 +201,23 @@ más, `DATABASE_URL`, `CORS_ORIGIN` explícito y `NEXT_PUBLIC_API_URL` durante e
 Swagger nunca se publica en producción. Antes de desplegar, realiza un backup administrado de
 PostgreSQL y verifica una restauración en un entorno aislado; las migraciones no reemplazan los
 backups.
+
+## Despliegue del frontend en Vercel
+
+El repositorio incluye `vercel.json` para que Vercel detecte Next.js dentro del monorepo,
+construya `@volleyflow/web` y publique su salida `.next`. De esta forma, las rutas del App Router
+(incluidas las rutas dinámicas) siguen siendo atendidas por Next.js al abrirlas directamente o al
+refrescar el navegador, en lugar de resolverse como archivos estáticos inexistentes.
+
+Al importar el repositorio en Vercel:
+
+1. Configura **Root Directory** como `apps/web`. La ruta de salida `.next` es relativa a ese
+   directorio; no uses `apps/web/.next` porque Vercel intentaría resolver
+   `apps/web/apps/web/.next`.
+2. Configura `NEXT_PUBLIC_API_URL` como variable de entorno del proyecto antes de construir.
+3. No agregues un rewrite global hacia `index.html`; este frontend usa Next.js, no una exportación
+   SPA estática.
+4. Vuelve a desplegar para que Vercel aplique `vercel.json`.
 
 ## Gestión de comunidad y sedes
 

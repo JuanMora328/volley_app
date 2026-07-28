@@ -55,7 +55,7 @@ export default function Dashboard() {
     return (
       <FullScreenLoader
         title="Cargando inicio"
-        description="Preparando el resumen de VolleyFlow…"
+        description="Preparando el resumen de VolleyJRN…"
       />
     );
   if (me.isError || dashboard.isError)

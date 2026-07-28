@@ -3,8 +3,8 @@ import type { MetadataRoute } from 'next';
 export default function manifest(): MetadataRoute.Manifest {
   return {
     id: '/',
-    name: 'VolleyFlow',
-    short_name: 'VolleyFlow',
+    name: 'VolleyJRN',
+    short_name: 'VolleyJRN',
     description: 'Organiza jornadas, equipos y partidos de voleibol.',
     start_url: '/',
     scope: '/',
