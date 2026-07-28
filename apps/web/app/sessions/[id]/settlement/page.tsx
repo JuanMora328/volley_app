@@ -438,8 +438,7 @@ function parseInteger(value: string) {
 
 function formatInteger(value: number) {
   return new Intl.NumberFormat('es-CO', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    maximumFractionDigits: 0,
   }).format(value);
 }
 

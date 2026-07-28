@@ -165,7 +165,7 @@ export default function PaymentsPage() {
                 onChange={(e) => setAmount(parseInteger(e.target.value))}
               />
               <small className="mt-1 block font-normal text-slate-500">
-                Valor en COP con dos unidades decimales.
+                Valor entero en COP con separador de miles.
               </small>
             </label>
             <div className="my-3 grid grid-cols-2 gap-2">
@@ -234,8 +234,7 @@ function parseInteger(value: string) {
 
 function formatInteger(value: number) {
   return new Intl.NumberFormat('es-CO', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    maximumFractionDigits: 0,
   }).format(Number.isFinite(value) ? value : 0);
 }
 function Metric({ label, value, danger }: { label: string; value: string; danger?: boolean }) {

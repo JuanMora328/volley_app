@@ -44,8 +44,7 @@ export const venueSchema = z.object({
 export const cop = new Intl.NumberFormat('es-CO', {
   style: 'currency',
   currency: 'COP',
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
+  maximumFractionDigits: 0,
 });
 
 export function parseCopInput(value: string): number {
@@ -57,7 +56,6 @@ export function parseCopInput(value: string): number {
 export function formatCopInput(value: string | number | undefined): string {
   const amount = typeof value === 'number' ? value : parseCopInput(value ?? '');
   return new Intl.NumberFormat('es-CO', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    maximumFractionDigits: 0,
   }).format(amount);
 }

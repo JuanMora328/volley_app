@@ -12,8 +12,7 @@ export type DashboardResponse = {
     title: string;
     date: string;
     venueName: string;
-    playersConfirmed: number;
-    playersCapacity: number;
+    participantCount: number;
     statusLabel: string;
   };
   stats: {

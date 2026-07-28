@@ -24,8 +24,7 @@ const money = (v: number) =>
   new Intl.NumberFormat('es-CO', {
     style: 'currency',
     currency: 'COP',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    maximumFractionDigits: 0,
   }).format(v || 0);
 const stateTone: Record<string, string> = {
   FINISHED: 'bg-lime-200 text-lime-950 ring-lime-600/20',

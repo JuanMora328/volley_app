@@ -32,8 +32,7 @@ const money = (v: number) =>
   new Intl.NumberFormat('es-CO', {
     style: 'currency',
     currency: 'COP',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    maximumFractionDigits: 0,
   }).format(v || 0);
 export default function Dashboard() {
   const router = useRouter();
@@ -246,7 +245,8 @@ function ActiveSession({ session }: { session: NonNullable<DashboardResponse['ac
         <div className="rounded-2xl bg-white/10 p-3">
           <small className="text-slate-300">Participantes</small>
           <b className="block text-xl">
-            {session.playersConfirmed}/{session.playersCapacity}
+            {session.participantCount}{' '}
+            {session.participantCount === 1 ? 'registrado' : 'registrados'}
           </b>
         </div>
         <div className="rounded-2xl bg-white/10 p-3">

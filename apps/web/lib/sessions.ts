@@ -60,8 +60,7 @@ export const money = (value: number) =>
   new Intl.NumberFormat('es-CO', {
     style: 'currency',
     currency: 'COP',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    maximumFractionDigits: 0,
   }).format(Number.isFinite(value) ? value : 0);
 
 const sessionStatusLabels: Record<string, string> = {
