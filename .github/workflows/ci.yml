@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: volleyflow
+          POSTGRES_PASSWORD: volleyflow
+          POSTGRES_DB: volleyflow_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U volleyflow -d volleyflow_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      NODE_ENV: test
+      DATABASE_URL: postgres://volleyflow:volleyflow@localhost:5432/volleyflow_test
+      MIGRATION_DATABASE_URL: postgres://volleyflow:volleyflow@localhost:5432/volleyflow_test
+      DATABASE_SSL: 'false'
+      JWT_SECRET: ci-only-secret-with-at-least-32-characters
+      CORS_ORIGIN: http://localhost:3000
+      SEED_ADMIN_NAME: CI Admin
+      SEED_ADMIN_EMAIL: ci-admin@example.test
+      SEED_ADMIN_PASSWORD: ci-password-only-123
+      NEXT_PUBLIC_API_URL: http://localhost:3001/api
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @volleyflow/api migration:run
+      - run: pnpm --filter @volleyflow/api seed
+      - run: pnpm --filter @volleyflow/api seed
+      - run: pnpm --filter @volleyflow/api migration:show
+      - run: pnpm --filter @volleyflow/api migration:revert
+      - run: pnpm --filter @volleyflow/api migration:run
+      - run: pnpm -r lint:check
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
