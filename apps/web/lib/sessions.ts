@@ -3,7 +3,11 @@ export const sessionSchema = z
   .object({
     date: z.string().min(1, 'La fecha es obligatoria'),
     startTime: z.string().optional(),
-    venueId: z.string().optional(),
+    venueId: z
+      .string()
+      .trim()
+      .transform((value) => value || undefined)
+      .optional(),
     venueName: z.string().optional(),
     courtPrice: z.coerce.number().int().min(0),
     gatoradePrice: z.coerce.number().int().min(0),
@@ -15,6 +19,11 @@ export const sessionSchema = z
     path: ['venueName'],
   });
 export type SessionForm = z.infer<typeof sessionSchema>;
+
+export function localDateInputValue(date = new Date()): string {
+  const local = new Date(date.getTime() - date.getTimezoneOffset() * 60_000);
+  return local.toISOString().slice(0, 10);
+}
 export type SessionPlayer = {
   id: string;
   player: { id: string };

@@ -25,11 +25,11 @@ export type DashboardResponse = {
 };
 
 export function getToken() {
-  return typeof sessionStorage === 'undefined' ? null : sessionStorage.getItem(TOKEN_KEY);
+  return typeof localStorage === 'undefined' ? null : localStorage.getItem(TOKEN_KEY);
 }
 
 export function setToken(token: string) {
-  sessionStorage.setItem(TOKEN_KEY, token);
+  localStorage.setItem(TOKEN_KEY, token);
 }
 
 export async function api<T>(path: string, init?: RequestInit): Promise<T> {

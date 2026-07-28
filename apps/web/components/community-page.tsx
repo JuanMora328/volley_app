@@ -642,9 +642,9 @@ function MoneyInput({
   const registration = register(name);
   return (
     <div className="flex min-h-12 items-center rounded-xl border border-slate-300 bg-white px-4 focus-within:border-secondary focus-within:ring-2 focus-within:ring-blue-100">
+      <input {...registration} type="hidden" />
       <span className="mr-2 font-semibold text-slate-500">$</span>
       <input
-        {...registration}
         type="text"
         inputMode="numeric"
         autoComplete="off"

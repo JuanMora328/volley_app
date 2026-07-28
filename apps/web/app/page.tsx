@@ -133,7 +133,7 @@ export default function Dashboard() {
                 Crea una jornada, selecciona participantes y genera equipos equilibrados.
               </p>
               <button
-                className="mt-5 inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 font-bold text-[#091426] transition hover:bg-blue-50"
+                className="mb-2 mt-5 inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 font-bold text-[#091426] transition hover:bg-blue-50"
                 onClick={() => router.push('/sessions/new')}
               >
                 Comenzar ahora <ArrowRight size={17} />
