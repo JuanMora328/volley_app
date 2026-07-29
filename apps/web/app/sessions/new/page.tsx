@@ -22,7 +22,13 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { api } from '../../../lib/api';
-import { SessionDetail, SessionForm, money, sessionSchema } from '../../../lib/sessions';
+import {
+  localDateInputValue,
+  SessionDetail,
+  SessionForm,
+  money,
+  sessionSchema,
+} from '../../../lib/sessions';
 import { FullScreenLoader } from '../../../components/ui/full-screen-loader';
 type Venue = { id: string; name: string; defaultCourtPrice: number; defaultGatoradePrice: number };
 type Player = { id: string; name: string; defaultLevel: number; active: boolean };
@@ -34,7 +40,7 @@ export default function NewSession() {
   const [search, setSearch] = useState('');
   const form = useForm<SessionForm>({
     defaultValues: {
-      date: new Date().toISOString().slice(0, 10),
+      date: localDateInputValue(),
       startTime: '',
       venueId: '',
       venueName: '',
@@ -46,7 +52,7 @@ export default function NewSession() {
   });
   const venues = useQuery({
     queryKey: ['venues-active'],
-    queryFn: () => api<{ items: Venue[] }>('/venues?active=true&limit=100'),
+    queryFn: () => api<{ items: Venue[] }>('/venues?status=active&limit=100'),
   });
   const defaults = useQuery({
     queryKey: ['session-defaults'],
@@ -173,7 +179,12 @@ export default function NewSession() {
               error={form.formState.errors.date?.message}
               icon={<CalendarDays size={17} />}
             >
-              <input className="input" type="date" {...form.register('date')} />
+              <input
+                className="input"
+                type="date"
+                min={localDateInputValue()}
+                {...form.register('date')}
+              />
             </Field>
             <Field label="Hora (opcional)" icon={<Clock3 size={17} />}>
               <input className="input" type="time" {...form.register('startTime')} />

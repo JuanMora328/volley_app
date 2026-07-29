@@ -5,6 +5,7 @@ export const PRIVATE_CACHE_PREFIX = 'volleyflow-private-';
 export async function clearPrivatePwaData(queryClient?: QueryClient) {
   queryClient?.clear();
   if (typeof sessionStorage !== 'undefined') sessionStorage.clear();
+  if (typeof localStorage !== 'undefined') localStorage.removeItem('vf_token');
   if (typeof caches !== 'undefined') {
     const names = await caches.keys();
     await Promise.all(
