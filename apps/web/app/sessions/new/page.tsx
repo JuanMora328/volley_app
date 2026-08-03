@@ -71,7 +71,7 @@ export default function NewSession() {
   }, [defaults.data, form]);
   const players = useQuery({
     queryKey: ['players-active'],
-    queryFn: () => api<{ items: Player[] }>('/players?active=true&limit=100'),
+    queryFn: () => api<{ items: Player[] }>('/players?status=active&limit=100'),
   });
   const create = useMutation({
     mutationFn: (values: SessionForm) =>
