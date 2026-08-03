@@ -92,7 +92,7 @@ export default function NewSession() {
   const savePlayers = useMutation({
     mutationFn: () =>
       api<SessionDetail[]>(`/sessions/${session!.id}/players`, {
-        method: 'POST',
+        method: 'PUT',
         body: JSON.stringify({
           players: Object.entries(selected).map(([playerId, levelSnapshot]) => ({
             playerId,

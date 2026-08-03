@@ -48,6 +48,9 @@ export class SessionsController {
   @Post(':id/players') addPlayers(@Param('id') id: string, @Body() dto: AddSessionPlayersDto) {
     return this.service.addPlayers(id, dto);
   }
+  @Put(':id/players') replacePlayers(@Param('id') id: string, @Body() dto: AddSessionPlayersDto) {
+    return this.service.replacePlayers(id, dto);
+  }
   @Patch(':id/players/:sessionPlayerId') updatePlayer(
     @Param('id') id: string,
     @Param('sessionPlayerId') spid: string,

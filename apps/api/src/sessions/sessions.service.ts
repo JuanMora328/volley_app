@@ -252,6 +252,47 @@ export class SessionsService {
       return manager.save(records);
     });
   }
+  async replacePlayers(id: string, dto: AddSessionPlayersDto) {
+    return this.dataSource.transaction(async (manager) => {
+      const session = await this.sessionWith(manager, id);
+      this.ensureDraft(session);
+      const ids = dto.players.map((item) => item.playerId);
+      if (new Set(ids).size !== ids.length)
+        throw new ConflictException('No se puede repetir un jugador');
+
+      const players = await manager.find(PlayerEntity, { where: { id: In(ids), active: true } });
+      if (players.length !== ids.length)
+        throw new BadRequestException('Todos los jugadores deben existir y estar activos');
+
+      const existing = await manager.find(SessionPlayerEntity, {
+        where: { session: { id } },
+        relations: { player: true },
+      });
+      await this.invalidateTeams(manager, id);
+
+      const selectedIds = new Set(ids);
+      const removed = existing.filter((participant) => !selectedIds.has(participant.player.id));
+      if (removed.length) await manager.remove(removed);
+
+      const records = dto.players.map((item) => {
+        const participant = existing.find((current) => current.player.id === item.playerId);
+        if (participant) {
+          participant.levelSnapshot =
+            item.levelSnapshot ??
+            players.find((player) => player.id === item.playerId)!.defaultLevel;
+          return participant;
+        }
+        const player = players.find((current) => current.id === item.playerId)!;
+        return manager.create(SessionPlayerEntity, {
+          session,
+          player,
+          playerNameSnapshot: player.name,
+          levelSnapshot: item.levelSnapshot ?? player.defaultLevel,
+        });
+      });
+      return manager.save(records);
+    });
+  }
   async updatePlayer(id: string, spid: string, dto: UpdateSessionPlayerDto) {
     return this.dataSource.transaction(async (manager) => {
       const session = await this.sessionWith(manager, id);
